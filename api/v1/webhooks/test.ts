@@ -3,24 +3,16 @@
  * api/v1/webhooks/test.ts
  */
 
-import { WebhookTestRequest, WebhookTestResponse, ApiErrorResponse } from '../../../src/types/api';
-import { dispatchWebhook } from '../../../server/events/webhookDispatcher';
-import { serverEventBus } from '../../../server/events/eventBus';
-import { signPayload } from '../../../server/events/webhookSigner';
+import { WebhookTestRequest, WebhookTestResponse, ApiErrorResponse } from '../../../src/types/api.js';
+import { dispatchWebhook } from '../../../server/events/webhookDispatcher.js';
+import { serverEventBus } from '../../../server/events/eventBus.js';
+import { signPayload } from '../../../server/events/webhookSigner.js';
+import { applyCors } from '../../../server/http/cors.js';
 
 export default async function handler(req: any, res: any) {
-  // CORS configuration
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
+  applyCors(req, res, ['POST', 'OPTIONS']);
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method !== 'POST') {
     const errorResponse: ApiErrorResponse = {
@@ -36,7 +28,7 @@ export default async function handler(req: any, res: any) {
     const rawBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const body: WebhookTestRequest = rawBody || {};
 
-    if (!body.target_url || !body.target_url.startsWith('http')) {
+    if (!body.target_url || !/^https?:\/\//i.test(body.target_url)) {
       const errorResponse: ApiErrorResponse = {
         status: 'error',
         code: 'VALIDATION_FAILED',
@@ -56,12 +48,11 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json(errorResponse);
     }
 
-    const eventType = (body.event_type as any) || 'deal.submitted';
+    const eventType = (body.event_type as any) || 'lead.submitted';
     const samplePayload = body.sample_payload || {
-      deal_id: 'deal_test_992a',
+      submission_id: 'intake_test_992a',
       business_name: 'Acme Test Corp',
-      requested_amount: 250000,
-      triage_score: 88,
+      workflow_priority: 'HUMAN_REVIEW',
       is_test_event: true
     };
 
@@ -71,7 +62,6 @@ export default async function handler(req: any, res: any) {
     });
 
     const signature = signPayload(JSON.stringify(testEvent), body.secret);
-
     const deliveryResult = await dispatchWebhook(testEvent, {
       targetUrl: body.target_url,
       secret: body.secret,
