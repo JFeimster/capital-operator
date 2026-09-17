@@ -1,0 +1,46 @@
+{
+  "mockBlueprints": [
+    {
+      "id": "mock-relationship-led",
+      "operatingModel": "Relationship-Led",
+      "nextUnlock": "Systemized Pipeline & Structured Document Intake",
+      "topFindingHeadline": "Your Firm Possesses Strong Capital Demand But Operates on Fragile Tribal Memory",
+      "executiveSummary": "Deal progress currently depends entirely on personal memory, manual follow-ups, and unstandardized email documents.",
+      "recommendedCapabilitiesCount": 5,
+      "totalTimeEstimated": "2 to 3 weeks to stabilize",
+      "highestLeverageMove": {
+        "headline": "Replace Email Attachments with a Secure Document Portal",
+        "subheadline": "Stop chasing missing bank statements in thread replies",
+        "action": "Deploy an intake checklist tool (like Filevine or Formbricks) that auto-validates 3 months of bank statements."
+      }
+    },
+    {
+      "id": "mock-systemized",
+      "operatingModel": "Systemized",
+      "nextUnlock": "AI Document Parsing & Programmatic Credit Memos",
+      "topFindingHeadline": "Pipeline Tracking is Centralized, but Document Synthesis Remains a Human Bottleneck",
+      "executiveSummary": "You have transitioned beyond ad-hoc spreadsheets, but senior operators are still spending 2-4 hours per file calculating cash flows.",
+      "recommendedCapabilitiesCount": 4,
+      "totalTimeEstimated": "10 to 14 days to deploy",
+      "highestLeverageMove": {
+        "headline": "Deploy AI Financial Analysis & Debt Schedule Extraction",
+        "subheadline": "Convert 6 months of PDF bank statements into a normalized credit memo in seconds",
+        "action": "Integrate an OCR engine like Heron Data or Inscribe directly into your intake stage."
+      }
+    },
+    {
+      "id": "mock-capital-operator",
+      "operatingModel": "Capital Operator",
+      "nextUnlock": "White-Label Partner Distribution & Autonomous Refinance Loops",
+      "topFindingHeadline": "High-Efficiency Operating Architecture with Embedded Capital Partner Rails",
+      "executiveSummary": "Your operation qualifies, extracts, packages, and routes deals systematically with clean human judgment checkpoints.",
+      "recommendedCapabilitiesCount": 2,
+      "totalTimeEstimated": "7 to 10 days for optimization",
+      "highestLeverageMove": {
+        "headline": "Activate Continuous Lifecycle & Covenant Refinance Loops",
+        "subheadline": "Turn past funded borrowers into perpetual renewal assets",
+        "action": "Automate 90-day and 180-day post-funding health check-ins tied to debt maturity dates."
+      }
+    }
+  ]
+}

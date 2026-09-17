@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CapitalOperatorDiagnosticSchema",
+  "description": "Validation schema for Capital Operator 12-stage diagnostic questions",
+  "type": "object",
+  "required": [
+    "id",
+    "stepNumber",
+    "section",
+    "title",
+    "subtitle",
+    "inputType",
+    "options"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "stepNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12
+    },
+    "section": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "inputType": {
+      "type": "string",
+      "enum": ["single-select", "multi-select"]
+    },
+    "maxSelections": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "description"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
