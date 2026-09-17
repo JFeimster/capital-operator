@@ -3,8 +3,8 @@
  * server/integrations/types.ts
  */
 
-import { LeadCapturePayload } from '../../src/types';
-import { IntakeSubmitRequest } from '../../src/types/api';
+import { LeadCapturePayload } from '../../src/types.js';
+import { IntakeSubmitRequest } from '../../src/types/api.js';
 
 export type UnifiedLeadInput = LeadCapturePayload | IntakeSubmitRequest;
 
