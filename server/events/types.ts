@@ -3,4 +3,4 @@
  * server/events/types.ts
  */
 
-export * from '../../src/types/events';
+export * from '../../src/types/events.js';
