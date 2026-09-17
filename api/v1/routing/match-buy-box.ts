@@ -72,7 +72,7 @@ export function evaluateBuyBoxMatches(req: BuyBoxMatchRequest): BuyBoxMatchResul
     if (fitSignals.length >= 2 && reviewFlags.length === 0) matchTier = 'POTENTIAL_FIT';
     else if (fitSignals.length > 0) matchTier = 'REVIEW';
 
-    return {
+    const result: BuyBoxMatchResult = {
       route_id: route.route_id,
       program_type: route.program_type,
       match_tier: matchTier,
@@ -80,8 +80,14 @@ export function evaluateBuyBoxMatches(req: BuyBoxMatchRequest): BuyBoxMatchResul
       review_flags: reviewFlags,
       human_review_required: true
     };
+
+    return result;
   }).sort((a, b) => {
-    const weight = { POTENTIAL_FIT: 2, REVIEW: 1, NOT_INDICATED: 0 } as const;
+    const weight: Record<BuyBoxMatchResult['match_tier'], number> = {
+      POTENTIAL_FIT: 2,
+      REVIEW: 1,
+      NOT_INDICATED: 0
+    };
     return weight[b.match_tier] - weight[a.match_tier];
   });
 }
