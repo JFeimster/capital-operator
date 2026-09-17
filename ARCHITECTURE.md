@@ -2,64 +2,119 @@
 
 ## 1. Architectural Philosophy
 
-Capital Operator adheres to four core operational principles:
+Capital Operator follows four operating rules:
 
-1. **Automate movement before judgment.** Repetitive administrative tasks (chasing bank statements, file renaming, pipeline notifications) should never consume dealmaker bandwidth.
-2. **Rules before autonomous agents.** Deterministic logic and rigid lender criteria matrices must precede non-deterministic AI generation.
-3. **One source of truth per domain.** One primary CRM for pipeline state, one secure cloud vault for borrower records, and one master lender matrix.
-4. **Human checkpoints follow consequence.** Wherever a decision impacts borrower rate, credit exposure, or lender confidence, human review is mandatory.
+1. **Systems handle repetition.** Deterministic software owns validation, schemas, calculations, mappings, workflow state, and explicit routing rules.
+2. **AI handles synthesis.** AI may summarize, classify, explain, recommend, and assist operators after deterministic logic.
+3. **Humans handle judgment.** Consequential capital representations, exceptions, eligibility judgments, negotiations, and lender decisions remain human-controlled.
+4. **Capital partners handle capital.** Capital Operator orchestrates infrastructure; it does not pretend software itself is the capital provider.
+
+One canonical source should own each domain. Do not create parallel scoring, routing, or configuration systems.
 
 ---
 
-## 2. Component Hierarchy & Flow
+## 2. Runtime Architecture
 
 ```text
-[ User Land / Landing View ]
-       │
-       ├── Situational Selection (AudienceCards)
-       └── Direct Diagnostic Entry (AssessmentIntro)
-       │
-       ▼
-[ 12-Step Diagnostic Questionnaire ] (AssessmentStep)
-       │
-       ├── State managed in React + localStorage
-       ├── Keyboard shortcut listeners (1-9, Enter)
-       │
-       ▼
-[ Deterministic Recommendation Engine ] (src/lib/recommendationEngine.ts)
-       │
-       ├── Calculate Operating Model (Relationship-Led -> Capital Operator)
-       ├── Compute 8-Stage Priority (FIX NOW / BUILD NEXT / WORKING WELL / LATER)
-       ├── Identify Manual Automation Leaks & Business Cost
-       ├── Detect Relationship Equity Leaks (for Referrers)
-       └── Synthesize 30-Day Phased Roadmap
-       │
-       ▼
-[ Results View (ResultsView.tsx) ]
-       │
-       ├── Operating Model Classification & Next Unlock
-       ├── Executive Summary & Highest-Leverage Move
-       ├── Segment-Specific Custom Pathway
-       ├── Expandable 8-Stage Operating Model Cards
-       ├── Capital Architecture Map (CapitalArchitectureMap.tsx)
-       ├── Automation Leaks Section
-       ├── Relationship Leakage Alert (Conditional)
-       ├── Phased Roadmap (First 7 Days, Next 30 Days, Later)
-       ├── Lead Capture Modal (LeadCaptureModal.tsx)
-       └── Partner Ecosystem Conversion Rail (Moonshine Capital)
-       │
-       ▼
-[ Clean Executive Print Layout ] (PrintView.tsx)
+Browser
+→ React/Vite Capital Operator frontend
+→ Vercel serverless API / orchestration layer
+→ integration adapters / event layer
+→ CRM / database / automation / AI / capital ecosystem
 ```
+
+### Frontend
+
+- React + TypeScript + Vite
+- diagnostic and blueprint workflow
+- localStorage resilience for client-side diagnostic state
+- provider-agnostic lead dispatch boundary
+- zero private credentials in client configuration
+
+### Server/API
+
+- `/api/v1/health` — runtime/capability health
+- `/api/v1/intake/submit` — validated intake + workflow classification + adapter dispatch
+- `/api/v1/routing/match-buy-box` — **SANDBOX** capability routing requiring human review
+- `/api/v1/webhooks/test` — signed webhook delivery sandbox
+- `/api/lead` — backwards-compatible lead dispatch endpoint
+
+The routing endpoint does not constitute a verified live lender network, lender approval engine, or autonomous underwriting system.
+
+### Integration Layer
+
+Normalized server adapters exist for:
+
+- HubSpot
+- Notion
+- n8n
+- generic outbound webhook
+
+Each adapter is fault-isolated. Missing credentials disable/degrade only that integration. If no provider accepts a payload, the platform reports degraded state and does not claim durable buffering or persistence.
+
+### Event Layer
+
+Canonical events use the `CapitalEvent` envelope:
+
+- unique event ID
+- version
+- ISO timestamp
+- typed payload
+- optional request/environment/partner context
+
+Initial lifecycle vocabulary includes diagnostic, blueprint, lead, routing, integration, and webhook events. Future deal/submission/offer/funding event names do not imply that those later operational systems are already implemented.
 
 ---
 
-## 3. Data & Storage Contracts
+## 3. Client State
 
-The diagnostic does not require an authenticated cloud database to provide value to the operator. All state persists across sessions via client-side `localStorage` keys:
-- `capital_operator_answers`: Complete answers array
-- `capital_operator_step`: Current step index (1-12)
-- `capital_operator_is_assessing`: Active diagnostic state flag
-- `capital_operator_blueprint`: Generated specification object
+The diagnostic can operate without authenticated cloud persistence. Client state may persist through localStorage keys such as:
 
-When lead capture occurs, the payload is dispatched via `src/config/integrations.ts` to configurable endpoints (Tally, Make.com, or custom webhook).
+- `capital_operator_answers`
+- `capital_operator_step`
+- `capital_operator_is_assessing`
+- `capital_operator_blueprint`
+
+Client persistence is not a substitute for later authenticated operational deal storage.
+
+---
+
+## 4. Deployment Roles
+
+### Vercel
+
+Canonical serverless runtime for `/api/*` and production-capable application deployment.
+
+`vercel.json` keeps `main` deployment enabled and isolates `/api/*` from SPA rewrites.
+
+### GitHub Pages
+
+Static public mirror/fallback for the frontend where intentionally supported. GitHub Pages cannot provide the serverless API runtime.
+
+---
+
+## 5. Security Boundary
+
+- private credentials are server-side only
+- no private API keys in `VITE_*`
+- externally supplied payloads are validated
+- client-computed financial values are not trusted for consequential server operations
+- failed provider dispatch is never represented as successful persistence
+- CORS uses either public non-credentialed wildcard access or an explicit credentialed origin allowlist, never both simultaneously
+
+---
+
+## 6. Current Capability Status
+
+- diagnostic — **LIVE**
+- blueprint — **LIVE**
+- health API — **LIVE**
+- intake API — **LIVE**
+- event envelope/event bus foundation — **LIVE**
+- HMAC webhook signing/verification foundation — **LIVE**
+- webhook test endpoint — **SANDBOX**
+- capital routing endpoint — **SANDBOX**
+- external integration adapters — **BETA** when configured, otherwise **SPECIFIED**
+- production MCP — **PLANNED, Phase 2 / Batch B**
+- document intelligence/OCR — **PLANNED**
+- authenticated capital clearing/deal operations — **PLANNED, Phase 5 / Batch C**
