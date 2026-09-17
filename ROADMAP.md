@@ -56,9 +56,9 @@ Status: **BETA / implemented on production**
 ## Batch C — Distribution + Transactional Platform
 
 ### Phase 4 — Engineering-as-Marketing + SEO/AEO
-Status: **PLANNED**
+Status: **C1 implemented; C2 SEO/AEO knowledge work remains planned**
 
-- useful public calculators/builders/audits
+- C1: seven shared-architecture public calculators/builders/audits with deterministic calculations, capability/ecosystem routing, optional context-preserving handoff, metadata, and analytics
 - entity/knowledge pages
 - schema, sitemap, internal linking, `llms.txt`
 - acquisition and assisted-conversion analytics

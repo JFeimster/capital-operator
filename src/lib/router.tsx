@@ -6,6 +6,8 @@ import { ForOperators } from '../pages/ForOperators';
 import { ForPlatforms } from '../pages/ForPlatforms';
 import { ForPartners } from '../pages/ForPartners';
 import { CapitalStack } from '../pages/CapitalStack';
+import { PublicToolPage } from '../components/tools/PublicToolPage';
+import { PUBLIC_TOOLS, type PublicToolId } from '../config/publicTools';
 import { Assessment } from '../pages/Assessment';
 import { Blueprint } from '../pages/Blueprint';
 import { Tools } from '../pages/Tools';
@@ -46,7 +48,7 @@ export const AppRouter: React.FC<RouterProps> = ({
   onRestart,
   onStartAssessment
 }) => {
-  const cleanRoute = currentRoute.replace(/^#\/?/, '').split('?')[0].split('/')[0].toLowerCase();
+  const cleanRoute = currentRoute.replace(/^#?\/?/, '').split('?')[0].split('/')[0].toLowerCase();
 
   switch (cleanRoute) {
     case '':
@@ -70,6 +72,15 @@ export const AppRouter: React.FC<RouterProps> = ({
 
     case 'capital-stack':
       return <CapitalStack />;
+
+    case 'capital-stack-builder':
+    case 'capital-ops-calculator':
+    case 'capital-workflow-builder':
+    case 'capital-tech-stack':
+    case 'capital-readiness-audit':
+    case 'embedded-capital-calculator':
+    case 'referral-revenue-calculator':
+      return <PublicToolPage tool={PUBLIC_TOOLS[cleanRoute as PublicToolId]} />;
 
     case 'assessment':
       return (

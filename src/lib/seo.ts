@@ -25,4 +25,22 @@ export function updateDocumentSEO(seo: PageSEO) {
 
   let ogDesc = document.querySelector('meta[property="og:description"]');
   if (ogDesc) ogDesc.setAttribute('content', seo.description);
+
+  const canonicalPath = seo.canonical || window.location.pathname;
+  const canonicalUrl = new URL(canonicalPath, SITE_CONFIG.url).toString();
+  let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    document.head.appendChild(canonical);
+  }
+  canonical.href = canonicalUrl;
+
+  let ogUrl = document.querySelector('meta[property="og:url"]');
+  if (!ogUrl) {
+    ogUrl = document.createElement('meta');
+    ogUrl.setAttribute('property', 'og:url');
+    document.head.appendChild(ogUrl);
+  }
+  ogUrl.setAttribute('content', canonicalUrl);
 }

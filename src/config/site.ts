@@ -10,7 +10,7 @@ export const SITE_CONFIG = {
   tagline: 'Turn fragmented borrower demand into an institutional operating system.',
   description:
     'A high-conviction capital infrastructure diagnostic and blueprint engine for commercial loan brokers, fractional CFOs, debt advisors, and fintech operators.',
-  url: 'https://jfeimster.github.io/capital-operator/',
+  url: 'https://capital-operator.vercel.app/',
   author: 'Moonshine Capital',
   company: 'Moonshine Capital Partners',
   distilledFundingUrl: 'https://www.distilledfunding.com',

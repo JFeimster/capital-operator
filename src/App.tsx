@@ -65,12 +65,20 @@ export default function App() {
     }
   });
 
-  const [currentRoute, setCurrentRoute] = useState<string>(() => window.location.hash || '#home');
+  const activeLocation = () => {
+    if (window.location.hash) return window.location.hash;
+    const base = import.meta.env.BASE_URL;
+    const pathname = window.location.pathname.startsWith(base)
+      ? `/${window.location.pathname.slice(base.length)}`
+      : window.location.pathname;
+    return pathname === '/' ? '#home' : pathname;
+  };
+  const [currentRoute, setCurrentRoute] = useState<string>(activeLocation);
 
   useEffect(() => {
     captureAttribution();
     const onHashChange = () => {
-      setCurrentRoute(window.location.hash || '#home');
+      setCurrentRoute(activeLocation());
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);

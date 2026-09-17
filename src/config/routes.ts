@@ -10,6 +10,16 @@ export interface AppRoute {
   isExternal?: boolean;
 }
 
+export const PUBLIC_TOOL_ROUTES: AppRoute[] = [
+  { path: '/capital-stack-builder', name: 'Capital Stack Builder', description: 'Plan potential capital-structure categories with explicit human review.' },
+  { path: '/capital-ops-calculator', name: 'Capital Ops Calculator', description: 'Model operational leakage and capacity scenarios.' },
+  { path: '/capital-workflow-builder', name: 'Capital Workflow Builder', description: 'Map a current workflow against eight canonical operating stages.' },
+  { path: '/capital-tech-stack', name: 'Capital Tech Stack', description: 'Build a capability-led capital operations stack.' },
+  { path: '/capital-readiness-audit', name: 'Capital Readiness Audit', description: 'Assess operational readiness without credit or approval semantics.' },
+  { path: '/embedded-capital-calculator', name: 'Embedded Capital Calculator', description: 'Model a capital capability for a partner or platform audience.' },
+  { path: '/referral-revenue-calculator', name: 'Referral Revenue Calculator', description: 'Model referral scenarios with explicit assumptions.' }
+];
+
 export const APP_ROUTES: Record<string, AppRoute> = {
   home: {
     path: '/',

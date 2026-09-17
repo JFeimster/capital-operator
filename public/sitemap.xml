@@ -1,69 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <loc>https://capital-operator.vercel.app/</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#how-it-works</loc>
+    <loc>https://capital-operator.vercel.app/#how-it-works</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#for-advisors</loc>
+    <loc>https://capital-operator.vercel.app/#for-advisors</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#for-operators</loc>
+    <loc>https://capital-operator.vercel.app/#for-operators</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#for-platforms</loc>
+    <loc>https://capital-operator.vercel.app/#for-platforms</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#for-partners</loc>
+    <loc>https://capital-operator.vercel.app/#for-partners</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#capital-stack</loc>
+    <loc>https://capital-operator.vercel.app/#capital-stack</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#assessment</loc>
+    <loc>https://capital-operator.vercel.app/#assessment</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#tools</loc>
+    <loc>https://capital-operator.vercel.app/#tools</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#resources</loc>
+    <loc>https://capital-operator.vercel.app/#resources</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://capitaloperator.distilledfunding.com/#about</loc>
+    <loc>https://capital-operator.vercel.app/#about</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url><loc>https://capital-operator.vercel.app/capital-stack-builder</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/capital-ops-calculator</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/capital-workflow-builder</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/capital-tech-stack</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/capital-readiness-audit</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/embedded-capital-calculator</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/referral-revenue-calculator</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
 </urlset>

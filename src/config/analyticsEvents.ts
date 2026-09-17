@@ -41,7 +41,15 @@ export const ANALYTICS_EVENTS = {
   INTEGRATION_DISPATCHED: 'integration_dispatched',
   INTEGRATION_FAILED: 'integration_failed',
   WEBHOOK_DISPATCHED: 'webhook_dispatched',
-  WEBHOOK_FAILED: 'webhook_failed'
+  WEBHOOK_FAILED: 'webhook_failed',
+  PUBLIC_TOOL_VIEWED: 'public_tool_viewed',
+  PUBLIC_TOOL_STARTED: 'public_tool_started',
+  PUBLIC_TOOL_COMPLETED: 'public_tool_completed',
+  PUBLIC_TOOL_RESULT_GENERATED: 'public_tool_result_generated',
+  PUBLIC_TOOL_CTA_CLICKED: 'public_tool_cta_clicked',
+  PUBLIC_TOOL_SHARED: 'public_tool_shared',
+  PUBLIC_TOOL_LEAD_HANDOFF_STARTED: 'public_tool_lead_handoff_started',
+  PUBLIC_TOOL_LEAD_HANDOFF_COMPLETED: 'public_tool_lead_handoff_completed'
 } as const;
 
 export type AnalyticsEventName = typeof ANALYTICS_EVENTS[keyof typeof ANALYTICS_EVENTS];
