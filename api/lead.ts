@@ -2,13 +2,13 @@
  * Capital Operator — Vercel Serverless Lead Integration Endpoint
  * api/lead.ts
  *
- * Handles secure server-side lead ingestion, validation, and multi-destination dispatch.
- * Normalized behind the server integration adapter and event bus layer.
+ * Backwards-compatible lead ingestion boundary using normalized adapters.
  */
 
-import { LeadCapturePayload } from '../src/types';
-import { dispatchToIntegrations } from '../server/integrations/dispatch';
-import { serverEventBus } from '../server/events/eventBus';
+import { LeadCapturePayload } from '../src/types.js';
+import { dispatchToIntegrations } from '../server/integrations/dispatch.js';
+import { serverEventBus } from '../server/events/eventBus.js';
+import { applyCors } from '../server/http/cors.js';
 
 interface LeadRequestBody extends LeadCapturePayload {
   attribution?: {
@@ -29,70 +29,42 @@ interface LeadRequestBody extends LeadCapturePayload {
 }
 
 export default async function handler(req: any, res: any) {
-  // CORS configuration for serverless deployment
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  applyCors(req, res, ['POST', 'OPTIONS']);
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method !== 'POST') {
-    return res.status(405).json({
-      success: false,
-      error: 'Method Not Allowed. Expected POST.'
-    });
+    return res.status(405).json({ success: false, error: 'Method Not Allowed. Expected POST.' });
   }
 
   try {
     const rawBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const body: LeadRequestBody = rawBody || {};
-
-    // 1. Validation
     const { firstName, email, company, role, operatingModel, attribution } = body;
 
     if (!email || !email.includes('@')) {
-      return res.status(400).json({
-        success: false,
-        error: 'A valid email address is required.'
-      });
+      return res.status(400).json({ success: false, error: 'A valid email address is required.' });
     }
 
     if (!firstName || !company) {
-      return res.status(400).json({
-        success: false,
-        error: 'First name and company are required.'
-      });
+      return res.status(400).json({ success: false, error: 'First name and company are required.' });
     }
 
-    // 2. Emit lifecycle event
-    await serverEventBus.emit('lead.submitted', {
-      email,
-      firstName,
-      company,
-      role,
-      operatingModel,
-      attribution
-    });
+    await serverEventBus.emit('lead.submitted', { email, firstName, company, role, operatingModel, attribution });
 
-    // 3. Multi-destination normalized dispatch
     const dispatchSummary = await dispatchToIntegrations(body, {
       partner_id: attribution?.partner_id || attribution?.ref || '',
       utm_source: attribution?.utm_source || '',
       assessment_segment: attribution?.assessment_segment || ''
     });
 
-    // 4. Emit dispatch status event
-    if (dispatchSummary.hasFailures) {
+    if (dispatchSummary.degraded || dispatchSummary.hasFailures) {
       await serverEventBus.emit('integration.failed', {
         email,
         company,
-        errors: dispatchSummary.errors
+        errors: dispatchSummary.errors,
+        dispatchedTo: dispatchSummary.dispatchedTo,
+        persistedExternally: dispatchSummary.persistedExternally
       });
     } else {
       await serverEventBus.emit('integration.dispatched', {
@@ -100,20 +72,26 @@ export default async function handler(req: any, res: any) {
         company,
         dispatchedTo: dispatchSummary.dispatchedTo
       });
+      await serverEventBus.emit('lead.routed', {
+        email,
+        company,
+        destinations: dispatchSummary.dispatchedTo
+      });
     }
 
     return res.status(200).json({
       success: true,
-      message: 'Lead registered and processed successfully.',
+      message: dispatchSummary.degraded
+        ? 'Lead accepted, but no external integration confirmed durable persistence.'
+        : 'Lead accepted and dispatched successfully.',
       dispatchedTo: dispatchSummary.dispatchedTo,
-      errors: dispatchSummary.errors,
+      persistedExternally: dispatchSummary.persistedExternally,
+      degraded: dispatchSummary.degraded,
+      warnings: dispatchSummary.errors,
       timestamp: new Date().toISOString()
     });
   } catch (err: any) {
     console.error('[API:Lead] Internal Error:', err);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal processing error while saving lead.'
-    });
+    return res.status(500).json({ success: false, error: 'Internal processing error while handling lead.' });
   }
 }
