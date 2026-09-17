@@ -3,11 +3,11 @@
  * server/integrations/registry.ts
  */
 
-import { IntegrationAdapter } from './types';
-import { HubSpotAdapter } from './hubspot';
-import { NotionAdapter } from './notion';
-import { N8nAdapter } from './n8n';
-import { GenericWebhookAdapter } from './webhook';
+import { IntegrationAdapter } from './types.js';
+import { HubSpotAdapter } from './hubspot.js';
+import { NotionAdapter } from './notion.js';
+import { N8nAdapter } from './n8n.js';
+import { GenericWebhookAdapter } from './webhook.js';
 
 class AdapterRegistry {
   private adapters: Map<string, IntegrationAdapter> = new Map();
