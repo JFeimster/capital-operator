@@ -11,6 +11,7 @@ import { serverEventBus } from '../../../server/events/eventBus.js';
 import { applyCors } from '../../../server/http/cors.js';
 
 import { evaluateCapitalRoutes } from '../../../src/lib/capitalRouting.js';
+export { evaluateCapitalRoutes as evaluateBuyBoxMatches } from '../../../src/lib/capitalRouting.js';
 
 export default async function handler(req: any, res: any) {
   applyCors(req, res, ['POST', 'OPTIONS']);
