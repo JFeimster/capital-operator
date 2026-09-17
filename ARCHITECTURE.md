@@ -19,8 +19,11 @@ One canonical source should own each domain. Do not create parallel scoring, rou
 Browser
 → React/Vite Capital Operator frontend
 → Vercel serverless API / orchestration layer
-→ integration adapters / event layer
-→ CRM / database / automation / AI / capital ecosystem
+→ deterministic engines + integration/event layer
+→ MCP / bounded AI-assistance layer
+→ capability + ecosystem router
+→ CRM / database / automation / external capital ecosystem
+→ human/operator review
 ```
 
 ### Frontend
@@ -115,6 +118,19 @@ Static public mirror/fallback for the frontend where intentionally supported. Gi
 - webhook test endpoint — **SANDBOX**
 - capital routing endpoint — **SANDBOX**
 - external integration adapters — **BETA** when configured, otherwise **SPECIFIED**
-- production MCP — **PLANNED, Phase 2 / Batch B**
-- document intelligence/OCR — **PLANNED**
+- production MCP — **BETA**, with LIVE deterministic tools and SANDBOX route matching
+- Skills / operator-assistance agents — **BETA**
+- ecosystem capability registry/router/UI — **BETA**
+- document intelligence contracts/normalization — **SPECIFIED foundation**; paid OCR providers remain SPECIFIED
 - authenticated capital clearing/deal operations — **PLANNED, Phase 5 / Batch C**
+
+
+---
+
+## 7. Batch B Intelligence Layer
+
+The MCP server at `/api/mcp` exposes canonical deterministic logic through stateless HTTP JSON-RPC. Skills and agents are bounded contracts layered above those tools; they do not own separate scoring, routing, or lender logic.
+
+## 8. Ecosystem Control Plane
+
+`src/config/capabilities.ts` and `src/config/ecosystem.ts` are the canonical control-plane registries. `src/lib/capabilityMatcher.ts` and `src/lib/ecosystemRouter.ts` turn diagnosed gaps into structured handoffs, fallbacks, and human checkpoints.
