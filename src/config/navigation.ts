@@ -17,12 +17,10 @@ export interface NavSection {
 }
 
 export const MAIN_NAV: NavItem[] = [
-  { title: 'Diagnostic', href: '#assessment', badge: '12 Qs' },
   { title: 'How It Works', href: '#how-it-works' },
   { title: 'Capital Stack', href: '#capital-stack' },
   { title: 'Tools & Infra', href: '#tools' },
   { title: 'Resources', href: '#resources' },
-  { title: 'Docs & API', href: '#docs', badge: 'API' },
   { title: 'Methodology', href: '#methodology' }
 ];
 

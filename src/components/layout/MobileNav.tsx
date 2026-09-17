@@ -84,6 +84,13 @@ export const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
         >
           {HEADER_ACTIONS.primaryCTA.title}
         </CTAButton>
+        <a
+          href={HEADER_ACTIONS.secondaryCTA.href}
+          onClick={onClose}
+          className="block w-full text-center py-2.5 px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:bg-slate-800/60 transition-colors"
+        >
+          {HEADER_ACTIONS.secondaryCTA.title}
+        </a>
       </div>
     </div>
   );
