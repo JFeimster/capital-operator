@@ -9,6 +9,7 @@ import { integrationRegistry } from './registry';
 /**
  * Dispatches unified lead payloads across all configured server adapters.
  * Guarantees fault isolation: one adapter failing never prevents other adapters from executing.
+ * This function does not claim persistence unless an adapter reports SUCCESS.
  */
 export async function dispatchToIntegrations(
   payload: UnifiedLeadInput,
@@ -21,8 +22,7 @@ export async function dispatchToIntegrations(
 
   const executionPromises = adapters.map(async (adapter) => {
     try {
-      const result = await adapter.dispatch(payload, context);
-      return result;
+      return await adapter.dispatch(payload, context);
     } catch (err: any) {
       return {
         provider: adapter.id,
@@ -39,22 +39,24 @@ export async function dispatchToIntegrations(
     results.push(result);
     if (result.status === 'SUCCESS') {
       dispatchedTo.push(result.provider);
-    } else if (result.status === 'FAILED') {
-      if (result.error) {
-        errors.push(`${result.provider}: ${result.error}`);
-      }
+    } else if (result.status === 'FAILED' && result.error) {
+      errors.push(`${result.provider}: ${result.error}`);
     }
   }
 
-  // If no external providers were active, record buffer fallback
-  if (dispatchedTo.length === 0) {
-    dispatchedTo.push('serverless_buffer');
+  const persistedExternally = dispatchedTo.length > 0;
+  const degraded = !persistedExternally;
+
+  if (degraded && errors.length === 0) {
+    errors.push('No external integration accepted or persisted this payload. Core intake completed, but durable external persistence is unavailable.');
   }
 
   return {
     dispatchedTo,
     results,
-    hasFailures: errors.length > 0,
+    hasFailures: results.some(result => result.status === 'FAILED'),
+    degraded,
+    persistedExternally,
     errors: errors.length > 0 ? errors : undefined
   };
 }
