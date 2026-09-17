@@ -40,13 +40,11 @@ export const Assessment: React.FC<AssessmentPageProps> = ({
       <Section>
         <Container size="md">
           <AssessmentStep
-            step={currentStep}
-            totalSteps={QUESTIONS.length}
+            currentStep={currentStep}
             answers={answers}
             onUpdateAnswer={onUpdateAnswer}
             onNext={onNext}
             onBack={onBack}
-            onSelectSituation={onSelectSituation}
           />
         </Container>
       </Section>

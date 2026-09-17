@@ -19,7 +19,13 @@ export type AnalyticsEventType =
   | 'ecosystem_product_clicked'
   | 'blueprint_printed'
   | 'blueprint_copied'
-  | 'assessment_restarted';
+  | 'assessment_restarted'
+  | 'page_view'
+  | 'cta_action'
+  | 'marketing_cta_click'
+  | 'section_view'
+  | 'integration_viewed'
+  | 'embed_copied';
 
 export function trackEvent(eventType: AnalyticsEventType, properties?: Record<string, unknown>): void {
   // In development, log to console

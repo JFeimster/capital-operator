@@ -3,6 +3,7 @@ import { Badge } from './Badge';
 
 export interface SectionHeadingProps {
   badge?: string;
+  tag?: string;
   badgeVariant?: 'emerald' | 'cyan' | 'amber' | 'slate' | 'rose';
   title: string;
   subtitle?: string;
@@ -12,21 +13,24 @@ export interface SectionHeadingProps {
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
   badge,
+  tag,
   badgeVariant = 'emerald',
   title,
   subtitle,
   align = 'center',
   className = ''
 }) => {
+  const displayBadge = badge || tag;
+
   return (
     <div
       className={`max-w-3xl mb-12 ${
         align === 'center' ? 'mx-auto text-center' : 'text-left'
       } ${className}`}
     >
-      {badge && (
+      {displayBadge && (
         <div className="mb-4">
-          <Badge variant={badgeVariant}>{badge}</Badge>
+          <Badge variant={badgeVariant}>{displayBadge}</Badge>
         </div>
       )}
       <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-4">

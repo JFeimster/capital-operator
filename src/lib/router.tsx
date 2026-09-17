@@ -10,6 +10,7 @@ import { Assessment } from '../pages/Assessment';
 import { Blueprint } from '../pages/Blueprint';
 import { Tools } from '../pages/Tools';
 import { Resources } from '../pages/Resources';
+import { Docs } from '../pages/Docs';
 import { About } from '../pages/About';
 import { Methodology } from '../pages/Methodology';
 import { PrivacyPolicy } from '../pages/PrivacyPolicy';
@@ -96,6 +97,10 @@ export const AppRouter: React.FC<RouterProps> = ({
 
     case 'resources':
       return <Resources />;
+
+    case 'docs':
+    case 'api':
+      return <Docs />;
 
     case 'about':
       return <About />;

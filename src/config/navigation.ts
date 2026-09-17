@@ -22,6 +22,7 @@ export const MAIN_NAV: NavItem[] = [
   { title: 'Capital Stack', href: '#capital-stack' },
   { title: 'Tools & Infra', href: '#tools' },
   { title: 'Resources', href: '#resources' },
+  { title: 'Docs & API', href: '#docs', badge: 'API' },
   { title: 'Methodology', href: '#methodology' }
 ];
 
@@ -38,7 +39,7 @@ export const HEADER_ACTIONS = {
     href: '#assessment'
   },
   secondaryCTA: {
-    title: 'View Stack',
-    href: '#capital-stack'
+    title: 'Docs & API',
+    href: '#docs'
   }
 };

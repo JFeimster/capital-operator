@@ -70,6 +70,11 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
     description: 'Downloadable templates, underwriting checklists, term sheet comparison frameworks, and diagnostic guides.',
     keywords: ['loan broker templates', 'debt checklist', 'term sheet comparison']
   },
+  docs: {
+    title: 'Developer Documentation, REST API & Embeds — Capital Operator',
+    description: 'Technical specifications, REST API endpoints, webhooks, Tally form embeds, widget SDKs, and Model Context Protocol (MCP) integrations.',
+    keywords: ['lending api', 'commercial loan webhooks', 'tally embeds', 'mcp tools', 'capital operator api']
+  },
   about: {
     title: 'About Capital Operator — Moonshine Capital',
     description: 'The operator-led philosophy behind high-conviction commercial debt syndication and automated underwriting.',

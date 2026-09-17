@@ -21,7 +21,7 @@ export const AssessmentPreview: React.FC = () => {
             <span className="font-mono text-emerald-400 font-bold">
               {idx < 9 ? `0${idx + 1}` : idx + 1}.
             </span>
-            <span className="truncate">{q.title}</span>
+            <span className="truncate">{q.question}</span>
           </div>
         ))}
       </div>

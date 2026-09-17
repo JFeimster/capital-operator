@@ -38,6 +38,7 @@ export const FOOTER_SECTIONS: FooterLinkGroup[] = [
     links: [
       { label: 'Underwriting Tools Directory', href: '#tools' },
       { label: 'Operator Playbooks & Resources', href: '#resources' },
+      { label: 'Developer Docs & REST API', href: '#docs', badge: 'API' },
       { label: 'Distilled Funding', href: 'https://www.distilledfunding.com', isExternal: true },
       { label: 'Operator Underwriting Suite', href: 'https://tools.distilledfunding.com', isExternal: true }
     ]

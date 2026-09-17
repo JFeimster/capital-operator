@@ -4,7 +4,7 @@ import { Section } from '../components/layout/Section';
 import { SEOHead } from '../components/site/SEOHead';
 import { SEO_CONFIG } from '../config/seo';
 import { Breadcrumbs } from '../components/site/Breadcrumbs';
-import { ResourceGrid } from '../components/resources/ResourceGrid';
+import { ResourceCenterFull } from '../components/resources/ResourceCenterFull';
 import { CTAButton } from '../components/site/CTAButton';
 
 export const Resources: React.FC = () => {
@@ -19,10 +19,10 @@ export const Resources: React.FC = () => {
               OPERATIONAL PLAYBOOKS & TEMPLATES
             </span>
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Borrower Checklists, Credit Memos & Models
+              Borrower Checklists, Credit Memos & Calculators
             </h1>
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-              Standardized templates to upgrade your underwriting packaging, prevent document delays, and structure credit requests.
+              Standardized templates, interactive DSCR & term sheet calculators, credit memo specifications, and syndication schemas to eliminate friction in debt placement.
             </p>
           </div>
         </Container>
@@ -30,7 +30,7 @@ export const Resources: React.FC = () => {
 
       <Section>
         <Container>
-          <ResourceGrid />
+          <ResourceCenterFull />
 
           <div className="mt-16 text-center">
             <CTAButton href="#assessment" size="lg">
