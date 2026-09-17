@@ -1,23 +1,24 @@
 # Webhook Architecture: Capital Operator
 
-## Webhook Dispatch Model
-Capital Operator emits asynchronous lifecycle events to registered consumer URLs (CRMs, Zapier, n8n, internal microservices). All events follow the canonical `CapitalEvent` envelope with cryptographic HMAC-SHA256 signatures.
+## Status
+
+The canonical event envelope, HMAC-SHA256 signing/verification foundation, and webhook delivery dispatcher are implemented. The public webhook test endpoint is **SANDBOX**. Durable queue/retry infrastructure is **not** implemented and must not be implied.
 
 ---
 
 ## Canonical Event Envelope
+
 ```json
 {
   "id": "evt_9f82a1b74c0e",
-  "type": "deal.submitted",
+  "type": "lead.submitted",
   "version": "1.0.0",
   "timestamp": "2026-09-17T14:00:00.000Z",
   "payload": {
-    "deal_id": "deal_984fbc71a92e",
+    "submission_id": "intake_984fbc71a92e",
     "business_name": "Apex Logistics LLC",
     "annual_revenue": 3200000,
-    "avg_monthly_deposits": 265000,
-    "triage_score": 92
+    "workflow_priority": "HUMAN_REVIEW"
   },
   "context": {
     "source": "capital-operator-server",
@@ -29,88 +30,80 @@ Capital Operator emits asynchronous lifecycle events to registered consumer URLs
 
 ---
 
-## Complete Event Lifecycle Catalog
-| Event Name | Lifecycle Stage | Status | Primary Payload Entities |
-| :--- | :--- | :--- | :--- |
-| `assessment.completed` | Diagnostic | **LIVE** | `answers`, `operating_model`, `readiness_score` |
-| `blueprint.generated` | Diagnostic | **LIVE** | `model_type`, `priority_matrix`, `roadmap_30d` |
-| `lead.submitted` | Intake / CRM | **LIVE** | `email`, `firstName`, `company`, `role` |
-| `lead.routed` | Intake / Routing | **LIVE** | `deal_id`, `partner_id`, `segment` |
-| `deal.submitted` | Pipeline | **LIVE** | `deal_id`, `business_name`, `annual_revenue` |
-| `deal.qualified` | Underwriting | **LIVE** | `deal_id`, `triage_score`, `max_credit_limit` |
-| `routing.completed` | Buy-Box Routing | **LIVE** | `requested_amount`, `qualified_count`, `top_match` |
-| `lender.matched` | Syndication | **LIVE** | `deal_id`, `matched_fund_ids`, `program_types` |
-| `documents.received` | Document Intake | **SPECIFIED** | `deal_id`, `file_keys`, `document_types` |
-| `documents.extracted` | OCR Extraction | **SPECIFIED** | `deal_id`, `cash_flow_summary`, `nsf_count` |
-| `capital_case.generated`| Credit Memo | **SPECIFIED** | `deal_id`, `executive_summary`, `risk_rating` |
-| `submission.created` | Syndication | **SPECIFIED** | `deal_id`, `lender_id`, `submission_package_url`|
-| `termsheet.issued` | Term Sheet | **SPECIFIED** | `deal_id`, `facility_amount`, `interest_rate` |
-| `offer.received` | Offer Desk | **SPECIFIED** | `deal_id`, `lender_name`, `rate_apr`, `term_mos` |
-| `deal.funded` | Closing | **SPECIFIED** | `deal_id`, `funded_amount`, `commission_split` |
-| `facility.funded` | Settlement | **SPECIFIED** | `deal_id`, `wire_reference`, `effective_date` |
-| `relationship.followup_due` | Post-Funding | **SPECIFIED**| `deal_id`, `borrower_email`, `trigger_milestone`|
-| `integration.dispatched` | Infrastructure | **LIVE** | `provider`, `email`, `dispatchedTo` |
-| `integration.failed` | Infrastructure | **LIVE** | `provider`, `email`, `errors` |
-| `webhook.dispatched` | Infrastructure | **LIVE** | `delivery_id`, `event_id`, `target_url` |
-| `webhook.failed` | Infrastructure | **LIVE** | `delivery_id`, `event_id`, `error_message` |
+## Event Vocabulary
+
+### Implemented foundation / active event families
+
+| Event | Status | Purpose |
+| :--- | :--- | :--- |
+| `assessment.completed` | **SUPPORTED** | Diagnostic lifecycle vocabulary. |
+| `blueprint.generated` | **SUPPORTED** | Blueprint lifecycle vocabulary. |
+| `lead.submitted` | **LIVE usage** | Intake accepted after validation. |
+| `lead.routed` | **LIVE usage** | Intake dispatched to one or more successful adapters. |
+| `routing.completed` | **SANDBOX usage** | Capital-route sandbox evaluation completed. |
+| `integration.dispatched` | **LIVE foundation** | Successful provider dispatch. |
+| `integration.failed` | **LIVE foundation** | Provider dispatch failure. |
+| `webhook.dispatched` | **LIVE foundation** | Webhook delivery succeeded. |
+| `webhook.failed` | **LIVE foundation** | Webhook delivery failed. |
+
+`SUPPORTED` means the canonical type system recognizes the event. It does not necessarily mean every frontend workflow currently emits it through the server event bus.
+
+### Expansion vocabulary
+
+The event type registry also reserves future lifecycle events such as:
+
+- `deal.created`
+- `deal.submitted`
+- `deal.qualified`
+- `documents.received`
+- `documents.extracted`
+- `capital_case.generated`
+- `lender.matched`
+- `submission.created`
+- `termsheet.issued`
+- `offer.received`
+- `deal.funded`
+- `facility.funded`
+- `relationship.followup_due`
+
+These names are **future-compatible vocabulary**, not proof that corresponding Phase 5 operational systems are live.
 
 ---
 
-## Security, Headers & HMAC-SHA256 Verification
+## Security Headers
 
-Every outbound webhook request includes three standard security headers:
-1. `X-Capital-Signature`: Contains timestamp and SHA-256 HMAC (format: `t=<timestamp>,v1=<signature>`).
-2. `X-Capital-Event`: The event type string (e.g. `deal.submitted`).
-3. `X-Capital-Delivery`: Unique delivery trace identifier (`del_...`).
+Outbound webhook requests use:
 
-### Signature Verification Implementation (Node.js / TypeScript)
+1. `X-Capital-Signature: t=<timestamp>,v1=<hmac-sha256>`
+2. `X-Capital-Event: <event-type>`
+3. `X-Capital-Delivery: del_<uuid>`
 
-```typescript
-import crypto from "crypto";
+Signature verification uses a timestamp tolerance window and timing-safe HMAC comparison.
 
-export function verifyCapitalWebhook(
-  rawBody: string,
-  signatureHeader: string,
-  secret: string,
-  toleranceSeconds: number = 300
-): { valid: boolean; reason?: string } {
-  if (!signatureHeader || !secret) {
-    return { valid: false, reason: "Missing signature or secret" };
-  }
+---
 
-  const parts = signatureHeader.split(",");
-  let timestampStr: string | undefined;
-  let signatureV1: string | undefined;
+## Delivery Semantics
 
-  for (const part of parts) {
-    const [key, value] = part.trim().split("=");
-    if (key === "t") timestampStr = value;
-    if (key === "v1") signatureV1 = value;
-  }
+Webhook delivery results are normalized as:
 
-  if (!timestampStr || !signatureV1) {
-    return { valid: false, reason: "Malformed signature header format" };
-  }
+- `DELIVERED`
+- `FAILED`
+- `RETRYING`
+- `SKIPPED`
 
-  const timestamp = parseInt(timestampStr, 10);
-  const now = Math.floor(Date.now() / 1000);
-  if (Math.abs(now - timestamp) > toleranceSeconds) {
-    return { valid: false, reason: "Timestamp outside tolerance window (replay protection)" };
-  }
+The contract is retry-ready, but current Batch A infrastructure does not claim a durable queue or persistent retry worker.
 
-  const signedPayload = `${timestamp}.${rawBody}`;
-  const hmac = crypto.createHmac("sha256", secret);
-  hmac.update(signedPayload);
-  const expectedSignature = hmac.digest("hex");
+If a provider or webhook target is unavailable:
 
-  const signatureBuffer = Buffer.from(signatureV1, "hex");
-  const expectedBuffer = Buffer.from(expectedSignature, "hex");
+- unrelated application behavior continues
+- failure is returned/logged truthfully
+- the platform does not claim successful persistence
+- no fake `serverless_buffer` is reported
 
-  if (signatureBuffer.length !== expectedBuffer.length) {
-    return { valid: false, reason: "Signature length mismatch" };
-  }
+---
 
-  const matches = crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
-  return matches ? { valid: true } : { valid: false, reason: "HMAC mismatch" };
-}
-```
+## Test Endpoint
+
+`POST /api/v1/webhooks/test` is a **SANDBOX** endpoint for validating signing and delivery behavior against a caller-supplied destination.
+
+It should not be used as evidence of production subscriber management, durable delivery guarantees, or persistent event storage.
