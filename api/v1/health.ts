@@ -3,9 +3,9 @@
  * api/v1/health.ts
  */
 
-import { HealthCheckResponse } from '../../src/types/api';
-import { integrationRegistry } from '../../server/integrations/registry';
-import { applyCors } from '../../server/http/cors';
+import { HealthCheckResponse } from '../../src/types/api.js';
+import { integrationRegistry } from '../../server/integrations/registry.js';
+import { applyCors } from '../../server/http/cors.js';
 
 const START_TIME = Date.now();
 
