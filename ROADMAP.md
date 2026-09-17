@@ -32,22 +32,24 @@ Status: **LIVE with explicitly marked SANDBOX/BETA capabilities**
 ## Batch B — Intelligence + Ecosystem Control Plane
 
 ### Phase 2 — Intelligence, Skills, Agents & MCP
-Status: **PLANNED**
+Status: **BETA / implemented on production with explicit capability-level statuses**
 
-- domain Skills using canonical deterministic logic
-- Capital Architect, Intake Analyst, Capital Case Builder, Routing Copilot
-- production MCP server and validated tool contracts
-- provider-agnostic document intelligence architecture
+- five domain Skills using canonical deterministic logic — **BETA**
+- Capital Architect, Intake Analyst, Capital Case Builder, Routing Copilot — **BETA**
+- production MCP server at `/api/mcp` with externally smoke-tested JSON-RPC tools — **BETA transport; LIVE/BETA/SANDBOX tools as documented**
+- provider-agnostic document intelligence contracts, normalization, confidence/review flags — **SPECIFIED foundation**
+- Heron/Ocrolus/Validis adapters — **SPECIFIED**, not configured
 
 **Production MCP belongs in Phase 2 / Batch B.**
 
 ### Phase 3 — Ecosystem Routing Platform
-Status: **PLANNED**
+Status: **BETA / implemented on production**
 
-- capability registry and deterministic ecosystem routing
-- workflow-stage and operating-model recommendations
-- downstream handoffs with graceful degradation
-- ecosystem analytics
+- canonical capability and ecosystem registries
+- deterministic contextual matching across operating model, segment, workflow stage, business need, capital-demand profile, manual gaps, current stack, and downstream availability
+- source-controlled ecosystem handoffs with graceful fallbacks and human checkpoints
+- ecosystem control-plane UI at `#ecosystem`
+- canonical ecosystem recommendation/match/handoff/fallback analytics
 
 ---
 
