@@ -3,7 +3,7 @@
  * src/config/workflowStages.ts
  */
 
-import { WorkflowStageDef } from '../types';
+import { WorkflowStageDef } from '../types.js';
 
 export const WORKFLOW_STAGES: WorkflowStageDef[] = [
   {
