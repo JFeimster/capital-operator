@@ -13,6 +13,11 @@ import { runIntakeApiTests } from './intakeApi.test';
 import { runRoutingApiTests } from './routingApi.test';
 import { runWebhookSigningTests } from './webhookSigning.test';
 import { runIntegrationDispatchTests } from './integrationDispatch.test';
+import { runCapitalMathTests } from './capitalMath.test';
+import { runEcosystemRoutingTests } from './ecosystemRouting.test';
+import { runDocumentNormalizationTests } from './documentNormalization.test';
+import { runMcpContractTests } from './mcpContract.test';
+import { runIntelligenceManifestTests } from './intelligenceManifests.test';
 
 async function main() {
   console.log('\n======================================================');
@@ -29,7 +34,12 @@ async function main() {
     { name: 'Intake API & Triage', fn: runIntakeApiTests },
     { name: 'Buy-Box Routing Engine', fn: runRoutingApiTests },
     { name: 'Webhook HMAC Signing & Verification', fn: runWebhookSigningTests },
-    { name: 'Integration Dispatch & Fallbacks', fn: runIntegrationDispatchTests }
+    { name: 'Integration Dispatch & Fallbacks', fn: runIntegrationDispatchTests },
+    { name: 'Deterministic Capital Math', fn: runCapitalMathTests },
+    { name: 'Ecosystem Capability Routing', fn: runEcosystemRoutingTests },
+    { name: 'Document Intelligence Normalization', fn: runDocumentNormalizationTests },
+    { name: 'MCP Contract', fn: runMcpContractTests },
+    { name: 'Skill & Agent Manifests', fn: runIntelligenceManifestTests }
   ];
 
   let passed = 0;
