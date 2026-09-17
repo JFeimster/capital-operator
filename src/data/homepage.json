@@ -1,0 +1,16 @@
+{
+  "badge": "OPERATING SYSTEM FOR COMMERCIAL DEBT",
+  "headline": "Turn Borrowing Demand Into An Operating System.",
+  "subheadline": "Evaluate your commercial debt advisory workflows across 8 operational stages. Generate an executive blueprint with prioritized automation leaks and a 30-day implementation roadmap.",
+  "metrics": [
+    { "label": "Diagnostic Matrix", "value": "12 Questions", "desc": "Holistic pipeline evaluation" },
+    { "label": "Operating Stages", "value": "8 Stages", "desc": "From intake to relationship equity" },
+    { "label": "Time to Blueprint", "value": "< 180s", "desc": "Deterministic executive scoring" },
+    { "label": "Privacy & Security", "value": "100% Client-Side", "desc": "Zero required external API keys" }
+  ],
+  "thesis": {
+    "title": "The Operator Thesis",
+    "subtitle": "Why modern commercial deal desks scale on systems, not headcount",
+    "quote": "Brokers celebrate lead volume; operators build conversion pipelines. When underwriting packets are assembled with verified financial criteria, lender turnaround drops from 18 days to 48 hours."
+  }
+}

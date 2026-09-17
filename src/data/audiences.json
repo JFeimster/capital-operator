@@ -1,0 +1,36 @@
+{
+  "audiences": [
+    {
+      "id": "advisors",
+      "name": "Fractional CFOs & Advisors",
+      "target": "Accounting firms, strategic advisors, and outsourced CFO desks",
+      "friction": "Wasting billable hours reviewing raw bank statements and deciphering lender guidelines.",
+      "solution": "Standardized financial intake and pre-packaged debt advisory packets.",
+      "route": "#for-advisors"
+    },
+    {
+      "id": "operators",
+      "name": "Commercial Loan Brokers",
+      "target": "Independent debt originators and multi-broker syndication teams",
+      "friction": "Slow deal velocity caused by disorganized email threads and lender shotgunning.",
+      "solution": "Algorithmic lender matching and automated borrower document collection.",
+      "route": "#for-operators"
+    },
+    {
+      "id": "platforms",
+      "name": "Fintechs & SaaS Platforms",
+      "target": "B2B marketplaces, vertical software, and ERP providers",
+      "friction": "High engineering cost and compliance risk of building in-house capital origination.",
+      "solution": "Turnkey commercial lending endpoints and embedded debt routing.",
+      "route": "#for-platforms"
+    },
+    {
+      "id": "partners",
+      "name": "Lender Networks & Syndicates",
+      "target": "Non-bank private credit funds, SBA originators, and asset-backed lenders",
+      "friction": "Screening hundreds of non-conforming, incomplete loan submissions.",
+      "solution": "Receive verified borrower packets structured directly to your credit box.",
+      "route": "#for-partners"
+    }
+  ]
+}

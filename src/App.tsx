@@ -1,27 +1,17 @@
 /**
- * Capital Operator — Main Application
+ * Capital Operator — Main Application & Shell
  * Moonshine Capital
  * src/App.tsx
  */
 
 import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { PositioningSection } from './components/PositioningSection';
-import { AudienceCards } from './components/AudienceCards';
-import { AssessmentIntro } from './components/AssessmentIntro';
-import { AssessmentStep, QUESTIONS } from './components/AssessmentStep';
-import { ResultsView } from './components/ResultsView';
+import { SiteShell } from './components/layout/SiteShell';
+import { AppRouter } from './lib/router';
 import { PrintView } from './components/PrintView';
-import { Footer } from './components/Footer';
-import { CapitalArchitectureMap } from './components/CapitalArchitectureMap';
+import { QUESTIONS } from './components/AssessmentStep';
 import { AssessmentAnswers, BlueprintResult } from './types';
 import { generateBlueprint } from './lib/recommendationEngine';
 import { trackEvent } from './lib/analytics';
-import { PrivacyPolicy } from './pages/PrivacyPolicy';
-import { TermsOfService } from './pages/TermsOfService';
-import { Methodology } from './pages/Methodology';
-import { AboutCapitalOperator } from './pages/AboutCapitalOperator';
 import { captureAttribution, updateAttributionDiagnostic } from './lib/attribution';
 
 const INITIAL_ANSWERS: AssessmentAnswers = {
@@ -75,11 +65,13 @@ export default function App() {
     }
   });
 
-  const [currentRoute, setCurrentRoute] = useState<string>(() => window.location.hash);
+  const [currentRoute, setCurrentRoute] = useState<string>(() => window.location.hash || '#home');
 
   useEffect(() => {
     captureAttribution();
-    const onHashChange = () => setCurrentRoute(window.location.hash);
+    const onHashChange = () => {
+      setCurrentRoute(window.location.hash || '#home');
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -102,6 +94,7 @@ export default function App() {
 
   const handleStartAssessment = () => {
     setIsAssessing(true);
+    window.location.hash = '#assessment';
     trackEvent('capital_operator_started');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -113,6 +106,7 @@ export default function App() {
     }));
     setCurrentStep(2);
     setIsAssessing(true);
+    window.location.hash = '#assessment';
     trackEvent('capital_operator_started', { situation: situationText });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -155,6 +149,7 @@ export default function App() {
         segment: result.segment
       });
       trackEvent('blueprint_generated');
+      window.location.hash = '#blueprint';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -180,121 +175,28 @@ export default function App() {
     setIsAssessing(false);
     setBlueprint(null);
     trackEvent('assessment_restarted');
+    window.location.hash = '#home';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleExploreStack = () => {
-    const el = document.getElementById('architecture-preview');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      handleStartAssessment();
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#07090d] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-slate-950">
-      
-      {/* Top Navigation */}
-      <Navbar
-        onStartAssessment={handleStartAssessment}
+    <SiteShell currentRoute={currentRoute}>
+      <AppRouter
+        currentRoute={currentRoute}
+        answers={answers}
+        currentStep={currentStep}
+        isAssessing={isAssessing}
+        blueprint={blueprint}
+        onUpdateAnswer={handleUpdateAnswer}
+        onNext={handleNext}
+        onBack={handleBack}
+        onSelectSituation={handleSelectSituation}
         onRestart={handleRestart}
-        hasStarted={isAssessing || blueprint !== null || answers.q1_currentHandling !== ''}
-        isCompleted={blueprint !== null}
+        onStartAssessment={handleStartAssessment}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1">
-        {currentRoute === '#privacy' && (
-          <PrivacyPolicy onBack={() => { window.location.hash = ''; }} />
-        )}
-        {currentRoute === '#terms' && (
-          <TermsOfService onBack={() => { window.location.hash = ''; }} />
-        )}
-        {currentRoute === '#methodology' && (
-          <Methodology onBack={() => { window.location.hash = ''; }} />
-        )}
-        {currentRoute === '#about' && (
-          <AboutCapitalOperator onBack={() => { window.location.hash = ''; }} />
-        )}
-
-        {!['#privacy', '#terms', '#methodology', '#about'].includes(currentRoute) && (
-          <>
-            {/* VIEW 1: Diagnostic Questionnaire in progress */}
-            {isAssessing && (
-              <div className="no-print">
-                <AssessmentStep
-                  currentStep={currentStep}
-                  answers={answers}
-                  onUpdateAnswer={handleUpdateAnswer}
-                  onNext={handleNext}
-                  onBack={handleBack}
-                />
-              </div>
-            )}
-
-            {/* VIEW 2: Results View (Blueprint Generated) */}
-            {!isAssessing && blueprint && (
-              <div>
-                <div className="no-print">
-                  <ResultsView
-                    blueprint={blueprint}
-                    onRestart={handleRestart}
-                  />
-                </div>
-
-                {/* Hidden except during window.print() */}
-                <PrintView blueprint={blueprint} />
-              </div>
-            )}
-
-            {/* VIEW 3: Landing / Assessment Introduction */}
-            {!isAssessing && !blueprint && (
-              <div className="no-print">
-                <Hero
-                  onStartAssessment={handleStartAssessment}
-                  onExploreStack={handleExploreStack}
-                />
-
-                <PositioningSection
-                  onStartAssessment={handleStartAssessment}
-                />
-
-                <AudienceCards
-                  onSelectSituation={handleSelectSituation}
-                />
-
-                {/* Architecture Preview Section */}
-                <div id="architecture-preview" className="py-16 bg-[#07090d] border-b border-slate-800/80">
-                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="text-center max-w-3xl mx-auto mb-4">
-                      <span className="text-xs font-semibold tracking-widest text-cyan-400 uppercase font-mono-code">
-                        INTERACTIVE PREVIEW
-                      </span>
-                      <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                        The Modern Capital Stack
-                      </h2>
-                      <p className="mt-3 text-base text-slate-400">
-                        Explore how repetitive administrative workflows, AI synthesis, and human judgment collaborate across an active deal lifecycle.
-                      </p>
-                    </div>
-
-                    <CapitalArchitectureMap />
-                  </div>
-                </div>
-
-                <AssessmentIntro
-                  onStart={handleStartAssessment}
-                />
-              </div>
-            )}
-          </>
-        )}
-      </main>
-
-      {/* Footer */}
-      <Footer />
-
-    </div>
+      {/* Hidden during normal view, rendered during window.print() */}
+      {blueprint && <PrintView blueprint={blueprint} />}
+    </SiteShell>
   );
 }

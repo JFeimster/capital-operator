@@ -1,12 +1,11 @@
-# Capital Operator (Moonshine Capital)
+# Capital Operator
+> Open Capital Infrastructure Diagnostic & Blueprint Engine by Moonshine Capital
 
-> Capital Operator is a commercial debt and lending infrastructure diagnostic tool built by Moonshine Capital.
+Capital Operator evaluates commercial debt origination, underwriting triage, document processing, and lender syndication workflows.
 
-## Key Information
-- **Domain**: Commercial loan brokerage, fractional CFO debt advisory, lending automation.
-- **Philosophy**: Systems handle repetition, AI handles synthesis, humans handle judgment, capital partners handle capital.
-- **Operating Models**: Relationship-Led (0-18), Systemized (19-32), AI-Augmented (33-44), Capital Operator (45+).
-- **Core Workflow**: 8 discrete stages from Demand & Intake to Compounding Retention.
-- **Partner Application**: https://tally.so/r/mOe658
-- **Direct Business Funding Application**: https://tally.so/r/mDEJB5
-- **Operator Tools Directory**: https://tools.distilledfunding.com
+## Primary Entities
+- Operating Models: Artisan (1), Standardized (2), Automated (3), Programmatic (4)
+- 8 Operating Stages: Ingestion, Triage, Document Assembly, Credit Memo Packaging, Lender Routing, Offer Syndication, Closing / Verification, and Post-Close Relationship Equity.
+- Moonshine Capital: Direct commercial debt provider and syndication desk.
+  - Partner Intake: https://tally.so/r/mOe658
+  - Borrower Application: https://tally.so/r/mDEJB5

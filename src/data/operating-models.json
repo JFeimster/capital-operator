@@ -1,0 +1,32 @@
+{
+  "models": [
+    {
+      "id": "lone-ranger",
+      "name": "Manual Referral Broker",
+      "stage": "0-1",
+      "description": "Scattered email intake, manual borrower chasing, and ad-hoc lender outreach.",
+      "unlock": "Automate intake with dynamic forms and pre-qual qualification logic."
+    },
+    {
+      "id": "structured-boutique",
+      "name": "Standardized Deal Desk",
+      "stage": "2-3",
+      "description": "Standard document checklists and structured borrower financial profiles.",
+      "unlock": "Implement automated financial statement OCR extraction and debt-service modeling."
+    },
+    {
+      "id": "syndicate-machine",
+      "name": "Institutional Syndication Engine",
+      "stage": "4-5",
+      "description": "Multi-lender programmatic distribution, verified credit memos, and parallel terms.",
+      "unlock": "Deploy automated post-close portfolio monitoring and renewal triggers."
+    },
+    {
+      "id": "embedded-platform",
+      "name": "Autonomous Capital Network",
+      "stage": "6-8",
+      "description": "API-driven borrower ingestion, automated underwriting scoring, and instant institutional routing.",
+      "unlock": "Scale multi-originator white-label partner network."
+    }
+  ]
+}

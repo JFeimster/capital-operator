@@ -1,0 +1,20 @@
+/**
+ * Capital Operator — Responsive Behavior Overrides
+ * src/styles/responsive.css
+ */
+
+@media (max-width: 640px) {
+  .co-mobile-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .co-mobile-full {
+    width: 100% !important;
+  }
+
+  .co-mobile-p-sm {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}

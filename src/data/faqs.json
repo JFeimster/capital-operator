@@ -1,0 +1,20 @@
+{
+  "faqs": [
+    {
+      "q": "What makes Capital Operator different from loan broker CRM software?",
+      "a": "Capital Operator is not a generic contact database; it is an operational diagnostic and architectural blueprint engine. It audits where your pipeline leaks time and capital, then provides an exact mathematical implementation plan."
+    },
+    {
+      "q": "Do I need to sign up or input credit cards to receive my blueprint?",
+      "a": "No. Capital Operator is completely free and executes 100% in your browser without requiring account creation or payment information."
+    },
+    {
+      "q": "Can I integrate Capital Operator recommendations with my existing CRM?",
+      "a": "Yes. Our recommendations are tool-agnostic. Whether you run HubSpot, Salesforce, Airtable, or Notion, our blueprints provide schema mappings and workflow trigger logic."
+    },
+    {
+      "q": "How does Moonshine Capital support operators after the diagnostic?",
+      "a": "Through our syndicate network and ecosystem tools, Moonshine Capital offers secondary desk support, direct underwriting facilities, and technology integrations to accelerate placement yield."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+  <rect width="800" height="400" rx="16" fill="#07090D"/>
+  <rect x="1" y="1" width="798" height="398" rx="15" stroke="#1E293B" stroke-width="2"/>
+  <text x="40" y="50" fill="#10B981" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="0.1em">CAPITAL OPERATOR // 8-STAGE DEBT ARCHITECTURE</text>
+  <g transform="translate(40, 80)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 01: Intake</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Multi-Channel Dynamic</text>
+  </g>
+  <g transform="translate(230, 80)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 02: Triage</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Pre-Qual Scoring</text>
+  </g>
+  <g transform="translate(420, 80)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 03: Docs</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">OCR Statement Ingestion</text>
+  </g>
+  <g transform="translate(610, 80)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 04: Memo</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Credit Memo Packaging</text>
+  </g>
+  <g transform="translate(40, 210)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 05: Routing</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Lender Buy-Box Matching</text>
+  </g>
+  <g transform="translate(230, 210)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 06: Offers</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Parallel Term Sheets</text>
+  </g>
+  <g transform="translate(420, 210)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 07: Closing</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Stipulation Clearance</text>
+  </g>
+  <g transform="translate(610, 210)">
+    <rect width="160" height="90" rx="8" fill="#0F172A" stroke="#334155"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="14">Stage 08: Equity</text>
+    <text x="16" y="56" fill="#94A3B8" font-size="11">Post-Close Monitoring</text>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+{
+  "products": [
+    {
+      "id": "distilled-funding",
+      "name": "Distilled Funding",
+      "category": "Direct Gateway",
+      "description": "Turnkey direct commercial lending platform for businesses seeking working capital and equipment financing.",
+      "url": "https://www.distilledfunding.com",
+      "role": "Origination"
+    },
+    {
+      "id": "distilled-funding-tools",
+      "name": "Distilled Funding Tools",
+      "category": "Operator Suite",
+      "description": "DSCR underwriting tools, debt service modeling, and commercial credit calculators.",
+      "url": "https://tools.distilledfunding.com",
+      "role": "Underwriting"
+    },
+    {
+      "id": "partner-intake-os",
+      "name": "Partner Intake OS",
+      "category": "Deal Desk",
+      "description": "Structured partner deal registration, intake branching, and commission attribution.",
+      "url": "https://partner-intake-t5e7p3fnv-jason-feimsters-projects.vercel.app",
+      "role": "Intake"
+    },
+    {
+      "id": "funding-operator-os",
+      "name": "Funding Operator OS",
+      "category": "Core Platform",
+      "description": "Full-cycle pipeline stage manager, document room, and lender syndication dashboard.",
+      "url": "https://funding-operator-nzehpctxq-jason-feimsters-projects.vercel.app",
+      "role": "Execution"
+    },
+    {
+      "id": "funding-partners-os",
+      "name": "Funding Partners OS",
+      "category": "Lender Portal",
+      "description": "Lender buy-box matcher and institutional capital provider allocation portal.",
+      "url": "https://funding-partners-os-dashboard-afpy26axy.vercel.app",
+      "role": "Syndication"
+    }
+  ]
+}

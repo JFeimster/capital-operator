@@ -1,0 +1,76 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "code": "01",
+      "name": "Intake & Qualification",
+      "category": "Origination",
+      "description": "Standardized capture of borrower parameters, revenue, time in business, and credit score.",
+      "leakMetric": "40% abandonment on long static forms",
+      "fix": "Dynamic smart branching questionnaire"
+    },
+    {
+      "id": 2,
+      "code": "02",
+      "name": "Triage & Underwriting Assessment",
+      "category": "Underwriting",
+      "description": "Instant programmatic evaluation against basic debt service and risk parameters.",
+      "leakMetric": "3.5 business days lost on unviable files",
+      "fix": "Automated pre-qual rule engine"
+    },
+    {
+      "id": 3,
+      "code": "03",
+      "name": "Document Gathering & Scrubbing",
+      "category": "Operations",
+      "description": "Automated collection of 6 months bank statements, P&L, balance sheets, and tax returns.",
+      "leakMetric": "68% of deal delays occur waiting on documents",
+      "fix": "Dedicated borrower upload portal with auto-reminders"
+    },
+    {
+      "id": 4,
+      "code": "04",
+      "name": "Financial Spreading & Packaging",
+      "category": "Underwriting",
+      "description": "Parsing transaction data into normalized DSCR, add-backs, and cash flow schedules.",
+      "leakMetric": "4.2 hours per file manual spreadsheet entry",
+      "fix": "OCR statement extraction into standardized credit memo"
+    },
+    {
+      "id": 5,
+      "code": "05",
+      "name": "Lender Matching & Routing",
+      "category": "Syndication",
+      "description": "Mapping borrowing profile against active lender buy boxes and tier preferences.",
+      "leakMetric": "52% rejection rate from mismatched lender guidelines",
+      "fix": "Dynamic rule-based lender credit matrix"
+    },
+    {
+      "id": 6,
+      "code": "06",
+      "name": "Offer Solicitation & Comparison",
+      "category": "Closing",
+      "description": "Structuring competing term sheets into transparent APR, factor, and fee schedules.",
+      "leakMetric": "Borrower confusion leading to abandoned offers",
+      "fix": "Standardized executive offer comparison dashboard"
+    },
+    {
+      "id": 7,
+      "code": "07",
+      "name": "Closing & Funding Execution",
+      "category": "Closing",
+      "description": "Stipulation clearing, payoff letter verification, and escrow coordination.",
+      "leakMetric": "Deal fatigue during closing stipulation clearance",
+      "fix": "Closing checklist tracking with automated lender updates"
+    },
+    {
+      "id": 8,
+      "code": "08",
+      "name": "Post-Funding Relationship Equity",
+      "category": "Retention",
+      "description": "Automated refinancing triggers, line renewals, and partner attribution tracking.",
+      "leakMetric": "82% of repeat borrowing goes to competitors",
+      "fix": "Milestone-based follow-up triggers at 60 and 120 days"
+    }
+  ]
+}

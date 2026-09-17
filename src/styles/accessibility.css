@@ -1,0 +1,38 @@
+/**
+ * Capital Operator — Accessibility & Focus Controls
+ * src/styles/accessibility.css
+ */
+
+:focus-visible {
+  outline: 2px solid var(--co-emerald, #10b981) !important;
+  outline-offset: 2px !important;
+}
+
+.skip-to-content {
+  position: absolute;
+  top: -9999px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #10b981;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #10b981;
+  font-weight: 600;
+  z-index: 9999;
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

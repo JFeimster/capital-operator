@@ -1,0 +1,44 @@
+/**
+ * Capital Operator — Marketing & Typography Styles
+ * src/styles/marketing.css
+ */
+
+.marketing-heading-1 {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.marketing-heading-2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+.marketing-heading-3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.marketing-body {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #94a3b8;
+}
+
+.terminal-badge {
+  font-family: var(--co-font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stat-numeral {
+  font-family: var(--co-font-mono, monospace);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}

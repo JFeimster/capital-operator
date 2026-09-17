@@ -1,0 +1,25 @@
+{
+  "testimonials": [
+    {
+      "id": "t1",
+      "author": "Marcus V.",
+      "role": "Managing Partner, Commercial Debt Advisory",
+      "quote": "Running the diagnostic exposed that our team was losing 14 hours per file chasing bank statements. We automated document scrubbing and doubled monthly submissions without adding staff.",
+      "metric": "2.4x Deal Velocity"
+    },
+    {
+      "id": "t2",
+      "author": "Elena R.",
+      "role": "Fractional CFO & Capital Consultant",
+      "quote": "I used to hate when clients asked for debt syndication because it turned into an administrative black hole. The 8-stage blueprint gave us a pristine advisory workflow.",
+      "metric": "85% Less Chasing"
+    },
+    {
+      "id": "t3",
+      "author": "David K.",
+      "role": "Head of Originations, Fintech Syndication Desk",
+      "quote": "The mathematical scoring and priority sequencing gave our executive team the exact roadmap needed to upgrade our lender distribution stack.",
+      "metric": "+38% Placement Yield"
+    }
+  ]
+}

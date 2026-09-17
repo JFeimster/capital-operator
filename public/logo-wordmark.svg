@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 40" fill="none">
+  <rect width="36" height="36" rx="8" y="2" fill="#07090D"/>
+  <rect x="1" y="3" width="34" height="34" rx="7" stroke="#1E293B" stroke-width="2"/>
+  <path d="M12 13C12 11.3431 13.3431 10 15 10H21C22.6569 10 24 11.3431 24 13V14H20V13H16V27H20V26H24V27C24 28.6569 22.6569 30 21 30H15C13.3431 30 12 28.6569 12 27V13Z" fill="#10B981"/>
+  <circle cx="23" cy="20" r="2.5" fill="#06B6D4"/>
+  <text x="48" y="26" fill="#FFFFFF" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="18" letter-spacing="0.05em">CAPITAL<tspan fill="#10B981">OPERATOR</tspan></text>
+</svg>

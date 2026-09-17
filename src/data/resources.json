@@ -1,0 +1,36 @@
+{
+  "resources": [
+    {
+      "id": "commercial-intake-checklist",
+      "title": "Commercial Debt Intake Checklist (PDF/Markdown)",
+      "category": "Templates",
+      "description": "Standardized 1-page financial intake checklist to eliminate borrower back-and-forth.",
+      "format": "Markdown / PDF",
+      "tag": "Foundational"
+    },
+    {
+      "id": "credit-memo-framework",
+      "title": "Institutional Credit Memorandum Blueprint",
+      "category": "Underwriting",
+      "description": "Executive 2-page borrower briefing format preferred by non-bank credit committees.",
+      "format": "Specification",
+      "tag": "Advanced"
+    },
+    {
+      "id": "term-sheet-comparison-model",
+      "title": "Term Sheet APR & Factor Comparison Matrix",
+      "category": "Tools",
+      "description": "Evaluate true cost of capital across revenue-based, asset-backed, and term debt.",
+      "format": "Calculator",
+      "tag": "Execution"
+    },
+    {
+      "id": "lender-buy-box-template",
+      "title": "Multi-Lender Buy-Box Mapping Spreadsheet",
+      "category": "Syndication",
+      "description": "Organize 50+ debt funds by min DSCR, revenue thresholds, and geographic restrictions.",
+      "format": "Data Schema",
+      "tag": "Scale"
+    }
+  ]
+}
