@@ -27,8 +27,11 @@
 | `FEAT_PLATFORM_GMV_CALC` | Embedded-capital monetization simulator. | Client / Calculator | **LIVE** | SaaS & Fintechs |
 | `FEAT_PRINT_VIEW` | Executive print/PDF layout. | Client / Print Engine | **LIVE** | Operators |
 | `FEAT_DOCS_API_HUB` | Developer documentation for implemented and planned capabilities. | Client / Docs Hub | **LIVE** | Developers & Fintechs |
-| `FEAT_OCR_DOCUMENT_FEED` | Provider-agnostic document/OCR intelligence pipeline. | Server / Pipeline | **PLANNED** | Capital Operations |
+| `FEAT_DOC_INTELLIGENCE_FOUNDATION` | Provider-agnostic document classification/parsing contracts, normalized extraction schema, confidence/review flags, and deterministic normalization. Paid OCR adapters are not enabled. | Server / Documents | **SPECIFIED** | Capital Operations |
 | `FEAT_LENDER_LOS_SYNC` | Direct bi-directional loan-origination-system integration. | Server / Integrations | **PLANNED** | Capital Partners |
-| `FEAT_MCP_TOOL_SERVER` | Production MCP server exposing validated Capital Operator tools. Phase 2 / Batch B. | Server / Agent Layer | **PLANNED** | AI Agents & Operators |
-| `FEAT_ECOSYSTEM_ROUTER` | Capability-driven ecosystem routing control plane. Phase 3 / Batch B. | Client + Server | **PLANNED** | Operators & Platforms |
+| `FEAT_MCP_TOOL_SERVER` | Production stateless HTTP JSON-RPC MCP server exposing validated Capital Operator tools. | Server / `/api/mcp` | **BETA** | AI Agents & Operators |
+| `FEAT_ECOSYSTEM_ROUTER` | Capability-driven ecosystem registry, matcher, router, and UI control plane. | Client / Control Plane | **BETA** | Operators & Platforms |
 | `FEAT_MULTI_USER_DESK` | Authenticated multi-user capital operations workspace. Phase 5 / Batch C. | Full-Stack / Platform | **PLANNED** | Enterprise Desks |
+
+| `FEAT_AI_SKILLS` | Five bounded Capital Operator Skills backed by canonical tools/engines. | Skills / Agent Layer | **BETA** | AI Agents & Operators |
+| `FEAT_OPERATOR_AGENTS` | Four bounded agent definitions with explicit human checkpoints and prohibited autonomy. | Agents / Agent Layer | **BETA** | Operators |
