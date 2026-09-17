@@ -3,14 +3,9 @@
  * server/integrations/dispatch.ts
  */
 
-import { UnifiedLeadInput, DispatchSummary, IntegrationAdapterResult } from './types';
-import { integrationRegistry } from './registry';
+import { UnifiedLeadInput, DispatchSummary, IntegrationAdapterResult } from './types.js';
+import { integrationRegistry } from './registry.js';
 
-/**
- * Dispatches unified lead payloads across all configured server adapters.
- * Guarantees fault isolation: one adapter failing never prevents other adapters from executing.
- * This function does not claim persistence unless an adapter reports SUCCESS.
- */
 export async function dispatchToIntegrations(
   payload: UnifiedLeadInput,
   context?: Record<string, unknown>
