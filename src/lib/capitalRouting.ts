@@ -75,7 +75,7 @@ export function evaluateCapitalRoutes(req: BuyBoxMatchRequest): BuyBoxMatchResul
       match_tier: matchTier,
       fit_signals: fitSignals,
       review_flags: reviewFlags,
-      human_review_required: true
+      human_review_required: true as const
     };
   }).sort((a, b) => {
     const weight: Record<BuyBoxMatchResult['match_tier'], number> = {
