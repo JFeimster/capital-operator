@@ -58,10 +58,59 @@ const routing = await rpc(4, 'tools/call', {
 if (routing?.structuredContent?.status !== 'SANDBOX') throw new Error('Production routing must remain SANDBOX.');
 if (routing?.structuredContent?.human_review_required !== true) throw new Error('Production routing must require human review.');
 
+
+const blueprint = await rpc(5, 'tools/call', {
+  name: 'generate_capital_blueprint',
+  arguments: {
+    answers: {
+      q1_currentHandling: '',
+      q2_monthlyVolume: '',
+      q3_leadSources: [],
+      q4_pipelineLocation: '',
+      q5_pursuingDecision: '',
+      q6_documentHandling: '',
+      q7_routingDecision: '',
+      q8_followUpAutomation: '',
+      q9_breakdownPoints: [],
+      q10_priorities: [],
+      q11_techBudget: '',
+      q12_handsOnControl: ''
+    }
+  }
+});
+if (!blueprint?.structuredContent?.blueprint?.operatingModel) throw new Error('Production blueprint tool did not return a blueprint.');
+
+const stack = await rpc(6, 'tools/call', {
+  name: 'recommend_capital_stack',
+  arguments: {
+    requestedAmount: 250000,
+    useOfFunds: 'equipment and working capital',
+    collateralAvailable: true,
+    recurringWorkingCapitalNeed: true
+  }
+});
+if (stack?.structuredContent?.status !== 'BETA') throw new Error('Production capital-stack tool must report BETA.');
+
+const queriedTools = await rpc(7, 'tools/call', {
+  name: 'query_capital_tools',
+  arguments: { workflowStage: 2, limit: 5 }
+});
+if (!Array.isArray(queriedTools?.structuredContent?.tools)) throw new Error('Production tool query failed.');
+
+const stage = await rpc(8, 'tools/call', {
+  name: 'explain_operating_stage',
+  arguments: { stage: 5 }
+});
+if (stage?.structuredContent?.stage?.number !== 5) throw new Error('Production operating-stage explanation failed.');
+
 console.log('Production MCP smoke passed:', {
   health: health.status,
   discovery: discovery.status,
   tools: names.size,
   dscr: dscr.structuredContent.dscr,
-  routing: routing.structuredContent.status
+  routing: routing.structuredContent.status,
+  blueprint: blueprint.structuredContent.blueprint.operatingModel,
+  capitalStack: stack.structuredContent.status,
+  queriedTools: queriedTools.structuredContent.tools.length,
+  explainedStage: stage.structuredContent.stage.number
 });
