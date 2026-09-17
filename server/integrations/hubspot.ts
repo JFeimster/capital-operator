@@ -5,6 +5,8 @@
 
 import { IntegrationAdapter, IntegrationAdapterResult, UnifiedLeadInput } from './types';
 
+const HUBSPOT_BASE_URL = 'https://api.hubapi.com';
+
 export class HubSpotAdapter implements IntegrationAdapter {
   id = 'hubspot';
   name = 'HubSpot CRM';
@@ -49,39 +51,73 @@ export class HubSpotAdapter implements IntegrationAdapter {
       return {
         provider: this.id,
         status: 'FAILED',
-        error: 'Email address missing for HubSpot contact creation.',
+        error: 'Email address missing for HubSpot contact upsert.',
         durationMs: Date.now() - startTime
       };
     }
 
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+
+    const properties = {
+      email,
+      firstname: firstName?.trim() || '',
+      company: company?.trim() || '',
+      jobtitle: role || 'Capital Operator Contact',
+      capital_operator_operating_model: operatingModel || 'Relationship-Led',
+      utm_source: (context?.utm_source as string) || '',
+      partner_id: (context?.partner_id as string) || ''
+    };
+
     try {
-      const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
+      const searchResponse = await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/contacts/search`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify({
-          properties: {
-            email,
-            firstname: firstName?.trim() || '',
-            company: company?.trim() || '',
-            jobtitle: role || 'Capital Operator Contact',
-            capital_operator_operating_model: operatingModel || 'Relationship-Led',
-            utm_source: (context?.utm_source as string) || '',
-            partner_id: (context?.partner_id as string) || ''
-          }
+          filterGroups: [{ filters: [{ propertyName: 'email', operator: 'EQ', value: email }] }],
+          properties: ['email'],
+          limit: 1
         })
       });
 
+      if (!searchResponse.ok) {
+        const searchError = await searchResponse.text();
+        return {
+          provider: this.id,
+          status: 'FAILED',
+          statusCode: searchResponse.status,
+          error: `HubSpot contact lookup returned ${searchResponse.status}: ${searchError}`,
+          durationMs: Date.now() - startTime
+        };
+      }
+
+      const searchData = await searchResponse.json() as { results?: Array<{ id: string }> };
+      const existingId = searchData.results?.[0]?.id;
+
+      const response = existingId
+        ? await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/contacts/${existingId}`, {
+            method: 'PATCH',
+            headers,
+            body: JSON.stringify({ properties })
+          })
+        : await fetch(`${HUBSPOT_BASE_URL}/crm/v3/objects/contacts`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ properties })
+          });
+
       const durationMs = Date.now() - startTime;
 
-      if (response.ok || response.status === 409) {
+      if (response.ok) {
+        const data = await response.json() as { id?: string };
         return {
           provider: this.id,
           status: 'SUCCESS',
           statusCode: response.status,
-          message: response.status === 409 ? 'HubSpot contact already exists (reconciled).' : 'HubSpot contact created.',
+          recordId: data.id || existingId,
+          message: existingId ? 'HubSpot contact updated.' : 'HubSpot contact created.',
           durationMs
         };
       }
