@@ -1,28 +1,18 @@
 /**
  * Capital Operator — Health Check API Endpoint
  * api/v1/health.ts
- *
- * Provides real-time operational status, environment details, and capability availability.
  */
 
 import { HealthCheckResponse } from '../../src/types/api';
 import { integrationRegistry } from '../../server/integrations/registry';
+import { applyCors } from '../../server/http/cors';
 
 const START_TIME = Date.now();
 
 export default async function handler(req: any, res: any) {
-  // CORS configuration
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
+  applyCors(req, res, ['GET', 'OPTIONS']);
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method !== 'GET') {
     return res.status(405).json({
@@ -46,13 +36,13 @@ export default async function handler(req: any, res: any) {
       diagnostic: 'LIVE',
       blueprint: 'LIVE',
       intake: 'LIVE',
-      routing: 'LIVE',
+      routing: 'SANDBOX',
       webhooks: Boolean(process.env.WEBHOOK_SECRET) ? 'LIVE' : 'BETA',
       integrations: {
-        hubspot: integrationStatuses.hubspot?.configured ? 'LIVE' : 'BETA',
-        notion: integrationStatuses.notion?.configured ? 'LIVE' : 'BETA',
-        n8n: integrationStatuses.n8n?.configured ? 'LIVE' : 'BETA',
-        genericWebhook: integrationStatuses.genericWebhook?.configured ? 'LIVE' : 'BETA'
+        hubspot: integrationStatuses.hubspot?.configured ? 'BETA' : 'SPECIFIED',
+        notion: integrationStatuses.notion?.configured ? 'BETA' : 'SPECIFIED',
+        n8n: integrationStatuses.n8n?.configured ? 'BETA' : 'SPECIFIED',
+        genericWebhook: integrationStatuses.genericWebhook?.configured ? 'BETA' : 'SPECIFIED'
       }
     }
   };
