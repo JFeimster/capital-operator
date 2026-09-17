@@ -18,6 +18,7 @@ import { runEcosystemRoutingTests } from './ecosystemRouting.test';
 import { runDocumentNormalizationTests } from './documentNormalization.test';
 import { runMcpContractTests } from './mcpContract.test';
 import { runIntelligenceManifestTests } from './intelligenceManifests.test';
+import { runPublicToolTests } from './publicTools.test';
 
 async function main() {
   console.log('\n======================================================');
@@ -40,6 +41,7 @@ async function main() {
     { name: 'Document Intelligence Normalization', fn: runDocumentNormalizationTests },
     { name: 'MCP Contract', fn: runMcpContractTests },
     { name: 'Skill & Agent Manifests', fn: runIntelligenceManifestTests }
+    ,{ name: 'Phase 4A Public Tools', fn: runPublicToolTests }
   ];
 
   let passed = 0;

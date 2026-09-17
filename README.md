@@ -182,6 +182,22 @@ Browser
 
 ---
 
+## Batch C1 — Public Tools
+
+Phase 4A provides seven deterministic, client-side public tools through one shared route, metadata, analytics, capability-matching, ecosystem-routing, and context-preserving handoff architecture:
+
+- `/capital-stack-builder`
+- `/capital-ops-calculator`
+- `/capital-workflow-builder`
+- `/capital-tech-stack`
+- `/capital-readiness-audit`
+- `/embedded-capital-calculator`
+- `/referral-revenue-calculator`
+
+Results remain visible without a lead gate. Inputs stay client-side; analytics records route and non-sensitive tool context. Outputs are operating scenarios and workflow recommendations—not lender eligibility, pricing, approval, availability, or guaranteed economics.
+
+---
+
 ## Tech Stack
 
 - React 19
