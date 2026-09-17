@@ -30,3 +30,33 @@ The ecosystem router does not claim live lender availability or approval.
 - `src/lib/ecosystemRouter.ts`
 - `src/pages/Ecosystem.tsx`
 - `src/components/ecosystem/*`
+
+
+## Contextual Routing Inputs
+
+The deterministic capability matcher can derive recommendations from:
+
+- operating model
+- user segment
+- workflow stage
+- business need
+- capital-demand profile
+- manual workflow gaps
+- explicitly required capabilities
+- current capabilities
+- current ecosystem products / existing stack
+- downstream product availability
+
+The matcher records `matchedBecause` reasons for auditability. The ecosystem router converts missing capabilities into canonical product handoffs or documented fallbacks. No AI is required to decide these mappings.
+
+## Analytics
+
+The production ecosystem UI emits the canonical events:
+
+- `ecosystem_recommendation_generated`
+- `capability_matched`
+- `downstream_product_recommended`
+- `ecosystem_handoff_initiated`
+- `ecosystem_fallback_used`
+
+`ecosystem_handoff_completed` remains available for integrations that can truthfully observe downstream completion.

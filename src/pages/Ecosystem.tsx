@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Container } from '../components/layout/Container';
 import { Section } from '../components/layout/Section';
 import { Breadcrumbs } from '../components/site/Breadcrumbs';
@@ -9,7 +9,29 @@ import { trackEvent } from '../lib/analytics';
 import { ANALYTICS_EVENTS } from '../config/analyticsEvents';
 
 export const Ecosystem: React.FC = () => {
-  const routes=routeEcosystem({capabilityIds:['funding-intake','capital-case','routing','crm-lifecycle','automation']});
+  const routes=useMemo(()=>routeEcosystem({
+    context:{
+      operatingModel:'Relationship-Led',
+      segment:'advisor',
+      businessNeed:'Turn existing capital demand into a systemized partner and funding workflow',
+      manualWorkflowGaps:['manual intake handoffs','manual follow-up','capital routing'],
+      capitalDemandProfile:{partnerOriginated:true},
+      currentCapabilityIds:['diagnostic'],
+      preferAutomated:true
+    }
+  }),[]);
+
+  useEffect(()=>{
+    trackEvent(ANALYTICS_EVENTS.ECOSYSTEM_RECOMMENDATION_GENERATED,{routeCount:routes.length});
+    for(const route of routes){
+      trackEvent(ANALYTICS_EVENTS.CAPABILITY_MATCHED,{capabilityId:route.capabilityId,status:route.status});
+      if(route.product){
+        trackEvent(ANALYTICS_EVENTS.DOWNSTREAM_PRODUCT_RECOMMENDED,{capabilityId:route.capabilityId,productId:route.product.id});
+      } else {
+        trackEvent(ANALYTICS_EVENTS.ECOSYSTEM_FALLBACK_USED,{capabilityId:route.capabilityId});
+      }
+    }
+  },[routes]);
   return (
     <>
       <div className="border-b border-slate-800 bg-grid-pattern py-12">
@@ -31,6 +53,7 @@ export const Ecosystem: React.FC = () => {
             <div className="font-mono text-xs text-emerald-400">{route.status}</div>
             <div className="mt-2 text-lg font-bold text-white">{route.product?.name||route.capabilityId}</div>
             <p className="mt-2 text-sm text-slate-400">{route.reason}</p>
+            {route.matchedBecause.length>0 && <p className="mt-2 text-xs text-cyan-300">Matched because: {route.matchedBecause.join(' · ')}</p>}
             <p className="mt-3 text-xs text-slate-500">Fallback: {route.fallback}</p>
             {route.product?.url && <a href={route.product.url} target="_blank" rel="noreferrer" onClick={()=>trackEvent(ANALYTICS_EVENTS.ECOSYSTEM_HANDOFF_INITIATED,{capabilityId:route.capabilityId,productId:route.product?.id})} className="mt-4 inline-block text-sm font-semibold text-emerald-400 hover:text-emerald-300">Open handoff →</a>}
           </div>)}
