@@ -21,7 +21,8 @@ import {
   ChevronUp,
   Sparkles,
   Building2,
-  Share2
+  Share2,
+  FileDown
 } from 'lucide-react';
 import { BlueprintResult, StagePriority } from '../types';
 import { SEGMENTS_CONFIG } from '../config/segments';
@@ -87,7 +88,17 @@ ${CTAS_CONFIG.partner.url}
 
   const handlePrint = () => {
     trackEvent('blueprint_printed');
+    const originalTitle = document.title;
+    try {
+      const sanitizedModel = blueprint.operatingModel.replace(/[^a-zA-Z0-9_-]/g, '-');
+      document.title = `Capital-Operator-Blueprint-${sanitizedModel}`;
+    } catch {
+      // Non-blocking fallback
+    }
     window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1000);
   };
 
   const getPriorityBadge = (p: StagePriority) => {
@@ -115,7 +126,7 @@ ${CTAS_CONFIG.partner.url}
           </span>
         </div>
 
-        <div className="flex items-center space-x-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={handleCopySummary}
             className="inline-flex items-center space-x-1.5 rounded-xl border border-slate-700 bg-slate-800/60 px-3.5 py-2 text-xs font-semibold text-slate-200 hover:border-slate-600 hover:bg-slate-700/60 transition-all cursor-pointer"
@@ -125,11 +136,22 @@ ${CTAS_CONFIG.partner.url}
           </button>
 
           <button
+            id="download-pdf-btn"
             onClick={handlePrint}
-            className="inline-flex items-center space-x-1.5 rounded-xl border border-slate-700 bg-slate-800/60 px-3.5 py-2 text-xs font-semibold text-slate-200 hover:border-slate-600 hover:bg-slate-700/60 transition-all cursor-pointer"
+            title="Download executive blueprint as PDF"
+            className="inline-flex items-center space-x-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer shadow-sm shadow-emerald-950/40"
+          >
+            <FileDown className="h-4 w-4 text-emerald-400" />
+            <span>Download as PDF</span>
+          </button>
+
+          <button
+            onClick={handlePrint}
+            title="Print blueprint specification"
+            className="inline-flex items-center space-x-1.5 rounded-xl border border-slate-700 bg-slate-800/60 px-3 py-2 text-xs font-semibold text-slate-300 hover:border-slate-600 hover:bg-slate-700/60 transition-all cursor-pointer"
           >
             <Printer className="h-4 w-4 text-slate-400" />
-            <span>Print / PDF</span>
+            <span>Print</span>
           </button>
 
           <button
@@ -650,6 +672,28 @@ ${CTAS_CONFIG.partner.url}
             </div>
           </div>
 
+        </div>
+
+        {/* Quick Executive PDF Export Bar */}
+        <div className="mt-8 p-5 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 card-glow">
+          <div className="flex items-center space-x-3.5">
+            <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0">
+              <FileDown className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-sm font-bold text-white">Need an offline executive specification?</div>
+              <div className="text-xs text-slate-400 mt-0.5">
+                Download a clean, high-contrast PDF formatted specifically for your deal desk, advisors, or lending partners.
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={handlePrint}
+            className="inline-flex items-center space-x-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer shrink-0 shadow-sm shadow-emerald-950/40"
+          >
+            <FileDown className="h-4 w-4" />
+            <span>Download as PDF</span>
+          </button>
         </div>
       </div>
 
