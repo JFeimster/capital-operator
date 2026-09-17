@@ -30,5 +30,7 @@ export interface DispatchSummary {
   dispatchedTo: string[];
   results: IntegrationAdapterResult[];
   hasFailures: boolean;
+  degraded: boolean;
+  persistedExternally: boolean;
   errors?: string[];
 }
