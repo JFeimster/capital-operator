@@ -1,24 +1,20 @@
 # Skills Architecture: Capital Operator
 
-## Overview
-Defines the specialized operational skills and domain capabilities packaged into Capital Operator's modular system.
+## Status
+**BETA — Phase 2 / Batch B**
 
----
+Capital Operator Skills are reusable operating contracts for ChatGPT/agent tooling. They do not contain independent underwriting or lender-selection logic.
 
-## Skill Directory
+## Implemented Skills
 
-### 1. `skill-commercial-dscr-scoring`
-- **Domain**: Underwriting & Credit Risk
-- **Function**: Standardizes cash flow add-backs, discretionary expense normalization, and global debt coverage ratios across multiple operating entities.
+- `skills/capital-assessment/SKILL.md` — interpret canonical diagnostic/blueprint outputs.
+- `skills/capital-blueprint/SKILL.md` — generate/explain the deterministic blueprint.
+- `skills/capital-routing/SKILL.md` — use SANDBOX route classification for human review.
+- `skills/capital-case/SKILL.md` — organize verified facts and deterministic metrics into a reviewable capital-case draft.
+- `skills/capital-stack-design/SKILL.md` — produce non-binding capital-structure planning categories.
 
-### 2. `skill-bank-statement-ocr-reconciliation`
-- **Domain**: Financial Document Processing
-- **Function**: Reconciles raw PDF transactions with reported accounting P&Ls to identify unlisted daily debits and cash flow volatility.
+## Rules
 
-### 3. `skill-buy-box-syndication-routing`
-- **Domain**: Capital Markets Distribution
-- **Function**: Matches borrower metrics against 50+ debt fund guidelines (SBA, Asset-Based, Revenue-Based, Mezzanine).
+Skills must reuse canonical APIs, MCP tools, engines, schemas, registries, and types. They may synthesize and explain but may not invent lender approvals, pricing, availability, eligibility, buy boxes, or missing financial facts.
 
-### 4. `skill-tally-embed-orchestration`
-- **Domain**: Client Intake & UX
-- **Function**: Dynamically configures secure Tally forms, passes attribution metadata via query parameters, and handles postMessage communication.
+Consequential lender-facing representations, submissions, negotiations, exceptions, and capital decisions require human approval.
