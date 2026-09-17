@@ -9,177 +9,235 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![CI / Deploy](https://github.com/JFeimster/capital-operator/actions/workflows/deploy.yml/badge.svg)](https://github.com/JFeimster/capital-operator/actions/workflows/deploy.yml)
 
-**Turn Commercial Borrowing Demand Into a High-Velocity Operating Asset.**
+**Turn Capital Demand Into an Operating System.**
 
-[Live Production App](https://jfeimster.github.io/capital-operator/) • [Run 12-Q Diagnostic](https://jfeimster.github.io/capital-operator/#assessment) • [Developer Docs & API](https://jfeimster.github.io/capital-operator/#docs) • [Partner Onboarding](https://tally.so/r/mOe658)
+[Public App](https://jfeimster.github.io/capital-operator/) • [Diagnostic](https://jfeimster.github.io/capital-operator/#assessment) • [Developer Docs](https://jfeimster.github.io/capital-operator/#docs) • [Partner Onboarding](https://tally.so/r/mOe658)
 
 </div>
 
 ---
 
-## ⚡ Overview
+## Overview
 
-Most advisory firms, loan brokers, fractional CFOs, and B2B platforms encounter commercial borrowing demand, yet manage pipelines using **tribal knowledge, chaotic email threads, and manual spreadsheets**. This friction causes slow turnaround times, document chase fatigue, and loan decline rates exceeding 40–60%.
+Capital Operator is capital infrastructure / operating-system software for advisors, operators, agencies, platforms, funding teams, referral ecosystems, partner ecosystems, and businesses adding capital capabilities.
 
-**Capital Operator** (powered by **Moonshine Capital**) transitions informal debt brokerage into a deterministic **8-Stage Capital Operating Architecture**. The platform diagnoses operational bottlenecks via an interactive 12-question diagnostic matrix, pinpoints revenue leaks, and generates an executive 30-day transformation blueprint with curated technology stacks and role playbooks.
+It maps and helps construct the technology, workflows, automation, AI assistance, human judgment, and partner infrastructure required to turn existing capital demand into a repeatable operating capability.
 
----
+It is **not** a lender marketplace, a funding score, an automated credit decision engine, or a generic AI chatbot.
 
-## 🏛 The 8-Stage Operating Model
+Core operating principle:
 
-```
-+-----------------------------------------------------------------------------------+
-|                           8-STAGE CAPITAL OPERATING PIPELINE                      |
-+-----------+-----------+-----------+-----------+-----------+-----------+-----------+
-| 01. INTAKE| 02. TRIAGE| 03. DOCS  | 04. MEMO  | 05. ROUTE | 06. SUBMIT| 07. CLOSE | 08. RENEW |
-| Dynamic   | Instant   | Auto OCR  | Exec 2-Pg | 50+ Buy-  | Tracked   | Checklists| 30/90/150 |
-| Portals   | DSCR / NSF| Synthesis | Memo Room | Box Match | Data Rooms| & Wires   | Retention |
-+-----------+-----------+-----------+-----------+-----------+-----------+-----------+
-```
-
-1. **Stage 1: Intake & Lead Capture** — Omnichannel digital capture with automatic partner attribution and structured pre-qualification forms.
-2. **Stage 2: Triage & Financial Pre-Screening** — Deterministic cash flow health scoring, NSF/overdraft audits, and debt service capacity calculations.
-3. **Stage 3: Document Room & OCR Extraction** — Normalized bank statement parsing, revenue trend reconciliation, and Form 108 debt schedules.
-4. **Stage 4: Packaging & Credit Memo Synthesis** — Executive 2-page Institutional Credit Memorandum generation with normalized EBITDA add-backs.
-5. **Stage 5: Lender Routing & Buy-Box Matching** — Algorithmic filtering against 50+ non-bank debt funds, SBA preferred desks, and asset-based lenders.
-6. **Stage 6: Submission & Deal Movement** — Tracked single-link data rooms with granular document security and parallel submission governance.
-7. **Stage 7: Closing, Compliance & Funding** — Closing checklist automation, wire verification, fee attribution, and condition clearing.
-8. **Stage 8: Post-Close Relationship Equity** — Automated 30/60/90/150-day retention cadences, facility upsize alerts, and continuous client renewals.
+- **Systems handle repetition.**
+- **AI handles synthesis.**
+- **Humans handle judgment.**
+- **Capital partners handle capital.**
 
 ---
 
-## 📊 Operating Model Maturity Tiers
+## Canonical 8-Stage Workflow
 
-| Tier | Operating Classification | Characteristics | Focus Action |
-| :--- | :--- | :--- | :--- |
-| **Tier 1** | **Relationship-Led** | Purely manual intake, personal email threads, Excel tracking, heavy administrative drag. | Standardize digital intake & 5-doc data rooms. |
-| **Tier 2** | **Systemized** | Basic CRM adoption, cloud storage folders, manual document audit and ad-hoc lender reach-outs. | Automate bank OCR & buy-box routing. |
-| **Tier 3** | **AI-Augmented** | Automated intake portals, OCR bank extraction, AI-drafted credit memos, structured lender tracking. | Implement post-close renewal automation loops. |
-| **Tier 4** | **Capital Operator** | Autonomous debt routing engine, embedded platform APIs, continuous client lifetime equity capture. | Scale syndicate distribution & platform rev-share. |
+1. **Create Demand**
+2. **Find the Real Opportunities**
+3. **Know the Business**
+4. **Build the Capital Case**
+5. **Route to the Right Capital**
+6. **Move the Deal**
+7. **Keep Momentum**
+8. **Own the Relationship**
 
----
-
-## 🎯 Role-Specific Playbooks
-
-- **[For Fractional CFOs & Advisors](https://jfeimster.github.io/capital-operator/#for-advisors)**: Institutionalize commercial debt placement, eliminate unbillable document formatting, and monetize borrowing demand with an interactive **Advisor Placement Economics Simulator**.
-- **[For Loan Brokers & Operators](https://jfeimster.github.io/capital-operator/#for-operators)**: Build a high-velocity deal desk, reduce cycle times from 21 days to under 48 hours, and diagnose pipeline leaks with the **Deal Desk Friction Calculator**.
-- **[For SaaS & Fintech Platforms](https://jfeimster.github.io/capital-operator/#for-platforms)**: Embed zero-balance-sheet commercial lending rails into existing software workflows, model recurring revenue splits (150–250 bps), and access sandbox REST APIs.
-- **[For Lenders & Syndicate Partners](https://jfeimster.github.io/capital-operator/#for-partners)**: Receive standardized, pre-screened loan packages with verified electronic bank ledgers, pre-calculated DSCR, and 0% junk submissions.
+The current application focuses on operational diagnostics, blueprints, workflow architecture, and the programmable foundation required to support later capital operations.
 
 ---
 
-## 🧮 Interactive Financial Tools & Calculators
+## Operating Models
 
-- **Commercial DSCR Debt Capacity Calculator**: Calculate Debt Service Coverage Ratios, global cash flow buffers, and maximum safe debt burdens for non-bank credit committees.
-- **Factor Rate to Effective APR Normalizer**: Convert daily/weekly factor rates and merchant cash advances into annualized percentage rates (APR) and total cost of capital.
-- **Advisor Placement Economics Simulator**: Model annual referral commissions, placement velocity, and administrative hours saved.
-- **Deal Desk Friction & Leakage Calculator**: Quantify lost annual commission revenue caused by manual document collection and submission drag.
-- **Platform GMV Monetization Model**: Simulate software enterprise value enhancement from non-dilutive embedded lending.
+1. **Relationship-Led**
+2. **Systemized**
+3. **AI-Augmented**
+4. **Capital Operator**
+
+These describe operating maturity, not borrower creditworthiness.
 
 ---
 
-## 🔌 Developer APIs, Event Layer & Webhooks
+## Capability Status
 
-Capital Operator provides a complete developer and serverless execution suite:
+Capital Operator uses a strict status taxonomy:
 
-### 1. REST API Endpoints (`LIVE`)
-- `GET /api/v1/health` (Alias: `/api/health`): Real-time service heartbeat, uptime counter, and capability availability.
-- `POST /api/v1/intake/submit`: Programmatic commercial borrowing intake ingestion with deterministic triage scoring, pre-qualification limits, and normalized CRM dispatch.
-- `POST /api/v1/routing/match-buy-box`: Multi-fund credit box routing and lender qualification matrix against 50+ debt funds (SBA 7a, ABL, RBF, Equipment, Factoring).
-- `POST /api/v1/webhooks/test`: Interactive testing sandbox for validating HMAC signature generation and target delivery.
-- `POST /api/lead`: Normalized serverless lead integration endpoint with graceful fallbacks.
+- **LIVE** — executable and production-available
+- **BETA** — executable but intentionally limited or still being validated
+- **SANDBOX** — executable only in test/demo/non-production conditions
+- **SPECIFIED** — architecture/contract documented but not implemented
+- **PLANNED** — future capability without executable implementation
 
-### 2. Canonical Event Layer (`LIVE`)
-Outbound and internal asynchronous events follow the standardized `CapitalEvent` envelope (`deal.submitted`, `deal.qualified`, `routing.completed`, `integration.dispatched`, `webhook.dispatched`).
+A README, schema, mock, or specification does not make a capability LIVE.
 
-### 3. Cryptographic Webhook Signer (`LIVE`)
-All outbound webhooks include standard replay-protected headers:
+---
+
+## Batch A — Production Foundation + Capital API/Event Layer
+
+### REST API
+
+- `GET /api/v1/health` — **LIVE** service and capability status endpoint
+- `GET /api/health` — **LIVE** health alias
+- `POST /api/v1/intake/submit` — **LIVE** validated intake submission and workflow classification; does **not** make lender eligibility or approval decisions
+- `POST /api/v1/routing/match-buy-box` — **SANDBOX** capability-routing endpoint; informational only and requires human review
+- `POST /api/v1/webhooks/test` — **SANDBOX/BETA** signed webhook delivery test endpoint
+- `POST /api/lead` — **LIVE/BETA** provider-agnostic lead dispatch boundary depending on configured external adapters
+
+### Event layer
+
+The server uses a canonical `CapitalEvent` envelope with typed lifecycle events, UUID identifiers, timestamps, versioning, and context metadata.
+
+Initial event families include:
+
+- `assessment.completed`
+- `blueprint.generated`
+- `lead.submitted`
+- `lead.routed`
+- `integration.dispatched`
+- `integration.failed`
+- `routing.completed`
+- webhook dispatch/failure events
+
+### Webhook security
+
+Outbound signed webhooks use HMAC-SHA256 signatures with replay-window verification.
+
+Headers include:
+
 - `X-Capital-Signature: t=<timestamp>,v1=<hmac-sha256>`
 - `X-Capital-Event: <event-type>`
 - `X-Capital-Delivery: del_<uuid>`
 
+### Integration adapters
+
+Server-side provider adapters exist for:
+
+- HubSpot
+- Notion
+- n8n
+- generic outbound webhook
+
+Adapters are credential-isolated and fault-tolerant. If no external adapter successfully accepts a payload, the API reports a degraded state and **does not claim that the payload was buffered or persisted**.
+
+External integrations should be treated as **BETA** when configured and **SPECIFIED** when credentials are absent.
+
 ---
 
-## 🛠 Tech Stack & Architecture
+## Routing Boundary
 
-- **Frontend Core**: React 19+ (Single-Page App with Hash Routing)
-- **Backend / API**: Vercel Serverless Functions (`/api/v1/*`) + Express middleware in dev
-- **Language**: TypeScript 5.x (Strict Mode)
-- **Styling**: Tailwind CSS 4.x with custom dark fintech design tokens
-- **Icons**: `lucide-react`
-- **Build Engine**: Vite 8.x + `tsx` test execution
-- **Persistence & Fallbacks**: Client-side `localStorage` + Serverless buffers + Multi-CRM adapters
-- **CI/CD**: GitHub Actions pipeline enforcing typecheck, lint, automated test suites, and deployment
+The current routing endpoint is intentionally **SANDBOX**.
+
+It can surface program categories that may merit review, but it does not expose or claim:
+
+- live lender availability
+- lender approval
+- lender eligibility
+- verified lender buy boxes
+- interest-rate quotes
+- facility limits
+- underwriting decisions
+
+Consequential financial representations and lender decisions remain human-controlled.
 
 ---
 
-## 🚀 Local Development & Testing
+## Deployment Architecture
+
+```text
+Browser
+→ Capital Operator frontend
+→ secure Capital Operator API / orchestration layer
+→ CRM / database / automation / AI / capital ecosystem
+```
+
+- **Vercel** hosts the serverless API and production-capable application runtime.
+- **GitHub Pages** remains a static public mirror/fallback where intentionally supported.
+- SPA rewrites are configured so `/api/*` is not intercepted by frontend routing.
+- Private credentials must remain server-side and must never be placed in private-style `VITE_*` variables.
+
+---
+
+## Tech Stack
+
+- React 19
+- TypeScript 5
+- Vite 8
+- Tailwind CSS 4
+- Vercel Serverless Functions
+- GitHub Actions
+- `tsx` test execution
+
+---
+
+## Local Development
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start local dev server (port 3000)
 npm run dev
-
-# 3. Run full automated test suite (Unit & API Integration Tests)
 npm test
-
-# 4. Type check and lint
 npm run lint
-
-# 5. Build production bundle
 npm run build
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 capital-operator/
 ├── .github/workflows/
-│   ├── ci.yml                    # Automated typecheck, test runner, and build
-│   └── deploy.yml                # Automated GitHub Pages CI/CD deployment
-├── api/                          # Vercel Serverless API layer
+├── api/
 │   ├── v1/
-│   │   ├── health.ts             # Health check & capability status endpoint
-│   │   ├── intake/submit.ts      # Programmatic intake & triage endpoint
-│   │   ├── routing/match-buy-box.ts # Credit fund buy-box routing endpoint
-│   │   └── webhooks/test.ts      # Sandbox webhook test endpoint
-│   ├── health.ts                 # Health alias forwarder
-│   └── lead.ts                   # Normalized serverless lead endpoint
+│   │   ├── health.ts
+│   │   ├── intake/submit.ts
+│   │   ├── routing/match-buy-box.ts
+│   │   └── webhooks/test.ts
+│   ├── health.ts
+│   └── lead.ts
 ├── server/
-│   ├── events/                   # Event bus, HMAC signer, webhook dispatcher
-│   └── integrations/             # Normalized adapters (HubSpot, Notion, n8n, Webhook)
-├── docs/                         # Comprehensive architectural & domain specifications
+│   ├── events/
+│   ├── http/
+│   └── integrations/
+├── docs/
 ├── src/
-│   ├── components/               # Modular UI components (Assessment, Blueprint, Tools, Calculators)
-│   ├── config/                   # Central configuration & public environment registries
-│   ├── lib/                      # Recommendation engine, analytics, CTA router
-│   ├── schemas/                  # JSON validation schemas for intake, routing, webhooks
-│   ├── types/                    # Canonical TypeScript API and Event contracts
-│   ├── types.ts                  # Core domain models
-│   └── App.tsx                   # Top-level state orchestration
-├── tests/                        # 10+ automated test suites & test runner
-├── AGENTS.md                     # AI Agent operating rules & design tokens
-└── README.md                     # Master project documentation
+│   ├── components/
+│   ├── config/
+│   ├── lib/
+│   ├── schemas/
+│   └── types/
+├── tests/
+├── AGENTS.md
+├── ROADMAP.md
+└── README.md
 ```
 
 ---
 
-## 🌐 Live Ecosystem Links
+## Roadmap
 
-- **Production Application**: [https://jfeimster.github.io/capital-operator/](https://jfeimster.github.io/capital-operator/)
-- **Distilled Funding**: [https://www.distilledfunding.com](https://www.distilledfunding.com)
-- **Operator Underwriting Tools**: [https://tools.distilledfunding.com](https://tools.distilledfunding.com)
-- **Partner & Advisor Onboarding**: [https://tally.so/r/mOe658](https://tally.so/r/mOe658)
-- **Direct Deal Submission**: [https://tally.so/r/mDEJB5](https://tally.so/r/mDEJB5)
+The canonical Phase 0–5 roadmap is tracked in [GitHub Issue #8](https://github.com/JFeimster/capital-operator/issues/8) and summarized in [`ROADMAP.md`](ROADMAP.md).
+
+- **Batch A:** Phase 0 + Phase 1 — production foundation and programmability
+- **Batch B:** Phase 2 + Phase 3 — Skills, agents, production MCP, and ecosystem routing
+- **Batch C:** Phase 4 + Phase 5 — public acquisition/SEO-AEO and authenticated capital-clearing infrastructure
+
+**Production MCP belongs in Phase 2 / Batch B.**
 
 ---
 
-## 📄 License & Compliance
+## Live Ecosystem Links
+
+- **Public Application:** https://jfeimster.github.io/capital-operator/
+- **Distilled Funding:** https://www.distilledfunding.com
+- **Partner & Advisor Onboarding:** https://tally.so/r/mOe658
+- **Funding Intake:** https://tally.so/r/mDEJB5
+
+---
+
+## License & Compliance
 
 Licensed under the **Apache-2.0 License**. See [LICENSE](LICENSE) for details.
 
-*Disclaimer: Capital Operator is an operational diagnostics and workflow architecture platform provided in partnership with Moonshine Capital. Diagnostic blueprints, capacity models, and scorecards are intended solely for operational planning and do not constitute a credit decision, loan commitment, or legal underwriting advice.*
+Capital Operator provides operational diagnostics, workflow architecture, routing assistance, and software infrastructure. Diagnostic outputs and sandbox routing results are for operational planning and human review; they are not credit decisions, loan commitments, lender approvals, or legal/underwriting advice.
