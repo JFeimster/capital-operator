@@ -10,29 +10,14 @@ class MockResponse {
   headers: Record<string, string> = {};
   data: any = null;
 
-  status(code: number) {
-    this.statusCode = code;
-    return this;
-  }
-
-  setHeader(name: string, value: string) {
-    this.headers[name] = value;
-    return this;
-  }
-
-  json(body: any) {
-    this.data = body;
-    return this;
-  }
-
-  end() {
-    return this;
-  }
+  status(code: number) { this.statusCode = code; return this; }
+  setHeader(name: string, value: string) { this.headers[name] = value; return this; }
+  json(body: any) { this.data = body; return this; }
+  end() { return this; }
 }
 
 export async function runIntakeApiTests() {
-  // Test 1: Successful Prime Intake Submission
-  const validPrimeReq = {
+  const validReq = {
     method: 'POST',
     headers: { 'x-partner-id': 'partner_test_alpha' },
     body: {
@@ -48,47 +33,20 @@ export async function runIntakeApiTests() {
     }
   };
   const validRes = new MockResponse();
-  await handler(validPrimeReq, validRes);
+  await handler(validReq, validRes);
 
-  if (validRes.statusCode !== 200) {
-    throw new Error(`Intake test failed: Expected 200, got ${validRes.statusCode}: ${JSON.stringify(validRes.data)}`);
-  }
+  if (validRes.statusCode !== 200) throw new Error(`Intake test failed: Expected 200, got ${validRes.statusCode}: ${JSON.stringify(validRes.data)}`);
+  if (validRes.data?.status !== 'success') throw new Error(`Intake test failed: Expected status success, got ${validRes.data?.status}`);
+  if (!validRes.data?.submission_id?.startsWith('intake_')) throw new Error(`Intake test failed: Invalid submission_id ${validRes.data?.submission_id}`);
+  if (validRes.data?.workflow?.human_review_required !== true) throw new Error('Intake test failed: human review must remain required');
+  if ('prequalification' in validRes.data || 'triage_score' in validRes.data) throw new Error('Intake test failed: endpoint must not return underwriting/prequalification claims');
 
-  if (validRes.data?.status !== 'success') {
-    throw new Error(`Intake test failed: Expected status success, got ${validRes.data?.status}`);
-  }
-
-  if (!validRes.data?.deal_id?.startsWith('deal_')) {
-    throw new Error(`Intake test failed: Invalid deal_id format ${validRes.data?.deal_id}`);
-  }
-
-  if (validRes.data?.triage_score < 75) {
-    throw new Error(`Intake test failed: Prime applicant expected triage score >= 75, got ${validRes.data?.triage_score}`);
-  }
-
-  if (!validRes.data?.prequalification?.eligible) {
-    throw new Error('Intake test failed: Prime applicant should be eligible');
-  }
-
-  // Test 2: Validation failure on missing fields
-  const invalidReq = {
-    method: 'POST',
-    headers: {},
-    body: {
-      business_name: '',
-      email: 'bad-email'
-    }
-  };
+  const invalidReq = { method: 'POST', headers: {}, body: { business_name: '', email: 'bad-email' } };
   const invalidRes = new MockResponse();
   await handler(invalidReq, invalidRes);
 
-  if (invalidRes.statusCode !== 400) {
-    throw new Error(`Intake test failed: Expected 400 on invalid payload, got ${invalidRes.statusCode}`);
-  }
-
-  if (invalidRes.data?.code !== 'VALIDATION_FAILED') {
-    throw new Error(`Intake test failed: Expected code VALIDATION_FAILED, got ${invalidRes.data?.code}`);
-  }
+  if (invalidRes.statusCode !== 400) throw new Error(`Intake test failed: Expected 400 on invalid payload, got ${invalidRes.statusCode}`);
+  if (invalidRes.data?.code !== 'VALIDATION_FAILED') throw new Error(`Intake test failed: Expected VALIDATION_FAILED, got ${invalidRes.data?.code}`);
 
   return { passed: true, testName: 'runIntakeApiTests' };
 }
