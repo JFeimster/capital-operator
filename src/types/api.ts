@@ -55,21 +55,22 @@ export interface IntakeSubmitRequest {
   };
 }
 
-export interface IntakePrequalification {
-  eligible: boolean;
-  max_credit_limit: number;
-  recommended_program: string;
-  matched_lenders_count: number;
-  triage_tier: 'TIER_1_PRIME' | 'TIER_2_EXPEDITE' | 'TIER_3_STRUCTURED' | 'TIER_4_DECLINED';
+export type IntakeWorkflowPriority = 'STANDARD' | 'EXPEDITE' | 'HUMAN_REVIEW';
+
+export interface IntakeWorkflowClassification {
+  priority: IntakeWorkflowPriority;
+  flags: string[];
   rationale: string[];
+  human_review_required: true;
 }
 
 export interface IntakeSubmitResponse {
   status: 'success';
-  deal_id: string;
-  triage_score: number;
-  prequalification: IntakePrequalification;
+  submission_id: string;
+  workflow: IntakeWorkflowClassification;
   dispatched_to: string[];
+  persisted_externally: boolean;
+  degraded: boolean;
   warnings?: string[];
   timestamp: string;
 }
@@ -87,28 +88,25 @@ export interface BuyBoxMatchRequest {
   has_bankruptcy?: boolean;
 }
 
-export type BuyBoxMatchTier = 'HIGH_CONVICTION' | 'QUALIFIED' | 'STRETCH' | 'DISQUALIFIED';
+export type BuyBoxMatchTier = 'POTENTIAL_FIT' | 'REVIEW' | 'NOT_INDICATED';
 
 export interface BuyBoxMatchResult {
-  fund_id: string;
-  fund_name: string;
+  route_id: string;
   program_type: string;
-  match_score: number; // 0 - 100
   match_tier: BuyBoxMatchTier;
-  max_facility_amount: number;
-  estimated_rate_range: string;
-  estimated_term: string;
-  key_requirements: string[];
-  disqualification_reasons?: string[];
+  fit_signals: string[];
+  review_flags: string[];
+  human_review_required: true;
 }
 
 export interface BuyBoxMatchResponse {
   status: 'success';
+  capability_status: 'SANDBOX';
+  disclaimer: string;
   query_summary: {
     requested_amount: number;
     annual_revenue: number;
-    qualified_matches_count: number;
-    top_recommended_program: string;
+    potential_routes_count: number;
   };
   matches: BuyBoxMatchResult[];
   timestamp: string;
