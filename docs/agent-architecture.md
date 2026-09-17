@@ -1,31 +1,29 @@
 # Agent Architecture: Capital Operator
 
-## Autonomous AI Underwriting Agents
-Capital Operator utilizes specialized autonomous agent archetypes to streamline human-in-the-loop commercial debt placement.
+## Status
+**BETA — Phase 2 / Batch B**
 
----
+Capital Operator uses bounded operator-assistance agents, not autonomous underwriting agents.
 
-## Agent Roles & Boundaries
+## Implemented Agents
 
-```
-+----------------------------------------------------------+
-|                 ORCHESTRATOR AGENT                       |
-|  - Intake Routing                                        |
-|  - Task Delegation                                       |
-+------------+--------------------+--------------------+---+
-             |                    |                    |
-             v                    v                    v
-+------------------+    +------------------+    +------------------+
-| INTAKE PARSER    |    | BUY-BOX MATCHER  |    | MEMO SYNTHESIZER |
-| - OCR Validation |    | - Rule Filtering |    | - Executive 2-pg |
-| - NSF Counting   |    | - SLA Tracking   |    |   Memo Drafting  |
-+------------------+    +------------------+    +------------------+
-```
+- **Capital Architect** — synthesizes diagnostic, operating-model, capability, tooling, and ecosystem context.
+- **Intake Analyst** — normalizes intake facts and identifies missing information/review flags.
+- **Capital Case Builder** — organizes verified facts and deterministic metrics into a human-reviewable capital case.
+- **Routing Copilot** — uses SANDBOX route classification to suggest potential categories for operator review.
 
----
+Definitions live in `agents/`.
 
-## Agent Execution Guidelines
-1. **Intake Parser Agent**: Extracts tabular cash flows from bank PDFs. Flags irregularities (e.g., suspicious transfer spikes, undisclosed MCA debits).
-2. **Buy-Box Matcher Agent**: Evaluates borrower attributes strictly against deterministic JSON rule-sets. Prevents blind submissions.
-3. **Credit Memo Synthesizer Agent**: Structures normalized financial summaries into standardized 2-page credit memos.
-4. **Strict Human Judgment Policy**: All AI Agent outputs must pass through human operator validation before formal transmission to credit committees.
+## Execution Boundary
+
+Agents may use canonical MCP/API tools and repository-backed registries. They may summarize, explain, classify, and prepare drafts.
+
+Agents may not:
+- approve/decline financing
+- claim lender eligibility, approval, pricing, or availability
+- fabricate lender criteria or financial facts
+- negotiate terms/exceptions
+- submit externally without explicit authorization
+- replace human judgment on consequential capital decisions
+
+Every agent definition includes structured outputs, escalation conditions, prohibited actions, human checkpoints, fallback behavior, and audit trace requirements.
