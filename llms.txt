@@ -1,0 +1,12 @@
+# Capital Operator (Moonshine Capital)
+
+> Capital Operator is a commercial debt and lending infrastructure diagnostic tool built by Moonshine Capital.
+
+## Key Information
+- **Domain**: Commercial loan brokerage, fractional CFO debt advisory, lending automation.
+- **Philosophy**: Systems handle repetition, AI handles synthesis, humans handle judgment, capital partners handle capital.
+- **Operating Models**: Relationship-Led (0-18), Systemized (19-32), AI-Augmented (33-44), Capital Operator (45+).
+- **Core Workflow**: 8 discrete stages from Demand & Intake to Compounding Retention.
+- **Partner Application**: https://tally.so/r/mOe658
+- **Direct Business Funding Application**: https://tally.so/r/mDEJB5
+- **Operator Tools Directory**: https://tools.distilledfunding.com

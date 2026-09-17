@@ -38,3 +38,24 @@ export const CTAS_CONFIG = {
     compliance: "Capital Operator provides educational and operational blueprints. This system does not constitute a commitment to lend, credit approval authority, or legal advice. Capital options depend on verified borrower profiles, complete documentation, and independent lender partner underwriting criteria."
   }
 };
+
+export const PARTNER_FUNNEL = {
+  url: CTAS_CONFIG.partner.url,
+  headline: CTAS_CONFIG.partner.headline,
+  subheadline: CTAS_CONFIG.partner.body,
+  primaryAction: CTAS_CONFIG.partner.primaryCtaText,
+  secondaryAction: CTAS_CONFIG.partner.secondaryCtaText
+};
+
+export const BUSINESS_FUNDING_FUNNEL = {
+  url: CTAS_CONFIG.businessFunding.url,
+  headline: CTAS_CONFIG.businessFunding.headline,
+  subheadline: CTAS_CONFIG.businessFunding.body,
+  primaryAction: CTAS_CONFIG.businessFunding.ctaText
+};
+
+export const OPERATOR_TOOLS_PORTAL = {
+  url: CTAS_CONFIG.toolsHub.url,
+  title: CTAS_CONFIG.toolsHub.title,
+  primaryAction: CTAS_CONFIG.toolsHub.ctaText
+};

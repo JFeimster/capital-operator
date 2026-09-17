@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AssessmentAnswers",
+  "description": "Validation schema for Capital Operator user answers",
+  "type": "object",
+  "properties": {
+    "q1_currentHandling": { "type": "string" },
+    "q2_monthlyVolume": { "type": "string" },
+    "q3_leadSources": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "q4_pipelineLocation": { "type": "string" },
+    "q5_pursuingDecision": { "type": "string" },
+    "q6_documentHandling": { "type": "string" },
+    "q7_routingDecision": { "type": "string" },
+    "q8_followUpAutomation": { "type": "string" },
+    "q9_breakdownPoints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 3
+    },
+    "q10_priorities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 2
+    },
+    "q11_techBudget": { "type": "string" },
+    "q12_handsOnControl": { "type": "string" }
+  },
+  "required": ["q3_leadSources", "q9_breakdownPoints", "q10_priorities"]
+}

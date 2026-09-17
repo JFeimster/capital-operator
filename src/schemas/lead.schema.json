@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeadCapturePayload",
+  "description": "Validation schema for blueprint dispatch lead capture submissions",
+  "type": "object",
+  "required": ["firstName", "email", "company", "role"],
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "company": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "operatingModel": {
+      "type": "string"
+    },
+    "assessmentAnswers": {
+      "type": "object"
+    }
+  }
+}

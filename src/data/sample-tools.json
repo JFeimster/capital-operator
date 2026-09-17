@@ -1,0 +1,49 @@
+{
+  "tools": [
+    {
+      "id": "tally",
+      "name": "Tally",
+      "category": "intake",
+      "workflowStage": 1,
+      "description": "Minimal, high-conversion conversational form builder with webhook support.",
+      "bestFor": "Frictionless borrower intake and preliminary qualification forms",
+      "notFor": "Complex multi-party loan origination and digital signatures",
+      "pricingTier": "Free / Low",
+      "websiteUrl": "https://tally.so",
+      "isAffiliate": false,
+      "moonshineAsset": false,
+      "capability": "Conversational dynamic lead intake with real-time routing",
+      "tags": ["forms", "intake", "qualification"]
+    },
+    {
+      "id": "filevine",
+      "name": "Filevine / Document Portal",
+      "category": "document collection",
+      "workflowStage": 3,
+      "description": "Secure client document upload portal with automated checklists and progress tracking.",
+      "bestFor": "Replacing email attachments for bank statements, tax returns, and debt schedules",
+      "notFor": "Outbound sales email sequences",
+      "pricingTier": "Mid ($50-$250)",
+      "websiteUrl": "https://www.filevine.com",
+      "isAffiliate": false,
+      "moonshineAsset": false,
+      "capability": "Automated missing document reminder loops and audit-ready storage",
+      "tags": ["documents", "portal", "compliance"]
+    },
+    {
+      "id": "moonshine-partner",
+      "name": "Moonshine Capital Partner Infrastructure",
+      "category": "capital matching",
+      "workflowStage": 5,
+      "description": "Full-stack institutional lending placement, multi-lender syndication, and white-label borrower servicing.",
+      "bestFor": "Firms wanting to monetize deal flow without underwriting balance sheet risk",
+      "notFor": "Consumers seeking personal auto loans or micro credit cards",
+      "pricingTier": "Free / Low",
+      "websiteUrl": "https://tally.so/r/mOe658",
+      "isAffiliate": true,
+      "moonshineAsset": true,
+      "capability": "Turnkey commercial capital placement with revenue participation",
+      "tags": ["partner", "ecosystem", "underwriting"]
+    }
+  ]
+}

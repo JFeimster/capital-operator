@@ -1,0 +1,58 @@
+{
+  "phases": {
+    "first7Days": [
+      {
+        "step": 1,
+        "title": "Establish Single Source of Truth",
+        "description": "Migrate all active leads from email inboxes and sticky notes into a dedicated CRM pipeline with explicit deal stages.",
+        "stageLabel": "STAGE 01 / DEMAND"
+      },
+      {
+        "step": 2,
+        "title": "Deploy Structured Intake Form",
+        "description": "Create a unified intake link capturing revenue, time in business, and financing requested to filter non-starters immediately.",
+        "stageLabel": "STAGE 02 / QUALIFY"
+      },
+      {
+        "step": 3,
+        "title": "Replace Email Attachments with Secure Uploads",
+        "description": "Stop accepting bank statements via raw email attachments. Implement a secure upload checklist link.",
+        "stageLabel": "STAGE 03 / COLLECT"
+      }
+    ],
+    "next30Days": [
+      {
+        "step": 4,
+        "title": "Integrate Financial OCR & Spreading",
+        "description": "Deploy automated bank statement parsing to generate normalized cash-flow and debt-service metrics in minutes.",
+        "stageLabel": "STAGE 04 / SYNTHESIS"
+      },
+      {
+        "step": 5,
+        "title": "Codify Lender Credit Box Matrix",
+        "description": "Document your top 10 capital sources by credit score, industry exclusions, minimum revenue, and state availability.",
+        "stageLabel": "STAGE 05 / ROUTING"
+      },
+      {
+        "step": 6,
+        "title": "Automate Condition Reminder Sequences",
+        "description": "Implement automated SMS/email follow-ups triggered whenever an active file is missing underwriting stipulations.",
+        "stageLabel": "STAGE 07 / CLOSING"
+      }
+    ],
+    "later": [
+      {
+        "step": 7,
+        "title": "Activate Post-Funding Refinance Watchdog",
+        "description": "Set automated calendar reminders at 50% payoff milestones to re-evaluate lower-cost debt refinancing.",
+        "stageLabel": "STAGE 08 / LIFECYCLE"
+      },
+      {
+        "step": 8,
+        "title": "White-Label Partner Distribution Rail",
+        "description": "Offer co-branded intake portals to CPAs, attorneys, and fractional CFOs to turn referral sources into programmatic lead engines.",
+        "stageLabel": "STAGE 01 / EXPANSION"
+      }
+    ]
+  }
+}

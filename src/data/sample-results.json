@@ -1,0 +1,18 @@
+{
+  "sampleResults": [
+    {
+      "segment": "advisor",
+      "operatingModel": "Relationship-Led",
+      "nextUnlock": "Systemized Pipeline & Structured Document Intake",
+      "topFindingHeadline": "Your Firm Possesses Strong Capital Demand But Operates on Fragile Tribal Memory",
+      "executiveSummary": "You have earned trusted client relationships that generate borrowing requests, but deal velocity stalls because intake, status tracking, and lender handoffs depend entirely on manual human touch.",
+      "highestLeverageMove": {
+        "headline": "Replace Email Thread Inquiries with a Structured Intake & Qualification Link",
+        "subheadline": "Capture borrower data cleanly before requesting an introductory call",
+        "action": "Deploy a branded intake form that asks the 4 vital underwriting triage questions: annual revenue, time in business, credit tier, and monthly deposit volume."
+      },
+      "recommendedCapabilitiesCount": 5,
+      "totalTimeEstimated": "2 to 3 weeks to stabilize"
+    }
+  ]
+}

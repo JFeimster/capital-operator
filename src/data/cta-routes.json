@@ -1,0 +1,27 @@
+{
+  "partnerFunnel": {
+    "id": "partner",
+    "url": "https://tally.so/r/mOe658",
+    "headline": "Partner with Moonshine Capital",
+    "subheadline": "Turn Deal Flow into an End-to-End Capital Practice",
+    "primaryAction": "Become a Funding Partner",
+    "secondaryAction": "Explore Infrastructure Model",
+    "trackingTag": "m_cap_partner_v2"
+  },
+  "businessFunding": {
+    "id": "business-funding",
+    "url": "https://tally.so/r/mDEJB5",
+    "headline": "Looking for Capital for Your Business?",
+    "subheadline": "Get matched directly with institutional funding solutions",
+    "primaryAction": "Get a Funding Quote",
+    "trackingTag": "m_cap_direct_v2"
+  },
+  "operatorTools": {
+    "id": "operator-tools",
+    "url": "https://tools.distilledfunding.com",
+    "headline": "Explore the Capital Operator Software Directory",
+    "subheadline": "Every vetted CRM, OCR parser, and deal management tool",
+    "primaryAction": "Explore Tools Hub",
+    "trackingTag": "distilled_tools_v1"
+  }
+}

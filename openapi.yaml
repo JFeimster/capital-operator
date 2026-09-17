@@ -1,0 +1,60 @@
+openapi: 3.0.3
+info:
+  title: Capital Operator API
+  version: 1.0.0
+  description: Public API specification for Capital Operator diagnostic evaluation and partner lead dispatch.
+paths:
+  /api/health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /api/lead:
+    post:
+      summary: Submit lead capture payload for blueprint registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - email
+                - company
+                - role
+              properties:
+                firstName:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                company:
+                  type: string
+                role:
+                  type: string
+                phone:
+                  type: string
+                operatingModel:
+                  type: string
+      responses:
+        '200':
+          description: Lead registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string

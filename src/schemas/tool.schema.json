@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolItem",
+  "description": "Validation schema for recommended capital stack tools",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "category",
+    "workflowStage",
+    "description",
+    "bestFor",
+    "notFor",
+    "pricingTier",
+    "websiteUrl",
+    "isAffiliate",
+    "moonshineAsset",
+    "capability",
+    "tags"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "category": { "type": "string" },
+    "workflowStage": { "type": "integer", "minimum": 1, "maximum": 8 },
+    "description": { "type": "string" },
+    "bestFor": { "type": "string" },
+    "notFor": { "type": "string" },
+    "pricingTier": { "type": "string" },
+    "websiteUrl": { "type": "string", "format": "uri" },
+    "affiliateUrl": { "type": "string" },
+    "isAffiliate": { "type": "boolean" },
+    "moonshineAsset": { "type": "boolean" },
+    "capability": { "type": "string" },
+    "aiRole": { "type": "string" },
+    "humanRole": { "type": "string" },
+    "alternatives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

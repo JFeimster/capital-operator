@@ -565,3 +565,5 @@ export const TOOLS_REGISTRY: Record<string, ToolItem> = {
     tags: ['Moonshine Ecosystem', 'Knowledge Base', 'SOPs']
   }
 };
+
+export const TOOLS_CATALOG: ToolItem[] = Object.values(TOOLS_REGISTRY);

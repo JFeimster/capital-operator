@@ -1,0 +1,42 @@
+{
+  "testCases": [
+    {
+      "name": "Advisor with low automation",
+      "answers": {
+        "q1_currentHandling": "I refer capital opportunities elsewhere today",
+        "q2_monthlyVolume": "Under 10",
+        "q3_leadSources": ["Existing clients or customer base"],
+        "q4_pipelineLocation": "Email inbox / memory / sticky notes",
+        "q5_pursuingDecision": "Gut feel after talking to the borrower",
+        "q6_documentHandling": "Borrowers email them, we download and organize manually",
+        "q7_routingDecision": "I send to the 1-2 lenders or brokers I know best",
+        "q8_followUpAutomation": "Almost nothing — every email, text, and call is manual",
+        "q9_breakdownPoints": ["Getting borrowers to send documents"],
+        "q10_priorities": ["Stop chasing documents manually"],
+        "q11_techBudget": "$0 — using free tools, email, and spreadsheets",
+        "q12_handsOnControl": "Hands-off — I want to introduce deals and receive partner revenue"
+      },
+      "expectedModel": "Relationship-Led",
+      "expectedSegment": "affiliate"
+    },
+    {
+      "name": "High-volume operator with modern CRM",
+      "answers": {
+        "q1_currentHandling": "My team handles an active funding pipeline",
+        "q2_monthlyVolume": "76–200",
+        "q3_leadSources": ["Direct marketing / paid traffic / outbound"],
+        "q4_pipelineLocation": "Vertical lending software / loan origination system",
+        "q5_pursuingDecision": "Automated intake with scoring rules",
+        "q6_documentHandling": "Automated financial data extraction (Plaid, Heron, Inscribe, OCR)",
+        "q7_routingDecision": "We use a structured lender matrix with defined criteria",
+        "q8_followUpAutomation": "Fully automated sequences with human review points",
+        "q9_breakdownPoints": ["Lender responsiveness and condition clearing"],
+        "q10_priorities": ["Package deals faster with less effort"],
+        "q11_techBudget": "$750–$2,000/mo — full operational software stack",
+        "q12_handsOnControl": "Full operator — I want to build and run an end-to-end capital desk"
+      },
+      "expectedModel": "Capital Operator",
+      "expectedSegment": "operator"
+    }
+  ]
+}

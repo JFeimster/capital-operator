@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlueprintResult",
+  "description": "Validation schema for generated Capital Operator blueprint result",
+  "type": "object",
+  "required": [
+    "operatingModel",
+    "nextUnlock",
+    "topFindingHeadline",
+    "executiveSummary",
+    "highestLeverageMove",
+    "segment",
+    "stages",
+    "automationLeaks",
+    "hasRelationshipLeak",
+    "roadmap",
+    "recommendedCapabilitiesCount",
+    "totalTimeEstimated"
+  ],
+  "properties": {
+    "operatingModel": {
+      "type": "string",
+      "enum": [
+        "Relationship-Led",
+        "Systemized",
+        "AI-Augmented",
+        "Capital Operator"
+      ]
+    },
+    "nextUnlock": { "type": "string" },
+    "topFindingHeadline": { "type": "string" },
+    "executiveSummary": { "type": "string" },
+    "highestLeverageMove": {
+      "type": "object",
+      "required": ["headline", "subheadline", "action"],
+      "properties": {
+        "headline": { "type": "string" },
+        "subheadline": { "type": "string" },
+        "action": { "type": "string" }
+      }
+    },
+    "segment": {
+      "type": "string",
+      "enum": ["advisor", "operator", "affiliate", "platform", "new_revenue"]
+    },
+    "stages": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "automationLeaks": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "hasRelationshipLeak": { "type": "boolean" },
+    "roadmap": {
+      "type": "object",
+      "required": ["first7Days", "next30Days", "later"],
+      "properties": {
+        "first7Days": { "type": "array" },
+        "next30Days": { "type": "array" },
+        "later": { "type": "array" }
+      }
+    },
+    "recommendedCapabilitiesCount": { "type": "integer" },
+    "totalTimeEstimated": { "type": "string" }
+  }
+}

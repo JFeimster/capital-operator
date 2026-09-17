@@ -1,0 +1,36 @@
+{
+  "humanCheckpoints": [
+    {
+      "checkpointId": "CHK-QUALIFY",
+      "stage": 2,
+      "name": "Marginal Deal Viability Review",
+      "trigger": "Borrower metrics fall in grey area (e.g. 580-620 FICO with $1M revenue)",
+      "responsibility": "Senior Underwriting Analyst / Dealmaker",
+      "rationale": "Rules handle clear passes and hard declines. Borderline credits require business narrative inspection."
+    },
+    {
+      "checkpointId": "CHK-CREDIT-MEMO",
+      "stage": 4,
+      "name": "AI Executive Credit Memo Sign-Off",
+      "trigger": "AI synthesizes financial statements and outputs draft narrative",
+      "responsibility": "Managing Director / Principal Broker",
+      "rationale": "AI may misinterpret one-off anomalous deposits or tax adjustments. Human sign-off verifies institutional credibility."
+    },
+    {
+      "checkpointId": "CHK-SUBMISSION-CONFIRM",
+      "stage": 6,
+      "name": "Lender Target List & Strategy Approval",
+      "trigger": "Algorithm identifies top 3 capital providers",
+      "responsibility": "Senior Capital Originator",
+      "rationale": "Prevents redundant or conflicting submissions across lender syndicates that could harm borrower reputation."
+    },
+    {
+      "checkpointId": "CHK-TERM-NEGOTIATION",
+      "stage": 7,
+      "name": "Offer Evaluation & Borrower Counseling",
+      "trigger": "Lender issues Term Sheet or LOI",
+      "responsibility": "Trusted Advisor / Dealmaker",
+      "rationale": "Advising on interest rates, covenants, personal guarantees, and amortization terms requires human empathy and tactical judgment."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+# Global Codeowners
+* @moonshinecapital/core-team
+
+# Architecture and Scoring Rules
+/src/lib/ @moonshinecapital/architecture
+/src/config/ @moonshinecapital/product

@@ -1,0 +1,14 @@
+{
+  "blueprintExpectations": [
+    {
+      "model": "Relationship-Led",
+      "mustContainStage": "STAGE 01",
+      "leakPriority": "HIGH"
+    },
+    {
+      "model": "Capital Operator",
+      "mustContainStage": "STAGE 08",
+      "leakPriority": "MEDIUM"
+    }
+  ]
+}

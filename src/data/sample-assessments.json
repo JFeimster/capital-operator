@@ -1,0 +1,58 @@
+{
+  "samples": [
+    {
+      "id": "sample-advisor",
+      "description": "Fractional CFO or wealth advisor referring deals ad-hoc",
+      "answers": {
+        "q1_currentHandling": "I refer capital opportunities elsewhere today",
+        "q2_monthlyVolume": "10–25",
+        "q3_leadSources": ["Existing clients or customer base", "Professional referral partners (CPAs, attorneys, brokers)"],
+        "q4_pipelineLocation": "Email inbox / memory / sticky notes",
+        "q5_pursuingDecision": "Gut feel after talking to the borrower",
+        "q6_documentHandling": "We do not collect documents — our partner handles that",
+        "q7_routingDecision": "I send to the 1-2 lenders or brokers I know best",
+        "q8_followUpAutomation": "Almost nothing — every email, text, and call is manual",
+        "q9_breakdownPoints": [
+          "Losing track of where deals stand in the pipeline",
+          "Borrowers going dark after getting an offer",
+          "Knowing which lender will actually approve the deal"
+        ],
+        "q10_priorities": [
+          "Keep full visibility of every active deal",
+          "Turn capital into revenue without becoming a full-time broker"
+        ],
+        "q11_techBudget": "$50–$250/mo — basic SaaS stack",
+        "q12_handsOnControl": "Hybrid — I want to qualify and advise, with an infrastructure partner packaging and placing"
+      }
+    },
+    {
+      "id": "sample-active-operator",
+      "description": "Active commercial broker or debt advisor with a high-volume team",
+      "answers": {
+        "q1_currentHandling": "My team handles an active funding pipeline",
+        "q2_monthlyVolume": "76–200",
+        "q3_leadSources": [
+          "Direct marketing / paid traffic / outbound",
+          "Professional referral partners (CPAs, attorneys, brokers)",
+          "Organic search / social / content"
+        ],
+        "q4_pipelineLocation": "Standard CRM (HubSpot, Salesforce, Pipedrive)",
+        "q5_pursuingDecision": "Reviewing bank statements manually",
+        "q6_documentHandling": "Dedicated document collection portal with checklists",
+        "q7_routingDecision": "We use a structured lender matrix with defined criteria",
+        "q8_followUpAutomation": "Automated document reminders and pipeline notifications",
+        "q9_breakdownPoints": [
+          "Manual data entry and packaging credit memos",
+          "Getting borrowers to send documents",
+          "Lender responsiveness and condition clearing"
+        ],
+        "q10_priorities": [
+          "Package deals faster with less effort",
+          "Route to the right lender on the first attempt"
+        ],
+        "q11_techBudget": "$750–$2,000/mo — full operational software stack",
+        "q12_handsOnControl": "Full operator — I want to build and run an end-to-end capital desk"
+      }
+    }
+  ]
+}

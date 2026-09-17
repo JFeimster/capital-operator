@@ -1,0 +1,52 @@
+{
+  "capabilities": [
+    {
+      "stage": 1,
+      "name": "Multi-Channel Intake & Triage",
+      "level": "Foundational",
+      "description": "Standardized dynamic web form capturing core commercial credit box parameters."
+    },
+    {
+      "stage": 2,
+      "name": "Deterministic Pre-Qualification",
+      "level": "Foundational",
+      "description": "Instant rejection of out-of-box requests and rapid routing of viable files."
+    },
+    {
+      "stage": 3,
+      "name": "Automated Document Ingestion & Extraction",
+      "level": "Advanced",
+      "description": "OCR parsing of bank PDFs, tax forms, and ledger schedules with automated fraud flags."
+    },
+    {
+      "stage": 4,
+      "name": "AI Credit Memorandum Synthesis",
+      "level": "Advanced",
+      "description": "Automated generation of standardized 2-page executive underwriting memorandums."
+    },
+    {
+      "stage": 5,
+      "name": "Dynamic Lender Matrix Routing",
+      "level": "Scale",
+      "description": "Algorithmic matching of deal profile against real-time institutional credit guidelines."
+    },
+    {
+      "stage": 6,
+      "name": "Governed Parallel Submissions",
+      "level": "Scale",
+      "description": "Simultaneous offer solicitation without shotgunning borrower credit or creating lender channel conflict."
+    },
+    {
+      "stage": 7,
+      "name": "Stipulation & Wire Clearing Control",
+      "level": "Execution",
+      "description": "Automated condition tracking, lender checklist synchronization, and closing verification."
+    },
+    {
+      "stage": 8,
+      "name": "Autonomous Renewal & Refinance Loops",
+      "level": "Compounding",
+      "description": "Quarterly financial monitoring triggering proactive renewal and refinancing opportunities."
+    }
+  ]
+}

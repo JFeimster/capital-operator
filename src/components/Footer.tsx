@@ -96,8 +96,11 @@ export const Footer: React.FC = () => {
             <ShieldCheck className="h-4 w-4 text-slate-400" />
             <span>© {new Date().getFullYear()} Moonshine Capital. All rights reserved.</span>
           </div>
-          <div>
-            <span>Turn Capital Demand Into Infrastructure.</span>
+          <div className="flex items-center gap-4">
+            <a href="#about" className="hover:text-emerald-400 transition-colors">About</a>
+            <a href="#methodology" className="hover:text-emerald-400 transition-colors">Methodology</a>
+            <a href="#privacy" className="hover:text-emerald-400 transition-colors">Privacy</a>
+            <a href="#terms" className="hover:text-emerald-400 transition-colors">Terms</a>
           </div>
         </div>
 

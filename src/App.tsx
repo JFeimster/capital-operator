@@ -18,6 +18,10 @@ import { CapitalArchitectureMap } from './components/CapitalArchitectureMap';
 import { AssessmentAnswers, BlueprintResult } from './types';
 import { generateBlueprint } from './lib/recommendationEngine';
 import { trackEvent } from './lib/analytics';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsOfService } from './pages/TermsOfService';
+import { Methodology } from './pages/Methodology';
+import { AboutCapitalOperator } from './pages/AboutCapitalOperator';
 
 const INITIAL_ANSWERS: AssessmentAnswers = {
   q1_currentHandling: '',
@@ -69,6 +73,14 @@ export default function App() {
       return null;
     }
   });
+
+  const [currentRoute, setCurrentRoute] = useState<string>(() => window.location.hash);
+
+  useEffect(() => {
+    const onHashChange = () => setCurrentRoute(window.location.hash);
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   // Persist state changes to localStorage
   useEffect(() => {
@@ -190,73 +202,90 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* VIEW 1: Diagnostic Questionnaire in progress */}
-        {isAssessing && (
-          <div className="no-print">
-            <AssessmentStep
-              currentStep={currentStep}
-              answers={answers}
-              onUpdateAnswer={handleUpdateAnswer}
-              onNext={handleNext}
-              onBack={handleBack}
-            />
-          </div>
+        {currentRoute === '#privacy' && (
+          <PrivacyPolicy onBack={() => { window.location.hash = ''; }} />
+        )}
+        {currentRoute === '#terms' && (
+          <TermsOfService onBack={() => { window.location.hash = ''; }} />
+        )}
+        {currentRoute === '#methodology' && (
+          <Methodology onBack={() => { window.location.hash = ''; }} />
+        )}
+        {currentRoute === '#about' && (
+          <AboutCapitalOperator onBack={() => { window.location.hash = ''; }} />
         )}
 
-        {/* VIEW 2: Results View (Blueprint Generated) */}
-        {!isAssessing && blueprint && (
-          <div>
-            <div className="no-print">
-              <ResultsView
-                blueprint={blueprint}
-                onRestart={handleRestart}
-              />
-            </div>
+        {!['#privacy', '#terms', '#methodology', '#about'].includes(currentRoute) && (
+          <>
+            {/* VIEW 1: Diagnostic Questionnaire in progress */}
+            {isAssessing && (
+              <div className="no-print">
+                <AssessmentStep
+                  currentStep={currentStep}
+                  answers={answers}
+                  onUpdateAnswer={handleUpdateAnswer}
+                  onNext={handleNext}
+                  onBack={handleBack}
+                />
+              </div>
+            )}
 
-            {/* Hidden except during window.print() */}
-            <PrintView blueprint={blueprint} />
-          </div>
-        )}
-
-        {/* VIEW 3: Landing / Assessment Introduction */}
-        {!isAssessing && !blueprint && (
-          <div className="no-print">
-            <Hero
-              onStartAssessment={handleStartAssessment}
-              onExploreStack={handleExploreStack}
-            />
-
-            <PositioningSection
-              onStartAssessment={handleStartAssessment}
-            />
-
-            <AudienceCards
-              onSelectSituation={handleSelectSituation}
-            />
-
-            {/* Architecture Preview Section */}
-            <div id="architecture-preview" className="py-16 bg-[#07090d] border-b border-slate-800/80">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-4">
-                  <span className="text-xs font-semibold tracking-widest text-cyan-400 uppercase font-mono-code">
-                    INTERACTIVE PREVIEW
-                  </span>
-                  <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                    The Modern Capital Stack
-                  </h2>
-                  <p className="mt-3 text-base text-slate-400">
-                    Explore how repetitive administrative workflows, AI synthesis, and human judgment collaborate across an active deal lifecycle.
-                  </p>
+            {/* VIEW 2: Results View (Blueprint Generated) */}
+            {!isAssessing && blueprint && (
+              <div>
+                <div className="no-print">
+                  <ResultsView
+                    blueprint={blueprint}
+                    onRestart={handleRestart}
+                  />
                 </div>
 
-                <CapitalArchitectureMap />
+                {/* Hidden except during window.print() */}
+                <PrintView blueprint={blueprint} />
               </div>
-            </div>
+            )}
 
-            <AssessmentIntro
-              onStart={handleStartAssessment}
-            />
-          </div>
+            {/* VIEW 3: Landing / Assessment Introduction */}
+            {!isAssessing && !blueprint && (
+              <div className="no-print">
+                <Hero
+                  onStartAssessment={handleStartAssessment}
+                  onExploreStack={handleExploreStack}
+                />
+
+                <PositioningSection
+                  onStartAssessment={handleStartAssessment}
+                />
+
+                <AudienceCards
+                  onSelectSituation={handleSelectSituation}
+                />
+
+                {/* Architecture Preview Section */}
+                <div id="architecture-preview" className="py-16 bg-[#07090d] border-b border-slate-800/80">
+                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="text-center max-w-3xl mx-auto mb-4">
+                      <span className="text-xs font-semibold tracking-widest text-cyan-400 uppercase font-mono-code">
+                        INTERACTIVE PREVIEW
+                      </span>
+                      <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        The Modern Capital Stack
+                      </h2>
+                      <p className="mt-3 text-base text-slate-400">
+                        Explore how repetitive administrative workflows, AI synthesis, and human judgment collaborate across an active deal lifecycle.
+                      </p>
+                    </div>
+
+                    <CapitalArchitectureMap />
+                  </div>
+                </div>
+
+                <AssessmentIntro
+                  onStart={handleStartAssessment}
+                />
+              </div>
+            )}
+          </>
         )}
       </main>
 
