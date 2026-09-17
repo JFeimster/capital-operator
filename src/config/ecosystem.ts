@@ -18,6 +18,7 @@ export interface EcosystemProduct {
   category: EcosystemCategory;
   recommendedFor: string;
   workflowStages: number[];
+  stageLabel?: string;
   ctaText: string;
   capabilityHighlight: string;
   capabilityIds: string[];
