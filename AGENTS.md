@@ -49,3 +49,15 @@ This document provides system rules, operational guidelines, and architectural c
 - **State Management**: React functional hooks with localStorage serialization. Never mutate state directly.
 - **Safe State Dependencies**: Avoid unstable object references in `useEffect` dependency arrays.
 - **DOM & Print**: Ensure all interactive action bars, forms, and landing sections include `no-print` classes, while `PrintView.tsx` uses `print-only`.
+
+
+---
+
+### 5. Batch B AI / MCP / Ecosystem Rules
+
+- `src/lib/recommendationEngine.ts`, `src/lib/capitalMath.ts`, `src/lib/capitalStack.ts`, and `src/lib/capitalRouting.ts` own deterministic logic. Do not reimplement them inside prompts or agents.
+- `api/mcp.ts` + `server/mcp/*` are the production MCP boundary.
+- `skills/*/SKILL.md` and `agents/*.md` define bounded AI behavior; they may synthesize but may not autonomously approve, decline, price, negotiate, submit, or claim lender eligibility.
+- `src/config/capabilities.ts` and `src/config/ecosystem.ts` are the canonical ecosystem/control-plane registries. Do not hard-code duplicate product URLs or capability metadata in pages.
+- `server/documents/*` is provider-agnostic. Do not add paid OCR/data provider calls without an explicitly configured integration.
+- SANDBOX routing must always remain labeled informational and human-reviewed.
