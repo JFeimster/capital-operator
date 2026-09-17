@@ -6,9 +6,9 @@
  * eligibility, pricing, approval, or a live lender network.
  */
 
-import { BuyBoxMatchRequest, BuyBoxMatchResponse, BuyBoxMatchResult, ApiErrorResponse } from '../../../src/types/api';
-import { serverEventBus } from '../../../server/events/eventBus';
-import { applyCors } from '../../../server/http/cors';
+import { BuyBoxMatchRequest, BuyBoxMatchResponse, BuyBoxMatchResult, ApiErrorResponse } from '../../../src/types/api.js';
+import { serverEventBus } from '../../../server/events/eventBus.js';
+import { applyCors } from '../../../server/http/cors.js';
 
 type RouteDefinition = {
   route_id: string;
