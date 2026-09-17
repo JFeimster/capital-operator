@@ -12,9 +12,9 @@ import {
   AutomationLeakItem, 
   RoadmapItem,
   StagePriority
-} from '../types';
-import { TOOLS_REGISTRY } from '../config/tools';
-import { WORKFLOW_STAGES } from '../config/workflowStages';
+} from '../types.js';
+import { TOOLS_REGISTRY } from '../config/tools.js';
+import { WORKFLOW_STAGES } from '../config/workflowStages.js';
 
 export function generateBlueprint(answers: AssessmentAnswers): BlueprintResult {
   // 1. Determine User Segment
