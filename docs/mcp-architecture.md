@@ -1,35 +1,70 @@
 # Model Context Protocol (MCP) Architecture
 
-## Overview
-Capital Operator implements the **Model Context Protocol (MCP)** specification, exposing commercial lending tools and debt capacity calculators directly to AI Agents (Claude Desktop, Cursor, Gemini CLI, n8n Agent Nodes).
+## Status
+
+**PLANNED — Phase 2 / Batch B**
+
+Capital Operator does not currently expose a production MCP server. This document defines the target architecture for Phase 2 and must not be interpreted as evidence that MCP tools are live.
+
+## Design Rule
+
+MCP must expose canonical Capital Operator logic rather than creating a second scoring, routing, underwriting, or eligibility system inside prompts or tool handlers.
+
+Consequential capital decisions remain human-controlled.
 
 ---
 
-## MCP Server Tool Registry
+## Initial Production MCP Tool Targets
 
-### 1. `calculate_commercial_dscr`
-- **Description**: Computes Debt Service Coverage Ratio (DSCR), global cash flow, and flags risk thresholds for non-bank credit committees.
-- **Parameters**:
-  - `monthly_net_operating_income` (number, required)
-  - `monthly_debt_service` (number, required)
-  - `existing_mca_daily_payments` (number, optional)
-- **Output**:
-  - `dscr_ratio`: numeric value (e.g. 1.35)
-  - `credit_health`: `"HEALTHY"` | `"BORDERLINE"` | `"HIGH_RISK"`
-  - `max_recommended_additional_debt_service`: number
+### `generate_capital_blueprint`
+
+Expose the canonical blueprint-generation capability using existing application logic.
+
+### `calculate_commercial_dscr`
+
+Expose the canonical deterministic DSCR calculator only after its production contract, assumptions, validation, and tests are reconciled with the existing calculator implementation.
+
+### `recommend_capital_stack`
+
+Return structured capital-stack recommendations using validated deterministic logic plus AI synthesis where appropriate. Outputs must not be represented as lender approval or binding eligibility.
+
+### `query_capital_tools`
+
+Query the canonical Capital Operator tool/resource registry.
+
+### `explain_operating_stage`
+
+Explain one of the eight canonical Capital Operator workflow stages using repository-backed source material.
+
+### `match_capital_routes`
+
+Add only after the underlying routing service is production-ready. The current `/api/v1/routing/match-buy-box` endpoint is **SANDBOX** capability routing and is not a verified live lender buy-box network.
 
 ---
 
-### 2. `query_lender_buy_box`
-- **Description**: Queries Moonshine Capital's 50+ debt fund criteria matrix for matched programs.
-- **Parameters**:
-  - `annual_revenue` (number)
-  - `time_in_business_months` (number)
-  - `facility_type` (`"ABL"` | `"SBA_7A"` | `"TERM_DEBT"` | `"EQUIPMENT"`)
-  - `frequently_nsf` (boolean)
-- **Output**: Array of matched credit funds with target SLA and advance rate percentages.
+## Required MCP Foundation
+
+Phase 2 implementation must provide:
+
+- capability discovery
+- input/output schemas
+- validation
+- normalized errors
+- client setup documentation
+- supported transport documentation
+- tests
+- explicit human-review boundaries
+- truthful capability status
+
+A documented tool is not LIVE unless it is executable and validated.
 
 ---
 
-### 3. `generate_capital_blueprint`
-- **Description**: Synthesizes 12 diagnostic responses into an 8-stage transformation roadmap and prioritized operational leak checklist.
+## Future Tools
+
+Potential later tools include:
+
+- `get_deal_status`
+- `build_capital_case`
+
+These depend on later authenticated operational infrastructure and must remain `PLANNED` until their backing services exist.
