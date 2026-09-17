@@ -1,0 +1,6 @@
+{
+  "name": "Capital Operator",
+  "description": "Interactive capital infrastructure builder for advisors, operators, agencies, and platforms to turn financing demand into a repeatable operating capability.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

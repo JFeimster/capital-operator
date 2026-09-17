@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  
+  body {
+    font-family: var(--font-display);
+    background-color: #07090d;
+    color: #e2e8f0;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+}
+
+.font-mono-code {
+  font-family: var(--font-mono);
+}
+
+/* Command Center Grid System */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.03) 35%, transparent 70%);
+}
+
+/* Custom glow borders and shadows */
+.card-glow {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+}
+
+.card-glow-hover:hover {
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.35), 0 8px 30px -4px rgba(16, 185, 129, 0.15);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Print Specific Styles */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-break-after {
+    page-break-after: always !important;
+  }
+
+  .bg-grid-pattern, .bg-radial-gradient {
+    background-image: none !important;
+    background: transparent !important;
+  }
+
+  .card-glow {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+}
