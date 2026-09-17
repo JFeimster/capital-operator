@@ -4,117 +4,51 @@
  */
 
 import crypto from 'crypto';
-import { IntakeSubmitRequest, IntakeSubmitResponse, IntakePrequalification, ApiErrorResponse } from '../../../src/types/api';
+import { IntakeSubmitRequest, IntakeSubmitResponse, IntakeWorkflowClassification, ApiErrorResponse } from '../../../src/types/api';
 import { serverEventBus } from '../../../server/events/eventBus';
 import { dispatchToIntegrations } from '../../../server/integrations/dispatch';
+import { applyCors } from '../../../server/http/cors';
 
-function calculateDeterministicTriage(req: IntakeSubmitRequest): { score: number; prequal: IntakePrequalification } {
-  let score = 50; // Baseline
+function classifyWorkflow(req: IntakeSubmitRequest): IntakeWorkflowClassification {
+  const flags: string[] = [];
   const rationale: string[] = [];
 
-  const annualRev = Number(req.annual_revenue) || 0;
-  const monthlyDeposits = Number(req.avg_monthly_deposits) || 0;
-  const tibMonths = Number(req.time_in_business_months) || 0;
-  const creditScore = req.credit_score ? Number(req.credit_score) : 680;
-
-  // 1. Revenue Scale & Stability
-  if (annualRev >= 1000000) {
-    score += 15;
-    rationale.push('Annual revenue >= $1.0M qualifies for middle-market debt funds.');
-  } else if (annualRev >= 250000) {
-    score += 10;
-    rationale.push('Annual revenue >= $250k meets standard commercial lending baseline.');
-  } else {
-    score -= 10;
-    rationale.push('Annual revenue under $250k restricts options to micro-credit or revenue advances.');
+  if (req.target_amount && req.target_amount >= 250000) {
+    flags.push('LARGE_REQUEST');
+    rationale.push('Requested amount merits structured human review.');
   }
-
-  // 2. Operational History
-  if (tibMonths >= 36) {
-    score += 15;
-    rationale.push('3+ years operating history unlocks bank and SBA 7(a) senior lines.');
-  } else if (tibMonths >= 12) {
-    score += 8;
-    rationale.push('1+ year history meets non-bank fintech and asset-based revolver criteria.');
-  } else {
-    score -= 15;
-    rationale.push('Under 12 months operating history requires credit enhancements or collateral.');
+  if (req.time_in_business_months < 12) {
+    flags.push('EARLY_STAGE_BUSINESS');
+    rationale.push('Operating history is under 12 months.');
   }
-
-  // 3. Deposit Consistency
-  const impliedAnnualRunRate = monthlyDeposits * 12;
-  if (impliedAnnualRunRate >= annualRev * 0.9) {
-    score += 10;
-    rationale.push('Deposit run-rate indicates strong, stable cash flow velocity.');
-  } else {
-    score -= 5;
-    rationale.push('Monthly deposit variance suggests seasonal or decelerating revenue.');
+  if (req.hasOwnProperty('credit_score') && typeof req.credit_score === 'number' && req.credit_score < 620) {
+    flags.push('CREDIT_REVIEW');
+    rationale.push('Credit profile should be reviewed before any capital representation is made.');
   }
-
-  // 4. Principal Credit Profile
-  if (creditScore >= 700) {
-    score += 10;
-    rationale.push('FICO >= 700 allows prime single-digit interest rate pricing.');
-  } else if (creditScore >= 620) {
-    score += 5;
-    rationale.push('FICO >= 620 satisfies standard non-bank asset-based requirements.');
-  } else {
-    score -= 10;
-    rationale.push('Sub-620 FICO requires revenue-based structure or hard collateral.');
-  }
-
-  // Clamp score between 10 and 98
-  score = Math.max(10, Math.min(98, score));
-
-  // Determine borrowing capacity (typical rule of thumb: 1.0x to 1.5x monthly revenue or 10-15% of annual revenue)
-  let maxCreditLimit = Math.round((monthlyDeposits * 1.25) / 5000) * 5000;
-  if (annualRev >= 1000000 && tibMonths >= 24) {
-    maxCreditLimit = Math.max(maxCreditLimit, Math.round((annualRev * 0.15) / 10000) * 10000);
-  }
-
-  let recommendedProgram = 'REVOLVING_CREDIT_LINE';
-  let triageTier: IntakePrequalification['triage_tier'] = 'TIER_2_EXPEDITE';
-
-  if (score >= 80) {
-    triageTier = 'TIER_1_PRIME';
-    recommendedProgram = tibMonths >= 24 && creditScore >= 680 ? 'SBA_7A_SENIOR_LINE' : 'ASSET_BASED_REVOLVER';
-  } else if (score >= 60) {
-    triageTier = 'TIER_2_EXPEDITE';
-    recommendedProgram = 'COMMERCIAL_WORKING_CAPITAL';
-  } else if (score >= 40) {
-    triageTier = 'TIER_3_STRUCTURED';
-    recommendedProgram = 'REVENUE_BASED_FINANCING';
-  } else {
-    triageTier = 'TIER_4_DECLINED';
-    recommendedProgram = 'CREDIT_REPAIR_OR_COLLATERAL_ONLY';
-  }
-
-  return {
-    score,
-    prequal: {
-      eligible: score >= 40,
-      max_credit_limit: maxCreditLimit,
-      recommended_program: recommendedProgram,
-      matched_lenders_count: score >= 80 ? 6 : score >= 60 ? 4 : score >= 40 ? 2 : 0,
-      triage_tier: triageTier,
-      rationale
+  if (req.annual_revenue > 0 && req.avg_monthly_deposits > 0) {
+    const impliedRunRate = req.avg_monthly_deposits * 12;
+    const variance = Math.abs(impliedRunRate - req.annual_revenue) / req.annual_revenue;
+    if (variance >= 0.35) {
+      flags.push('REVENUE_DEPOSIT_VARIANCE');
+      rationale.push('Reported annual revenue and deposit run-rate differ materially.');
     }
-  };
+  }
+
+  let priority: IntakeWorkflowClassification['priority'] = 'STANDARD';
+  if (flags.includes('LARGE_REQUEST')) priority = 'EXPEDITE';
+  if (flags.includes('CREDIT_REVIEW') || flags.includes('EARLY_STAGE_BUSINESS') || flags.includes('REVENUE_DEPOSIT_VARIANCE')) {
+    priority = 'HUMAN_REVIEW';
+  }
+
+  if (rationale.length === 0) rationale.push('Submission passed basic intake validation and is ready for human review.');
+
+  return { priority, flags, rationale, human_review_required: true };
 }
 
 export default async function handler(req: any, res: any) {
-  // CORS configuration
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, X-Partner-ID'
-  );
+  applyCors(req, res, ['POST', 'OPTIONS']);
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method !== 'POST') {
     const errorResponse: ApiErrorResponse = {
@@ -130,23 +64,12 @@ export default async function handler(req: any, res: any) {
     const rawBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const body: IntakeSubmitRequest = rawBody || {};
 
-    // 1. Validation
     const errors: string[] = [];
-    if (!body.business_name || body.business_name.trim().length < 2) {
-      errors.push('business_name is required (min 2 characters).');
-    }
-    if (!body.email || !body.email.includes('@')) {
-      errors.push('A valid email address is required.');
-    }
-    if (typeof body.annual_revenue !== 'number' || body.annual_revenue < 0) {
-      errors.push('annual_revenue must be a non-negative number.');
-    }
-    if (typeof body.avg_monthly_deposits !== 'number' || body.avg_monthly_deposits < 0) {
-      errors.push('avg_monthly_deposits must be a non-negative number.');
-    }
-    if (typeof body.time_in_business_months !== 'number' || body.time_in_business_months < 0) {
-      errors.push('time_in_business_months must be a non-negative integer.');
-    }
+    if (!body.business_name || body.business_name.trim().length < 2) errors.push('business_name is required (min 2 characters).');
+    if (!body.email || !body.email.includes('@')) errors.push('A valid email address is required.');
+    if (typeof body.annual_revenue !== 'number' || body.annual_revenue < 0) errors.push('annual_revenue must be a non-negative number.');
+    if (typeof body.avg_monthly_deposits !== 'number' || body.avg_monthly_deposits < 0) errors.push('avg_monthly_deposits must be a non-negative number.');
+    if (typeof body.time_in_business_months !== 'number' || body.time_in_business_months < 0) errors.push('time_in_business_months must be a non-negative integer.');
 
     if (errors.length > 0) {
       const errorResponse: ApiErrorResponse = {
@@ -159,44 +82,39 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json(errorResponse);
     }
 
-    // 2. Generate Deal Identity & Triage Assessment
-    const dealId = `deal_${crypto.randomBytes(6).toString('hex')}`;
-    const { score, prequal } = calculateDeterministicTriage(body);
+    const submissionId = `intake_${crypto.randomBytes(6).toString('hex')}`;
+    const workflow = classifyWorkflow(body);
 
-    // 3. Emit Lifecycle Events
-    await serverEventBus.emit('deal.submitted', {
-      deal_id: dealId,
+    await serverEventBus.emit('lead.submitted', {
+      submission_id: submissionId,
       business_name: body.business_name,
-      email: body.email,
       annual_revenue: body.annual_revenue,
-      avg_monthly_deposits: body.avg_monthly_deposits,
-      triage_score: score,
-      prequalification: prequal,
+      requested_amount: body.target_amount,
+      workflow_priority: workflow.priority,
       partner_id: body.partner_id || req.headers['x-partner-id'] || ''
     });
 
-    await serverEventBus.emit('deal.qualified', {
-      deal_id: dealId,
-      triage_score: score,
-      eligible: prequal.eligible,
-      max_credit_limit: prequal.max_credit_limit,
-      recommended_program: prequal.recommended_program
-    });
-
-    // 4. Server Integration Dispatch
     const dispatchSummary = await dispatchToIntegrations(body, {
-      deal_id: dealId,
-      triage_score: score,
+      submission_id: submissionId,
+      workflow_priority: workflow.priority,
       partner_id: body.partner_id || req.headers['x-partner-id'] || '',
       utm_source: body.attribution?.utm_source || ''
     });
 
+    if (dispatchSummary.dispatchedTo.length > 0) {
+      await serverEventBus.emit('lead.routed', {
+        submission_id: submissionId,
+        destinations: dispatchSummary.dispatchedTo
+      });
+    }
+
     const response: IntakeSubmitResponse = {
       status: 'success',
-      deal_id: dealId,
-      triage_score: score,
-      prequalification: prequal,
+      submission_id: submissionId,
+      workflow,
       dispatched_to: dispatchSummary.dispatchedTo,
+      persisted_externally: dispatchSummary.persistedExternally,
+      degraded: dispatchSummary.degraded,
       warnings: dispatchSummary.errors,
       timestamp: new Date().toISOString()
     };
