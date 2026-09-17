@@ -3,7 +3,7 @@
  * src/config/tools.ts
  */
 
-import { ToolItem } from '../types';
+import type { ToolItem } from '../types.js';
 
 export const TOOLS_REGISTRY: Record<string, ToolItem> = {
   // === INTAKE & DEMAND GENERATION ===
