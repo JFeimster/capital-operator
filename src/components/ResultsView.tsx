@@ -26,6 +26,8 @@ import {
 import { BlueprintResult, StagePriority } from '../types';
 import { SEGMENTS_CONFIG } from '../config/segments';
 import { CTAS_CONFIG } from '../config/ctas';
+import { ECOSYSTEM_CATALOG } from '../config/ecosystem';
+import { TALLY_ROUTES } from '../config/tally';
 import { CapitalArchitectureMap } from './CapitalArchitectureMap';
 import { LeadCapture } from './LeadCaptureModal';
 import { trackEvent } from '../lib/analytics';
@@ -651,6 +653,59 @@ ${CTAS_CONFIG.partner.url}
         </div>
       </div>
 
+      {/* 9.5 Connected Ecosystem Capability Recommendations */}
+      <div className="mt-14 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8 card-glow">
+        <div className="max-w-3xl mb-6">
+          <span className="text-xs font-semibold tracking-widest text-cyan-400 uppercase font-mono-code">
+            CONNECTED CAPITAL ECOSYSTEM // MOONSHINE & DISTILLED
+          </span>
+          <h3 className="mt-1 text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Production Operating Infrastructure
+          </h3>
+          <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+            Rather than assembling disconnected SaaS tools from scratch, activate these turnkey platforms built specifically for commercial debt originators, fractional CFOs, and deal desks.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {ECOSYSTEM_CATALOG.map((prod) => (
+            <div key={prod.id} className="rounded-xl border border-slate-800/80 bg-slate-950/80 p-5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-[10px] font-mono-code px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 font-semibold uppercase">
+                    {prod.stageLabel}
+                  </span>
+                  <span className="text-[10px] font-mono-code text-slate-500 uppercase">
+                    {prod.category}
+                  </span>
+                </div>
+                <h4 className="text-base font-bold text-white tracking-tight">{prod.name}</h4>
+                <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">{prod.description}</p>
+                <div className="mt-3 text-[11px] text-emerald-400 font-mono-code">
+                  ⚡ {prod.capabilityHighlight}
+                </div>
+                <div className="mt-2 text-[11px] text-slate-400">
+                  <strong className="text-slate-300">Recommended For:</strong> {prod.recommendedFor}
+                </div>
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-slate-800/80">
+                <a
+                  href={prod.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('ecosystem_product_clicked', { product: prod.id })}
+                  className="w-full inline-flex items-center justify-center space-x-2 rounded-lg bg-slate-900 border border-slate-700 px-4 py-2.5 text-xs font-bold text-slate-200 hover:text-white hover:border-cyan-500/50 hover:bg-slate-800 transition-all cursor-pointer"
+                >
+                  <span>{prod.ctaText}</span>
+                  <ExternalLink className="h-3.5 w-3.5 text-cyan-400" />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* 10. Lead Capture Section */}
       {!leadCaptured && (
         <LeadCapture
@@ -660,7 +715,7 @@ ${CTAS_CONFIG.partner.url}
         />
       )}
 
-      {/* 11. Primary Partner Conversion Block */}
+      {/* 11. Primary Partner & Operator Conversion Block */}
       <div className="mt-14 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-slate-950 via-[#0a1412] to-slate-950 p-8 sm:p-10 card-glow text-center lg:text-left">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="max-w-2xl">
@@ -677,24 +732,24 @@ ${CTAS_CONFIG.partner.url}
 
           <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
             <a
-              href={CTAS_CONFIG.partner.url}
+              href={TALLY_ROUTES.partner.url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackEvent('partner_cta_clicked', { source: 'primary_partner_block' })}
               className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl bg-emerald-500 px-7 py-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/25 hover:bg-emerald-400 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
             >
-              <span>{CTAS_CONFIG.partner.primaryCtaText}</span>
+              <span>{TALLY_ROUTES.partner.defaultCtaText}</span>
               <ArrowRight className="h-4 w-4" />
             </a>
 
             <a
-              href={CTAS_CONFIG.partner.url}
+              href={TALLY_ROUTES.submitDeal.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackEvent('partner_cta_clicked', { source: 'explore_model_button' })}
+              onClick={() => trackEvent('deal_cta_clicked', { source: 'submit_deal_button' })}
               className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl border border-slate-700 bg-slate-900/80 px-6 py-4 text-sm font-semibold text-slate-300 hover:text-white hover:border-slate-600 transition-all cursor-pointer"
             >
-              <span>{CTAS_CONFIG.partner.secondaryCtaText}</span>
+              <span>{TALLY_ROUTES.submitDeal.defaultCtaText}</span>
               <ExternalLink className="h-4 w-4" />
             </a>
           </div>
@@ -713,13 +768,13 @@ ${CTAS_CONFIG.partner.url}
         </div>
 
         <a
-          href={CTAS_CONFIG.businessFunding.url}
+          href={TALLY_ROUTES.funding.url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackEvent('funding_cta_clicked', { source: 'direct_funding_block' })}
           className="inline-flex items-center justify-center space-x-2 rounded-xl border border-slate-700 bg-slate-800/80 px-5 py-2.5 text-xs font-semibold text-slate-200 hover:text-white hover:border-slate-600 transition-all cursor-pointer shrink-0"
         >
-          <span>{CTAS_CONFIG.businessFunding.ctaText}</span>
+          <span>{TALLY_ROUTES.funding.defaultCtaText}</span>
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
       </div>

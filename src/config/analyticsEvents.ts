@@ -15,6 +15,8 @@ export const ANALYTICS_EVENTS = {
   TOOL_CLICKED: 'tool_clicked',
   PARTNER_CTA_CLICKED: 'partner_cta_clicked',
   FUNDING_CTA_CLICKED: 'funding_cta_clicked',
+  DEAL_CTA_CLICKED: 'deal_cta_clicked',
+  ECOSYSTEM_PRODUCT_CLICKED: 'ecosystem_product_clicked',
   ARCHITECTURE_MAP_NODE_CLICKED: 'architecture_map_node_clicked',
   SITUATION_SELECTED: 'situation_selected',
   ASSESSMENT_RESTARTED: 'assessment_restarted'

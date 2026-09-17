@@ -15,6 +15,8 @@ export type AnalyticsEventType =
   | 'lead_submitted'
   | 'partner_cta_clicked'
   | 'funding_cta_clicked'
+  | 'deal_cta_clicked'
+  | 'ecosystem_product_clicked'
   | 'blueprint_printed'
   | 'blueprint_copied'
   | 'assessment_restarted';

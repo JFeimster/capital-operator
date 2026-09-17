@@ -22,6 +22,7 @@ import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Methodology } from './pages/Methodology';
 import { AboutCapitalOperator } from './pages/AboutCapitalOperator';
+import { captureAttribution, updateAttributionDiagnostic } from './lib/attribution';
 
 const INITIAL_ANSWERS: AssessmentAnswers = {
   q1_currentHandling: '',
@@ -77,6 +78,7 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = useState<string>(() => window.location.hash);
 
   useEffect(() => {
+    captureAttribution();
     const onHashChange = () => setCurrentRoute(window.location.hash);
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
@@ -147,6 +149,7 @@ export default function App() {
       const result = generateBlueprint(answers);
       setBlueprint(result);
       setIsAssessing(false);
+      updateAttributionDiagnostic(result.segment, result.operatingModel);
       trackEvent('assessment_completed', {
         operatingModel: result.operatingModel,
         segment: result.segment
