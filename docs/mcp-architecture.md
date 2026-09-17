@@ -1,70 +1,47 @@
 # Model Context Protocol (MCP) Architecture
 
 ## Status
+**LIVE / BETA — Phase 2 / Batch B**
 
-**PLANNED — Phase 2 / Batch B**
+Capital Operator exposes a stateless HTTP JSON-RPC MCP endpoint:
 
-Capital Operator does not currently expose a production MCP server. This document defines the target architecture for Phase 2 and must not be interpreted as evidence that MCP tools are live.
+`POST /api/mcp`
 
-## Design Rule
+`GET /api/mcp` returns service/transport discovery metadata.
 
-MCP must expose canonical Capital Operator logic rather than creating a second scoring, routing, underwriting, or eligibility system inside prompts or tool handlers.
+## Transport
 
-Consequential capital decisions remain human-controlled.
+The production implementation supports MCP-style JSON-RPC over stateless HTTP. Core methods:
 
----
+- `initialize`
+- `ping`
+- `tools/list`
+- `tools/call`
+- `notifications/initialized`
 
-## Initial Production MCP Tool Targets
+The server echoes a client-supplied protocol version during initialization when supplied and advertises tool capability discovery.
 
-### `generate_capital_blueprint`
+## Tools
 
-Expose the canonical blueprint-generation capability using existing application logic.
+- `generate_capital_blueprint` — **LIVE**; calls the canonical deterministic recommendation engine.
+- `calculate_commercial_dscr` — **LIVE**; deterministic NOI / annual debt-service math.
+- `recommend_capital_stack` — **BETA**; non-binding structure planning categories.
+- `query_capital_tools` — **LIVE**; queries the canonical tools registry.
+- `explain_operating_stage` — **LIVE**; returns one of the eight canonical workflow-stage definitions.
+- `match_capital_routes` — **SANDBOX**; informational route classification only, always human-reviewed.
 
-### `calculate_commercial_dscr`
+## Security and Decision Boundary
 
-Expose the canonical deterministic DSCR calculator only after its production contract, assumptions, validation, and tests are reconciled with the existing calculator implementation.
+The MCP server contains no client-exposed secrets and does not require optional provider credentials for core tools.
 
-### `recommend_capital_stack`
+It does not expose a live lender network, pricing engine, credit-decision engine, or autonomous submission capability. Consequential capital decisions remain human-controlled.
 
-Return structured capital-stack recommendations using validated deterministic logic plus AI synthesis where appropriate. Outputs must not be represented as lender approval or binding eligibility.
+## Client Setup
 
-### `query_capital_tools`
+Endpoint: `https://capital-operator.vercel.app/api/mcp`
 
-Query the canonical Capital Operator tool/resource registry.
+Send JSON-RPC 2.0 POST requests with `Content-Type: application/json`. Start with `initialize`, then `tools/list` or `tools/call`.
 
-### `explain_operating_stage`
+## Future
 
-Explain one of the eight canonical Capital Operator workflow stages using repository-backed source material.
-
-### `match_capital_routes`
-
-Add only after the underlying routing service is production-ready. The current `/api/v1/routing/match-buy-box` endpoint is **SANDBOX** capability routing and is not a verified live lender buy-box network.
-
----
-
-## Required MCP Foundation
-
-Phase 2 implementation must provide:
-
-- capability discovery
-- input/output schemas
-- validation
-- normalized errors
-- client setup documentation
-- supported transport documentation
-- tests
-- explicit human-review boundaries
-- truthful capability status
-
-A documented tool is not LIVE unless it is executable and validated.
-
----
-
-## Future Tools
-
-Potential later tools include:
-
-- `get_deal_status`
-- `build_capital_case`
-
-These depend on later authenticated operational infrastructure and must remain `PLANNED` until their backing services exist.
+Authenticated deal-state tools such as `get_deal_status` remain **PLANNED** for later transactional infrastructure.

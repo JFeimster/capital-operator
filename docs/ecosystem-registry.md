@@ -1,40 +1,32 @@
-# Ecosystem Registry: Capital Operator & Moonshine Capital
+# Ecosystem Registry: Capital Operator
 
-## Ecosystem Overview
-The Capital Operator ecosystem connects market demand, advisory channels, technology vendors, and institutional capital providers into a coordinated network.
+## Status
+**BETA — Phase 3 / Batch B**
 
-```
-+-------------------------------------------------------------+
-|                      CAPITAL OPERATOR                       |
-|          Diagnostic Engine & Underwriting Blueprint         |
-+------------------------------+------------------------------+
-                               |
-         +---------------------+---------------------+
-         |                                           |
-         v                                           v
-+------------------+                       +------------------+
-|  ORIGINATION     |                       |  CAPITAL RAILS   |
-|  - Distilled     |                       |  - Moonshine     |
-|    Funding       |                       |    Syndicate     |
-|  - Fractional    |                       |  - 50+ Debt      |
-|    CFO Partners  |                       |    Funds         |
-|  - SaaS B2B      |                       |  - SBA Preferred |
-|    Portals       |                       |    Desks         |
-+------------------+                       +------------------+
-```
+The canonical ecosystem registry is `src/config/ecosystem.ts`. Capability ownership is defined in `src/config/capabilities.ts`.
 
----
+Do not duplicate product URLs/status/metadata in pages or alternate registries. `src/config/ecosystemProducts.ts` is only a backward-compatible UI projection.
 
-## Ecosystem Nodes
+## Control-Plane Model
 
-### 1. Primary Operating Nodes
-- **Capital Operator (Core App)**: Diagnostic engine, 8-stage blueprint generator, developer API hub, and role playbooks.
-- **Distilled Funding (`www.distilledfunding.com`)**: Primary borrower educational hub and debt curriculum.
-- **Operator Underwriting Tools (`tools.distilledfunding.com`)**: Specialized calculators and deal packaging utilities.
-- **Moonshine Capital Syndicate**: Private debt placement desk maintaining active credit lines with 50+ institutional non-bank funds.
+`workflow stage → capability → responsibility → ecosystem product → fallback → human checkpoint`
 
-### 2. External Integration Nodes
-- **Tally.so**: Secure digital intake forms (`mOe658`, `mDEJB5`).
-- **Make.com / n8n**: Asynchronous webhook routers and CRM synchronization engines.
-- **HubSpot / Close CRM**: Pipeline state machine and post-close relationship equity trackers.
-- **Ocrolus / Heron Data**: Electronic bank statement OCR and cash flow normalization.
+Implemented ecosystem nodes include Distilled Funding, Partner Intake OS, Funding Operator OS, Funding Partners OS, Distilled Funding Tools, and adapter-ready HubSpot/n8n entries. Am I Fundable and Funding Applicant OS are represented as **SPECIFIED** until a canonical public handoff URL/production integration is source-controlled here.
+
+## Responsibility Boundary
+
+- **SYSTEM** handles repetition, mappings, deterministic rules, and workflow handoffs.
+- **AI** assists with synthesis and organization.
+- **HUMAN** owns judgment, exceptions, external representations, negotiations, and routing approval.
+- **CAPITAL_PARTNER** owns actual capital decisions.
+
+The ecosystem router does not claim live lender availability or approval.
+
+## Executable Sources
+
+- `src/config/capabilities.ts`
+- `src/config/ecosystem.ts`
+- `src/lib/capabilityMatcher.ts`
+- `src/lib/ecosystemRouter.ts`
+- `src/pages/Ecosystem.tsx`
+- `src/components/ecosystem/*`

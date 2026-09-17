@@ -1,7 +1,8 @@
 /**
- * Capital Operator — Ecosystem Products Configuration
- * src/config/ecosystemProducts.ts
+ * Backward-compatible UI projection of the canonical ecosystem registry.
+ * Do not add product metadata here; update src/config/ecosystem.ts instead.
  */
+import { ECOSYSTEM_CATALOG } from './ecosystem.js';
 
 export interface EcosystemProduct {
   id: string;
@@ -15,60 +16,25 @@ export interface EcosystemProduct {
   status: 'Live' | 'Preview' | 'Enterprise';
 }
 
-export const ECOSYSTEM_PRODUCTS: EcosystemProduct[] = [
-  {
-    id: 'distilled-funding',
-    name: 'Distilled Funding',
-    category: 'Origination',
-    tagline: 'Direct-to-Business Commercial Lending Gateway',
-    description: 'Direct financing destination connecting high-performing SMBs with fast equipment, working capital, and expansion financing.',
-    url: 'https://www.distilledfunding.com',
-    badge: 'DIRECT GATEWAY',
-    iconName: 'ArrowUpRight',
-    status: 'Live'
-  },
-  {
-    id: 'distilled-funding-tools',
-    name: 'Distilled Funding Tools',
-    category: 'Infrastructure',
-    tagline: 'Interactive Debt Calculators & DSCR Underwriting Suite',
-    description: 'Specialized underwriting calculators for commercial operators to stress-test borrower serviceability and evaluate capital costs.',
-    url: 'https://tools.distilledfunding.com',
-    badge: 'OPERATOR SUITE',
-    iconName: 'Calculator',
-    status: 'Live'
-  },
-  {
-    id: 'partner-intake-os',
-    name: 'Partner Intake OS',
-    category: 'Execution',
-    tagline: 'Institutional Partner Onboarding & Deal Intake System',
-    description: 'Structured qualification system for referral desks, B2B brokers, and equity consultants submitting commercial deals.',
-    url: 'https://partner-intake-t5e7p3fnv-jason-feimsters-projects.vercel.app',
-    badge: 'DESK SYSTEM',
-    iconName: 'Building',
-    status: 'Live'
-  },
-  {
-    id: 'funding-operator-os',
-    name: 'Funding Operator OS',
-    category: 'Infrastructure',
-    tagline: 'Multi-Lender Triage, Pipeline Stage Manager & Deal Room',
-    description: 'Internal operating system orchestrating multi-party deal rooms, document scrubbing, and lender syndication stages.',
-    url: 'https://funding-operator-nzehpctxq-jason-feimsters-projects.vercel.app',
-    badge: 'CORE ENGINE',
-    iconName: 'Terminal',
-    status: 'Live'
-  },
-  {
-    id: 'funding-partners-os',
-    name: 'Funding Partners OS',
-    category: 'Advisory',
-    tagline: 'Lender Buy-Box Matcher & Syndicate Portal',
-    description: 'Institutional lender portal organizing capital providers by asset class, credit minimums, and current deployment appetites.',
-    url: 'https://funding-partners-os-dashboard-afpy26axy.vercel.app',
-    badge: 'CAPITAL DESK',
+const categoryMap = {
+  intake: 'Origination',
+  operations: 'Execution',
+  tools: 'Infrastructure',
+  capital: 'Advisory',
+  crm: 'Infrastructure',
+  automation: 'Infrastructure'
+} as const;
+
+export const ECOSYSTEM_PRODUCTS: EcosystemProduct[] = ECOSYSTEM_CATALOG
+  .filter(product => Boolean(product.url))
+  .map(product => ({
+    id: product.id,
+    name: product.name,
+    category: categoryMap[product.category],
+    tagline: product.capabilityHighlight,
+    description: product.description,
+    url: product.url!,
+    badge: product.status,
     iconName: 'Layers',
-    status: 'Live'
-  }
-];
+    status: product.status === 'LIVE' ? 'Live' : product.status === 'BETA' ? 'Preview' : 'Enterprise'
+  }));

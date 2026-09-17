@@ -20,6 +20,7 @@ export const MAIN_NAV: NavItem[] = [
   { title: 'How It Works', href: '#how-it-works' },
   { title: 'Capital Stack', href: '#capital-stack' },
   { title: 'Tools & Infra', href: '#tools' },
+  { title: 'Ecosystem', href: '#ecosystem' },
   { title: 'Resources', href: '#resources' },
   { title: 'Methodology', href: '#methodology' }
 ];

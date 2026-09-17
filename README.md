@@ -143,6 +143,29 @@ Consequential financial representations and lender decisions remain human-contro
 
 ---
 
+## Batch B — Intelligence + Ecosystem Control Plane
+
+### Production MCP
+
+- `GET /api/mcp` — **BETA** discovery metadata
+- `POST /api/mcp` — **BETA** stateless HTTP JSON-RPC MCP transport
+- `generate_capital_blueprint` — **LIVE**
+- `calculate_commercial_dscr` — **LIVE**
+- `recommend_capital_stack` — **BETA**
+- `query_capital_tools` — **LIVE**
+- `explain_operating_stage` — **LIVE**
+- `match_capital_routes` — **SANDBOX**, informational only
+
+### Skills, agents, documents
+
+Five Skills and four bounded operator-assistance agents are **BETA**. The provider-agnostic document-intelligence contracts/normalizer are implemented as a **SPECIFIED foundation**; paid OCR/data providers remain unconfigured.
+
+### Ecosystem control plane
+
+The capability registry, ecosystem registry, capability matcher, ecosystem router, and `#ecosystem` UI are **BETA**. Handoffs use source-controlled metadata and documented fallbacks. Consequential capital decisions remain human-controlled.
+
+---
+
 ## Deployment Architecture
 
 ```text
@@ -197,10 +220,14 @@ capital-operator/
 │   ├── health.ts
 │   └── lead.ts
 ├── server/
+│   ├── documents/
 │   ├── events/
 │   ├── http/
-│   └── integrations/
+│   ├── integrations/
+│   └── mcp/
+├── agents/
 ├── docs/
+├── skills/
 ├── src/
 │   ├── components/
 │   ├── config/
