@@ -70,6 +70,10 @@ After a `main` deployment:
 6. verify the routing endpoint identifies itself as `SANDBOX`
 7. verify unavailable integrations return truthful degraded/disabled state rather than fake persistence
 8. verify webhook signing tests where a safe sandbox target is available
+9. verify `GET /api/mcp` returns MCP discovery metadata
+10. POST MCP `initialize`, `tools/list`, and at least one deterministic `tools/call`
+11. verify `match_capital_routes` identifies itself as SANDBOX
+12. verify `#ecosystem` renders from canonical capability/product registries
 
 ---
 
