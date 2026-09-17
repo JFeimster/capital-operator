@@ -4,10 +4,10 @@
  */
 
 import crypto from 'crypto';
-import { IntakeSubmitRequest, IntakeSubmitResponse, IntakeWorkflowClassification, ApiErrorResponse } from '../../../src/types/api';
-import { serverEventBus } from '../../../server/events/eventBus';
-import { dispatchToIntegrations } from '../../../server/integrations/dispatch';
-import { applyCors } from '../../../server/http/cors';
+import { IntakeSubmitRequest, IntakeSubmitResponse, IntakeWorkflowClassification, ApiErrorResponse } from '../../../src/types/api.js';
+import { serverEventBus } from '../../../server/events/eventBus.js';
+import { dispatchToIntegrations } from '../../../server/integrations/dispatch.js';
+import { applyCors } from '../../../server/http/cors.js';
 
 function classifyWorkflow(req: IntakeSubmitRequest): IntakeWorkflowClassification {
   const flags: string[] = [];
