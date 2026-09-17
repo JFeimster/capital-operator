@@ -27,5 +27,8 @@ jobs:
       - name: Type check & Lint
         run: npm run lint
 
+      - name: Run Test Suite
+        run: npm test
+
       - name: Production Build
         run: npm run build

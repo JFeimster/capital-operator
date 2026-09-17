@@ -4,8 +4,8 @@
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=black)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.x-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react&logoColor=black)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![CI / Deploy](https://github.com/JFeimster/capital-operator/actions/workflows/deploy.yml/badge.svg)](https://github.com/JFeimster/capital-operator/actions/workflows/deploy.yml)
 
@@ -78,74 +78,58 @@ Most advisory firms, loan brokers, fractional CFOs, and B2B platforms encounter 
 
 ---
 
-## 🔌 Developer APIs, Webhooks & MCP
+## 🔌 Developer APIs, Event Layer & Webhooks
 
-Capital Operator provides a complete developer integration suite for fintechs, SaaS platforms, and AI agents:
+Capital Operator provides a complete developer and serverless execution suite:
 
-### 1. REST API
-- `POST /api/v1/intake/submit`: Programmatic business borrowing application ingestion.
-- `POST /api/v1/routing/match-buy-box`: Deterministic lender criteria matching against 50+ debt funds.
+### 1. REST API Endpoints (`LIVE`)
+- `GET /api/v1/health` (Alias: `/api/health`): Real-time service heartbeat, uptime counter, and capability availability.
+- `POST /api/v1/intake/submit`: Programmatic commercial borrowing intake ingestion with deterministic triage scoring, pre-qualification limits, and normalized CRM dispatch.
+- `POST /api/v1/routing/match-buy-box`: Multi-fund credit box routing and lender qualification matrix against 50+ debt funds (SBA 7a, ABL, RBF, Equipment, Factoring).
+- `POST /api/v1/webhooks/test`: Interactive testing sandbox for validating HMAC signature generation and target delivery.
+- `POST /api/lead`: Normalized serverless lead integration endpoint with graceful fallbacks.
 
-### 2. Real-Time Webhooks
-- Cryptographically verified HMAC-SHA256 event payloads (`deal.submitted`, `prequal.computed`, `documents.extracted`, `facility.funded`).
+### 2. Canonical Event Layer (`LIVE`)
+Outbound and internal asynchronous events follow the standardized `CapitalEvent` envelope (`deal.submitted`, `deal.qualified`, `routing.completed`, `integration.dispatched`, `webhook.dispatched`).
 
-### 3. Model Context Protocol (MCP)
-Exposes commercial lending tools directly to AI coding assistants and autonomous agents (Claude Desktop, Cursor, Gemini CLI, n8n):
-- `calculate_commercial_dscr`
-- `query_lender_buy_box`
-- `generate_capital_blueprint`
-
-### 4. Turnkey Tally Form Embeds
-Zero-code iframe integration with dynamic query parameters and hidden field attribution (`partner_id`, `tier`, `source`).
+### 3. Cryptographic Webhook Signer (`LIVE`)
+All outbound webhooks include standard replay-protected headers:
+- `X-Capital-Signature: t=<timestamp>,v1=<hmac-sha256>`
+- `X-Capital-Event: <event-type>`
+- `X-Capital-Delivery: del_<uuid>`
 
 ---
 
 ## 🛠 Tech Stack & Architecture
 
-- **Frontend Core**: React 18+ (SPA with Hash Routing)
-- **Language**: TypeScript 5.x (Strict Type Checking)
-- **Styling**: Tailwind CSS with custom dark fintech design tokens
+- **Frontend Core**: React 19+ (Single-Page App with Hash Routing)
+- **Backend / API**: Vercel Serverless Functions (`/api/v1/*`) + Express middleware in dev
+- **Language**: TypeScript 5.x (Strict Mode)
+- **Styling**: Tailwind CSS 4.x with custom dark fintech design tokens
 - **Icons**: `lucide-react`
-- **Build Engine**: Vite 6.x
-- **Deterministic Engine**: Pure client-side scoring logic with `localStorage` persistence
-- **Export Formats**: Audit-ready executive Print/PDF stylesheet (`window.print`)
-- **CI/CD**: GitHub Actions deploying automatically to GitHub Pages
+- **Build Engine**: Vite 8.x + `tsx` test execution
+- **Persistence & Fallbacks**: Client-side `localStorage` + Serverless buffers + Multi-CRM adapters
+- **CI/CD**: GitHub Actions pipeline enforcing typecheck, lint, automated test suites, and deployment
 
 ---
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18.x or 20.x
-- npm 9.x or higher
-
-### Local Development Setup
+## 🚀 Local Development & Testing
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/JFeimster/capital-operator.git
-cd capital-operator
-
-# 2. Install dependencies
+# 1. Install dependencies
 npm install
 
-# 3. Start development server
+# 2. Start local dev server (port 3000)
 npm run dev
-```
 
-The application will be accessible locally at `http://localhost:3000`.
+# 3. Run full automated test suite (Unit & API Integration Tests)
+npm test
 
-### Building & Verification
-
-```bash
-# Type check and lint codebase
+# 4. Type check and lint
 npm run lint
 
-# Build production bundle to /dist
+# 5. Build production bundle
 npm run build
-
-# Preview production build locally
-npm run preview
 ```
 
 ---
@@ -154,46 +138,31 @@ npm run preview
 
 ```text
 capital-operator/
-├── .github/
-│   └── workflows/
-│       ├── deploy.yml            # Automated GitHub Pages CI/CD deployment
-│       ├── ci.yml                # Typecheck and linting pipeline
-│       └── lighthouse.yml        # Performance & accessibility audit
+├── .github/workflows/
+│   ├── ci.yml                    # Automated typecheck, test runner, and build
+│   └── deploy.yml                # Automated GitHub Pages CI/CD deployment
+├── api/                          # Vercel Serverless API layer
+│   ├── v1/
+│   │   ├── health.ts             # Health check & capability status endpoint
+│   │   ├── intake/submit.ts      # Programmatic intake & triage endpoint
+│   │   ├── routing/match-buy-box.ts # Credit fund buy-box routing endpoint
+│   │   └── webhooks/test.ts      # Sandbox webhook test endpoint
+│   ├── health.ts                 # Health alias forwarder
+│   └── lead.ts                   # Normalized serverless lead endpoint
+├── server/
+│   ├── events/                   # Event bus, HMAC signer, webhook dispatcher
+│   └── integrations/             # Normalized adapters (HubSpot, Notion, n8n, Webhook)
 ├── docs/                         # Comprehensive architectural & domain specifications
-│   ├── product-master-context.md # Master context & persona maps
-│   ├── api-architecture.md       # REST endpoint specifications
-│   ├── webhook-architecture.md   # Event schemas & HMAC verification
-│   ├── mcp-architecture.md       # Model Context Protocol tool registry
-│   └── ...                       # 25+ detailed system knowledge documents
-├── public/                       # Favicons, manifests, SEO assets, 404 router
 ├── src/
-│   ├── components/               # Modular UI components
-│   │   ├── assessment/           # 12-Question diagnostic matrix & progress bars
-│   │   ├── blueprint/            # Operating blueprint, roadmaps, friction maps
-│   │   ├── home/                 # Command center landing views
-│   │   ├── integrations/         # Tally form embed & modal components
-│   │   ├── layout/               # Header, Footer, Container, Section wrappers
-│   │   ├── resources/            # Calculators, templates, and credit memo downloads
-│   │   ├── site/                 # Terminals, badges, buttons, SEO heads
-│   │   └── tools/                # Interactive tool directory & stack presets
-│   ├── config/                   # Central configuration registries
-│   │   ├── ctas.ts               # Authoritative destination URLs
-│   │   ├── navigation.ts         # Route hierarchy & header actions
-│   │   ├── questions.ts          # Diagnostic questions & scoring weights
-│   │   ├── seo.ts                # OpenGraph & meta tags
-│   │   ├── tools.ts              # 20+ software tools & pricing models
-│   │   └── workflowStages.ts     # The 8 operating stages specifications
-│   ├── hooks/                    # Sticky headers, keyboard navigation, window sizing
-│   ├── lib/                      # Recommendation engine, analytics, router
-│   ├── pages/                    # Route views (Home, Assessment, Blueprint, Docs, Playbooks)
-│   ├── types.ts                  # Canonical TypeScript domain contracts
-│   ├── App.tsx                   # Top-level state orchestration
-│   ├── index.css                 # Tailwind CSS styles & animation utilities
-│   └── main.tsx                  # React DOM entry point
+│   ├── components/               # Modular UI components (Assessment, Blueprint, Tools, Calculators)
+│   ├── config/                   # Central configuration & public environment registries
+│   ├── lib/                      # Recommendation engine, analytics, CTA router
+│   ├── schemas/                  # JSON validation schemas for intake, routing, webhooks
+│   ├── types/                    # Canonical TypeScript API and Event contracts
+│   ├── types.ts                  # Core domain models
+│   └── App.tsx                   # Top-level state orchestration
+├── tests/                        # 10+ automated test suites & test runner
 ├── AGENTS.md                     # AI Agent operating rules & design tokens
-├── metadata.json                 # Google AI Studio application configuration
-├── package.json                  # Dependencies and execution scripts
-├── vite.config.ts                # Vite bundler configuration
 └── README.md                     # Master project documentation
 ```
 

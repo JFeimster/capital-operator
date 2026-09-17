@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IntakeSubmitRequest",
+  "description": "Schema for submitting a commercial borrower intake application to Capital Operator.",
+  "type": "object",
+  "required": [
+    "business_name",
+    "email",
+    "annual_revenue",
+    "avg_monthly_deposits",
+    "time_in_business_months"
+  ],
+  "properties": {
+    "business_name": {
+      "type": "string",
+      "minLength": 2,
+      "description": "Legal business or DBA name of the commercial borrower."
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary owner or finance contact name."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact email address for notification and portal access."
+    },
+    "phone": {
+      "type": "string",
+      "description": "Direct phone number for SMS notifications and verification."
+    },
+    "ein": {
+      "type": "string",
+      "pattern": "^[0-9]{2}-[0-9]{7}$|^[0-9]{9}$",
+      "description": "Federal Employer Identification Number (XX-XXXXXXX)."
+    },
+    "annual_revenue": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Gross annual business revenue in USD."
+    },
+    "avg_monthly_deposits": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Average monthly bank deposits in USD over last 3-6 months."
+    },
+    "time_in_business_months": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total operational history of business in months."
+    },
+    "credit_score": {
+      "type": "integer",
+      "minimum": 300,
+      "maximum": 850,
+      "description": "Estimated personal credit score of primary principal."
+    },
+    "requested_facility": {
+      "type": "string",
+      "enum": [
+        "REVOLVING_CREDIT_LINE",
+        "ASSET_BASED_REVOLVER",
+        "TERM_LOAN",
+        "SBA_7A",
+        "EQUIPMENT_FINANCING",
+        "INVOICE_FACTORING",
+        "REVENUE_BASED_FINANCING",
+        "COMMERCIAL_REAL_ESTATE",
+        "UNDETERMINED"
+      ],
+      "description": "Desired debt instrument classification."
+    },
+    "target_amount": {
+      "type": "number",
+      "minimum": 5000,
+      "description": "Target financing amount in USD."
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry classification (NAICS or description)."
+    },
+    "use_of_funds": {
+      "type": "string",
+      "description": "Planned deployment of capital proceeds."
+    },
+    "partner_id": {
+      "type": "string",
+      "description": "Referring advisor, broker, or platform partner identifier."
+    },
+    "attribution": {
+      "type": "object",
+      "properties": {
+        "utm_source": { "type": "string" },
+        "utm_medium": { "type": "string" },
+        "utm_campaign": { "type": "string" },
+        "partner_id": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

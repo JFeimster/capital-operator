@@ -25,7 +25,15 @@ export type AnalyticsEventType =
   | 'marketing_cta_click'
   | 'section_view'
   | 'integration_viewed'
-  | 'embed_copied';
+  | 'embed_copied'
+  | 'api_request'
+  | 'api_success'
+  | 'api_failure'
+  | 'deal_routed'
+  | 'integration_dispatched'
+  | 'integration_failed'
+  | 'webhook_dispatched'
+  | 'webhook_failed';
 
 export function trackEvent(eventType: AnalyticsEventType, properties?: Record<string, unknown>): void {
   // In development, log to console

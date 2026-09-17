@@ -19,7 +19,15 @@ export const ANALYTICS_EVENTS = {
   ECOSYSTEM_PRODUCT_CLICKED: 'ecosystem_product_clicked',
   ARCHITECTURE_MAP_NODE_CLICKED: 'architecture_map_node_clicked',
   SITUATION_SELECTED: 'situation_selected',
-  ASSESSMENT_RESTARTED: 'assessment_restarted'
+  ASSESSMENT_RESTARTED: 'assessment_restarted',
+  API_REQUEST: 'api_request',
+  API_SUCCESS: 'api_success',
+  API_FAILURE: 'api_failure',
+  DEAL_ROUTED: 'deal_routed',
+  INTEGRATION_DISPATCHED: 'integration_dispatched',
+  INTEGRATION_FAILED: 'integration_failed',
+  WEBHOOK_DISPATCHED: 'webhook_dispatched',
+  WEBHOOK_FAILED: 'webhook_failed'
 } as const;
 
 export type AnalyticsEventName = typeof ANALYTICS_EVENTS[keyof typeof ANALYTICS_EVENTS];

@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CapitalEventEnvelope",
+  "description": "Standardized canonical event envelope for Capital Operator lifecycle webhooks and event streaming.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "version",
+    "timestamp",
+    "payload"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique event identifier (e.g. evt_...).",
+      "pattern": "^(evt_[a-zA-Z0-9]+|[a-f0-9\\-]+)$"
+    },
+    "type": {
+      "type": "string",
+      "description": "Event classification name in domain.action syntax.",
+      "enum": [
+        "assessment.completed",
+        "blueprint.generated",
+        "lead.submitted",
+        "lead.routed",
+        "deal.created",
+        "deal.submitted",
+        "deal.qualified",
+        "documents.received",
+        "documents.extracted",
+        "capital_case.generated",
+        "routing.completed",
+        "lender.matched",
+        "submission.created",
+        "termsheet.issued",
+        "offer.received",
+        "deal.funded",
+        "facility.funded",
+        "relationship.followup_due",
+        "integration.dispatched",
+        "integration.failed",
+        "webhook.dispatched",
+        "webhook.failed"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "description": "API & Schema contract version (e.g. 1.0.0)."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of event generation."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data attributes."
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "environment": { "type": "string" },
+        "requestId": { "type": "string" },
+        "partnerId": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

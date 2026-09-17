@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BuyBoxMatchRequest",
+  "description": "Schema for evaluating commercial loan applicant attributes against lender buy-box matrices.",
+  "type": "object",
+  "required": [
+    "annual_revenue",
+    "avg_monthly_deposits",
+    "time_in_business_months",
+    "requested_amount"
+  ],
+  "properties": {
+    "annual_revenue": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Gross annual business revenue in USD."
+    },
+    "avg_monthly_deposits": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Average monthly bank deposits in USD."
+    },
+    "time_in_business_months": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Operating history in months."
+    },
+    "credit_score": {
+      "type": "integer",
+      "minimum": 300,
+      "maximum": 850,
+      "description": "Principal FICO credit score."
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry sector."
+    },
+    "collateral_available": {
+      "type": "boolean",
+      "description": "Whether borrower has pledgeable machinery, real estate, AR, or inventory."
+    },
+    "requested_amount": {
+      "type": "number",
+      "minimum": 1000,
+      "description": "Requested loan or credit limit."
+    },
+    "use_of_funds": {
+      "type": "string",
+      "description": "Primary purpose of capital."
+    },
+    "has_tax_liens": {
+      "type": "boolean",
+      "description": "Whether open federal/state tax liens exist."
+    },
+    "has_bankruptcy": {
+      "type": "boolean",
+      "description": "Whether bankruptcy has been filed in last 3 years."
+    }
+  },
+  "additionalProperties": true
+}
