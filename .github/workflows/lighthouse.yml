@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies & Build
         run: |
-          npm ci
+          npm install --include=optional --no-audit --no-fund
           npm run build
 
       - name: Run Lighthouse CI
