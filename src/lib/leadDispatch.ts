@@ -22,9 +22,8 @@ export interface LeadDispatchResponse {
 }
 
 /**
- * Dispatches lead payload to the serverless backend (/api/lead)
- * with transparent fallback to client-side storage and direct webhooks
- * when backend services are unprovisioned or offline.
+ * Dispatches lead payload to the secure serverless backend when available,
+ * with transparent fallback to client-side storage when it is not.
  */
 export async function submitLead(payload: LeadCapturePayload): Promise<LeadDispatchResponse> {
   const attribution = getAttribution();
@@ -36,7 +35,6 @@ export async function submitLead(payload: LeadCapturePayload): Promise<LeadDispa
     source: 'capital-operator'
   };
 
-  // Track event in client analytics
   trackEvent(ANALYTICS_EVENTS.LEAD_SUBMITTED, {
     email: payload.email,
     role: payload.role,
@@ -44,14 +42,12 @@ export async function submitLead(payload: LeadCapturePayload): Promise<LeadDispa
     operatingModel: payload.operatingModel
   });
 
-  // 1. Save local record for resilience
   try {
     localStorage.setItem('capital_operator_lead_captured', JSON.stringify(enrichedPayload));
-  } catch (e) {
-    // Non-blocking
+  } catch {
+    // Non-blocking fallback.
   }
 
-  // 2. Attempt secure serverless endpoint dispatch (/api/lead)
   try {
     const res = await fetch('/api/lead', {
       method: 'POST',
@@ -71,31 +67,10 @@ export async function submitLead(payload: LeadCapturePayload): Promise<LeadDispa
         dispatchedTo: data.dispatchedTo || ['serverless_pipeline']
       };
     }
-  } catch (err) {
-    // Expected in standalone client mode or when serverless function is not active in dev
-    console.info('Serverless endpoint unavailable, activating graceful client fallback.');
+  } catch {
+    console.info('Serverless endpoint unavailable; using local fallback.');
   }
 
-  // 3. Fallback: Optional Direct Webhook if configured in environment
-  const directWebhook = import.meta.env.VITE_LEAD_DISPATCH_WEBHOOK_URL;
-  if (directWebhook) {
-    try {
-      await fetch(directWebhook, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(enrichedPayload)
-      });
-      return {
-        success: true,
-        message: 'Blueprint registered. Welcome to the Moonshine Capital ecosystem.',
-        destination: 'direct_webhook'
-      };
-    } catch (whErr) {
-      console.warn('Direct webhook fallback failed:', whErr);
-    }
-  }
-
-  // 4. Default graceful completion - User is never blocked from their blueprint
   return {
     success: true,
     message: 'Your Capital Blueprint has been registered. You may now export or print your roadmap.',
