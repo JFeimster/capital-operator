@@ -1,5 +1,5 @@
 /**
- * Capital Operator — Analytics Event Definitions
+ * Capital Operator — Canonical Analytics Event Definitions
  * src/config/analyticsEvents.ts
  */
 
@@ -23,7 +23,7 @@ export const ANALYTICS_EVENTS = {
   API_REQUEST: 'api_request',
   API_SUCCESS: 'api_success',
   API_FAILURE: 'api_failure',
-  DEAL_ROUTED: 'deal_routed',
+  ROUTING_COMPLETED: 'routing_completed',
   INTEGRATION_DISPATCHED: 'integration_dispatched',
   INTEGRATION_FAILED: 'integration_failed',
   WEBHOOK_DISPATCHED: 'webhook_dispatched',
