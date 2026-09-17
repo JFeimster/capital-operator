@@ -116,7 +116,10 @@ export default async function handler(req: any, res: any) {
 
     // 3. Notion Integration (Server-side with NOTION_TOKEN)
     const notionToken = process.env.NOTION_TOKEN;
-    const notionLeadsDbId = process.env.NOTION_FUNDING_LEADS_DATABASE_ID || process.env.VITE_NOTION_FUNDING_LEADS_DATABASE_ID;
+    const notionLeadsDbId =
+      process.env.NOTION_FUNDING_LEADS_DATABASE_ID ||
+      process.env.VITE_NOTION_FUNDING_LEADS_DATABASE_ID ||
+      '62e717f6-e619-41d4-99bc-f81a41daacfe';
     if (notionToken && notionLeadsDbId) {
       try {
         const notionRes = await fetch('https://api.notion.com/v1/pages', {
