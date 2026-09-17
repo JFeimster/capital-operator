@@ -21,7 +21,6 @@ export async function runIntegrationDispatchTests() {
     operatingModel: 'Hybrid-Model'
   };
 
-  // Test: Dispatch without live credentials degrades gracefully and records serverless buffer
   const dispatchSummary = await dispatchToIntegrations(sampleLead, {
     source: 'automated_test_suite'
   });
@@ -30,8 +29,13 @@ export async function runIntegrationDispatchTests() {
     throw new Error('Integration dispatch test failed: Malformed dispatch summary response');
   }
 
+  if (dispatchSummary.dispatchedTo.includes('serverless_buffer')) {
+    throw new Error('Integration dispatch test failed: must not claim a non-existent serverless buffer');
+  }
+
   if (dispatchSummary.dispatchedTo.length === 0) {
-    throw new Error('Integration dispatch test failed: Should at least record serverless_buffer or active adapters');
+    if (!dispatchSummary.degraded) throw new Error('Integration dispatch test failed: no successful dispatch must be marked degraded');
+    if (dispatchSummary.persistedExternally) throw new Error('Integration dispatch test failed: no successful dispatch cannot claim external persistence');
   }
 
   return { passed: true, testName: 'runIntegrationDispatchTests' };
