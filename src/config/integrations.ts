@@ -13,13 +13,13 @@ export interface IntegrationConfig {
 }
 
 export const INTEGRATION_CONFIG: IntegrationConfig = {
-  webhookUrl: import.meta.env.VITE_LEAD_DISPATCH_WEBHOOK_URL || '',
+  webhookUrl: '',
   enableHubSpotSync: false,
   enableNotionSync: false
 };
 
 /**
- * Submits lead capture payload via the provider-agnostic leadDispatch layer
+ * Submits lead capture payload via the provider-agnostic leadDispatch layer.
  */
 export async function submitLead(payload: LeadCapturePayload): Promise<LeadDispatchResponse> {
   return dispatchSubmitLead(payload);
