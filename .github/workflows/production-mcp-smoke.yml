@@ -1,0 +1,46 @@
+name: Production MCP Smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'api/mcp.ts'
+      - 'server/mcp/**'
+      - 'src/lib/recommendationEngine.ts'
+      - 'src/lib/capitalMath.ts'
+      - 'src/lib/capitalStack.ts'
+      - 'src/lib/capitalRouting.ts'
+      - 'src/config/tools.ts'
+      - 'src/config/workflowStages.ts'
+      - 'scripts/production-mcp-smoke.mjs'
+      - '.github/workflows/production-mcp-smoke.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'api/mcp.ts'
+      - 'server/mcp/**'
+      - 'src/lib/recommendationEngine.ts'
+      - 'src/lib/capitalMath.ts'
+      - 'src/lib/capitalStack.ts'
+      - 'src/lib/capitalRouting.ts'
+      - 'src/config/tools.ts'
+      - 'src/config/workflowStages.ts'
+      - 'scripts/production-mcp-smoke.mjs'
+      - '.github/workflows/production-mcp-smoke.yml'
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: External JSON-RPC Production Smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Run production MCP smoke
+        run: node scripts/production-mcp-smoke.mjs
+        env:
+          CAPITAL_OPERATOR_URL: https://capital-operator.vercel.app
