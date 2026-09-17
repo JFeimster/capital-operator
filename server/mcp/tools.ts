@@ -30,7 +30,7 @@ export async function callMcpTool(name: string, args: Record<string, any>): Prom
       case 'calculate_commercial_dscr':
         return result({status:'LIVE', ...calculateCommercialDscr({netOperatingIncome:Number(args.netOperatingIncome),annualDebtService:Number(args.annualDebtService)})});
       case 'recommend_capital_stack':
-        return result({ ...recommendCapitalStack(args), human_review_required:true });
+        return result({ ...recommendCapitalStack({ requestedAmount:Number(args.requestedAmount), useOfFunds:args.useOfFunds, collateralAvailable:args.collateralAvailable, recurringWorkingCapitalNeed:args.recurringWorkingCapitalNeed, receivablesDriven:args.receivablesDriven, realEstateRelated:args.realEstateRelated, preserveLiquidity:args.preserveLiquidity }), human_review_required:true });
       case 'query_capital_tools': {
         const limit=Math.min(Number(args.limit)||10,25);
         const tools=TOOLS_CATALOG.filter(tool =>
