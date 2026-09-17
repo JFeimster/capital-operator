@@ -9,6 +9,7 @@ import { CapitalStack } from '../pages/CapitalStack';
 import { Assessment } from '../pages/Assessment';
 import { Blueprint } from '../pages/Blueprint';
 import { Tools } from '../pages/Tools';
+import { Ecosystem } from '../pages/Ecosystem';
 import { Resources } from '../pages/Resources';
 import { Docs } from '../pages/Docs';
 import { About } from '../pages/About';
@@ -94,6 +95,9 @@ export const AppRouter: React.FC<RouterProps> = ({
 
     case 'tools':
       return <Tools />;
+
+    case 'ecosystem':
+      return <Ecosystem />;
 
     case 'resources':
       return <Resources />;
