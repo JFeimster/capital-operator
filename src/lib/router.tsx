@@ -30,9 +30,9 @@ import { AssessmentAnswers, BlueprintResult } from '../types.js';
 import { KNOWLEDGE_PAGES } from '../data/knowledgePages.js';
 import { OPERATING_MODEL_ENTITIES } from '../data/operatingModelEntities.js';
 import { WORKFLOW_STAGE_ENTITIES } from '../data/workflowStageEntities.js';
-import { KnowledgePageTemplate } from '../components/knowledge/KnowledgePageTemplate.js';
-import { OperatingModelPageTemplate } from '../components/models/OperatingModelPageTemplate.js';
-import { WorkflowStagePageTemplate } from '../components/workflow/WorkflowStagePageTemplate.js';
+import { KnowledgePageTemplate } from '../components/knowledge/KnowledgePageTemplate';
+import { OperatingModelPageTemplate } from '../components/models/OperatingModelPageTemplate';
+import { WorkflowStagePageTemplate } from '../components/workflow/WorkflowStagePageTemplate';
 
 export interface RouterProps {
   currentRoute: string;
