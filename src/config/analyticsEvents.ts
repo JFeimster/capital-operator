@@ -1,5 +1,5 @@
 /**
- * Capital Operator — Canonical Analytics Event Definitions
+ * Capital Operator — Canonical Analytics Event Definitions (C2 Reconciled)
  * src/config/analyticsEvents.ts
  */
 
@@ -49,7 +49,16 @@ export const ANALYTICS_EVENTS = {
   PUBLIC_TOOL_CTA_CLICKED: 'public_tool_cta_clicked',
   PUBLIC_TOOL_SHARED: 'public_tool_shared',
   PUBLIC_TOOL_LEAD_HANDOFF_STARTED: 'public_tool_lead_handoff_started',
-  PUBLIC_TOOL_LEAD_HANDOFF_COMPLETED: 'public_tool_lead_handoff_completed'
+  PUBLIC_TOOL_LEAD_HANDOFF_COMPLETED: 'public_tool_lead_handoff_completed',
+  // C2 Knowledge & Entity Layer Analytics Events
+  KNOWLEDGE_PAGE_VIEWED: 'knowledge_page_viewed',
+  KNOWLEDGE_RELATED_TOOL_CLICKED: 'knowledge_related_tool_clicked',
+  KNOWLEDGE_RELATED_ENTITY_CLICKED: 'knowledge_related_entity_clicked',
+  WORKFLOW_STAGE_VIEWED: 'workflow_stage_viewed',
+  OPERATING_MODEL_VIEWED: 'operating_model_viewed',
+  OPERATING_MODEL_EVOLUTION_CLICKED: 'operating_model_evolution_clicked',
+  LEARN_TO_TOOL_HANDOFF: 'learn_to_tool_handoff',
+  LEARN_TO_ECOSYSTEM_HANDOFF: 'learn_to_ecosystem_handoff'
 } as const;
 
 export type AnalyticsEventName = typeof ANALYTICS_EVENTS[keyof typeof ANALYTICS_EVENTS];
