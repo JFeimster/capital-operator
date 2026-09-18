@@ -74,7 +74,7 @@ export const WORKFLOW_STAGE_ENTITIES: Record<string, WorkflowStageEntityDef> = {
     humanResponsibilities: WORKFLOW_STAGES[1].judgmentMatters,
     partnerResponsibilities: 'Providing clear buy-box guidelines and restriction criteria.',
     commonFailureModes: [
-      'Accepting unviable leads into deep review, burning 2+ hours per non-starter deal.'
+      'Accepting unviable leads into deep review, burning substantial manual time per non-starter deal.'
     ],
     capabilitiesRequired: [WORKFLOW_STAGES[1].capabilityNeeded],
     relevantEcosystemSystems: ['Tally', 'HubSpot', 'Am I Fundable'],
@@ -236,7 +236,7 @@ export const WORKFLOW_STAGE_ENTITIES: Record<string, WorkflowStageEntityDef> = {
     humanResponsibilities: WORKFLOW_STAGES[7].judgmentMatters,
     partnerResponsibilities: 'Payout of partner commissions and ongoing debt servicing.',
     commonFailureModes: [
-      'Funded clients are forgotten immediately post-close, losing 80%+ of lifetime renewal value.'
+      'Funded clients are forgotten immediately post-close, losing lifetime renewal value.'
     ],
     capabilitiesRequired: [WORKFLOW_STAGES[7].capabilityNeeded],
     relevantEcosystemSystems: ['Partner Intake OS', 'Resource Grid', 'HubSpot'],

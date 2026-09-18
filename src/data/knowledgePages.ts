@@ -91,9 +91,9 @@ export const KNOWLEDGE_PAGES: Record<string, KnowledgePageDef> = {
       }
     ],
     whatBreaksWithoutIt: [
-      'Operators burn 3-5 hours per deal on manual data entry and paper chasing.',
+      'Operators burn substantial time per deal on manual data entry and paper chasing.',
       'Inconsistent intake leads to premature lender rejections and wasted underwriter goodwill.',
-      'Funded clients are forgotten, causing 80%+ lifetime referral and renewal leakage.'
+      'Funded clients are forgotten, causing lifetime referral and renewal leakage.'
     ],
     nextSteps: {
       recommendedAction: 'Map your current deal flow against the canonical 8-stage framework using the Capital Workflow Builder.',
@@ -276,7 +276,7 @@ export const KNOWLEDGE_PAGES: Record<string, KnowledgePageDef> = {
     subheadline: 'Move from unstructured PDFs to a normalized, decision-useful credit package.',
     definition: 'A Capital Case is the verified compilation of a borrower’s financial metrics, debt schedule, cash flow trends, ownership background, and use-of-funds narrative structured for rapid lender review.',
     whyItMatters: [
-      'Underwriters judge deals in the first 3 minutes; a messy file leads to instant rejection or low priority.',
+      'Underwriters make fast judgments; a messy file can lead to rejection or low priority.',
       'Combines automated OCR extractions with human verification to guarantee zero-error representations.'
     ],
     howItWorks: [
@@ -371,7 +371,7 @@ export const KNOWLEDGE_PAGES: Record<string, KnowledgePageDef> = {
     subheadline: 'Progression across Relationship-Led, Systemized, AI-Augmented, and Capital Operator stages.',
     definition: 'The Capital Operator Model represents Level 4 operational maturity in commercial debt placement, characterized by programmatic intake, zero-touch extraction, decision-support routing, and continuous client lifetime equity loops.',
     whyItMatters: [
-      'Dramatically increases operator capacity from 3-5 active deals to 75+ active deals per team member.',
+      'Dramatically increases operator capacity and supports high-volume deal management.',
       'Protects brand value through deterministic quality control across every deal stage.'
     ],
     howItWorks: [
@@ -390,7 +390,7 @@ export const KNOWLEDGE_PAGES: Record<string, KnowledgePageDef> = {
       }
     ],
     whatBreaksWithoutIt: [
-      'Firms plateau at 5-10 deals per month due to human administrative bottlenecks.'
+      'Firms can plateau at low deal volume due to human administrative bottlenecks.'
     ],
     nextSteps: {
       recommendedAction: 'Audit your current operating model maturity using the Capital Readiness Audit.',

@@ -97,7 +97,7 @@ export const OPERATING_MODEL_ENTITIES: Record<string, OperatingModelEntityDef> =
       'Predictable stage progression and auditability.'
     ],
     limitations: [
-      'Senior team members still burn 2-4 hours per deal spreading financials manually.',
+      'Senior team members still spend significant time per deal spreading financials manually.',
       'Static lender databases quickly become stale.'
     ],
     workflowCharacteristics: [
