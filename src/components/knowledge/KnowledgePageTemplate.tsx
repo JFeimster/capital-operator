@@ -5,13 +5,14 @@
 
 import React from 'react';
 import { ArrowRight, CheckCircle2, AlertTriangle, ShieldCheck, Cpu, UserCheck, HelpCircle } from 'lucide-react';
-import type { KnowledgePageDef } from '../../data/knowledgePages.js';
-import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools.js';
-import { OPERATING_MODEL_ENTITIES } from '../../data/operatingModelEntities.js';
-import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities.js';
-import { SEO } from '../SEO.js';
-import { SchemaScript } from '../SchemaScript.js';
-import { trackEvent } from '../../lib/analytics.js';
+import type { KnowledgePageDef } from '../../data/knowledgePages';
+import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools';
+import { OPERATING_MODEL_ENTITIES } from '../../data/operatingModelEntities';
+import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities';
+import { SEO } from '../SEO';
+import { SchemaScript } from '../SchemaScript';
+import { trackEvent } from '../../lib/analytics';
+import { ANALYTICS_EVENTS } from '../../config/analyticsEvents';
 
 interface KnowledgePageTemplateProps {
   page: KnowledgePageDef;
@@ -19,7 +20,7 @@ interface KnowledgePageTemplateProps {
 
 export const KnowledgePageTemplate: React.FC<KnowledgePageTemplateProps> = ({ page }) => {
   React.useEffect(() => {
-    trackEvent('knowledge_page_viewed', { slug: page.slug, title: page.shortTitle });
+    trackEvent(ANALYTICS_EVENTS.KNOWLEDGE_PAGE_VIEWED, { slug: page.slug, title: page.shortTitle });
   }, [page.slug, page.shortTitle]);
 
   const primaryTool = page.nextSteps.primaryToolSlug
@@ -234,13 +235,13 @@ export const KnowledgePageTemplate: React.FC<KnowledgePageTemplateProps> = ({ pa
             {primaryTool && (
               <div className="p-6 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 shadow-lg">
                 <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider mb-2">RECOMMENDED OPERATOR TOOL</div>
-                <h3 className="text-xl font-bold text-white mb-2">{primaryTool.name}</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{primaryTool.title}</h3>
                 <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed">
                   {primaryTool.description}
                 </p>
                 <a
                   href={primaryTool.route}
-                  onClick={() => trackEvent('knowledge_related_tool_clicked', { tool: primaryTool.id, fromPage: page.slug })}
+                  onClick={() => trackEvent(ANALYTICS_EVENTS.KNOWLEDGE_RELATED_TOOL_CLICKED, { tool: primaryTool.id, fromPage: page.slug })}
                   className="inline-flex items-center justify-center w-full px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-colors gap-2"
                 >
                   <span>Launch Tool</span>
@@ -260,7 +261,7 @@ export const KnowledgePageTemplate: React.FC<KnowledgePageTemplateProps> = ({ pa
                       <a
                         key={mSlug}
                         href={model.route}
-                        onClick={() => trackEvent('knowledge_related_entity_clicked', { entityType: 'model', slug: mSlug, fromPage: page.slug })}
+                        onClick={() => trackEvent(ANALYTICS_EVENTS.KNOWLEDGE_RELATED_ENTITY_CLICKED, { entityType: 'model', slug: mSlug, fromPage: page.slug })}
                         className="block p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 transition-colors"
                       >
                         <div className="text-sm font-semibold text-white">{model.name}</div>
@@ -283,7 +284,7 @@ export const KnowledgePageTemplate: React.FC<KnowledgePageTemplateProps> = ({ pa
                       <a
                         key={sSlug}
                         href={stage.route}
-                        onClick={() => trackEvent('knowledge_related_entity_clicked', { entityType: 'stage', slug: sSlug, fromPage: page.slug })}
+                        onClick={() => trackEvent(ANALYTICS_EVENTS.KNOWLEDGE_RELATED_ENTITY_CLICKED, { entityType: 'stage', slug: sSlug, fromPage: page.slug })}
                         className="block p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 transition-colors"
                       >
                         <div className="text-xs font-mono text-emerald-400 mb-1">STAGE 0{stage.number}</div>
@@ -304,7 +305,7 @@ export const KnowledgePageTemplate: React.FC<KnowledgePageTemplateProps> = ({ pa
                       <a
                         key={kSlug}
                         href={`/learn/${kSlug}`}
-                        onClick={() => trackEvent('knowledge_related_entity_clicked', { entityType: 'knowledge', slug: kSlug, fromPage: page.slug })}
+                        onClick={() => trackEvent(ANALYTICS_EVENTS.KNOWLEDGE_RELATED_ENTITY_CLICKED, { entityType: 'knowledge', slug: kSlug, fromPage: page.slug })}
                         className="flex items-center justify-between p-2.5 rounded-lg text-sm text-slate-300 hover:text-emerald-400 hover:bg-slate-800/50 transition-colors"
                       >
                         <span className="capitalize">{kSlug.replace(/-/g, ' ')}</span>

@@ -5,12 +5,13 @@
 
 import React from 'react';
 import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, AlertTriangle, UserCheck, Wrench } from 'lucide-react';
-import type { WorkflowStageEntityDef } from '../../data/workflowStageEntities.js';
-import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools.js';
-import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities.js';
-import { SEO } from '../SEO.js';
-import { SchemaScript } from '../SchemaScript.js';
-import { trackEvent } from '../../lib/analytics.js';
+import type { WorkflowStageEntityDef } from '../../data/workflowStageEntities';
+import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools';
+import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities';
+import { SEO } from '../SEO';
+import { SchemaScript } from '../SchemaScript';
+import { trackEvent } from '../../lib/analytics';
+import { ANALYTICS_EVENTS } from '../../config/analyticsEvents';
 
 interface WorkflowStagePageTemplateProps {
   stage: WorkflowStageEntityDef;
@@ -18,7 +19,7 @@ interface WorkflowStagePageTemplateProps {
 
 export const WorkflowStagePageTemplate: React.FC<WorkflowStagePageTemplateProps> = ({ stage }) => {
   React.useEffect(() => {
-    trackEvent('workflow_stage_viewed', { stageNumber: stage.number, name: stage.name });
+    trackEvent(ANALYTICS_EVENTS.WORKFLOW_STAGE_VIEWED, { stageNumber: stage.number, name: stage.name });
   }, [stage.number, stage.name]);
 
   const previousStage = stage.previousStageSlug ? WORKFLOW_STAGE_ENTITIES[stage.previousStageSlug] : null;
@@ -231,7 +232,7 @@ export const WorkflowStagePageTemplate: React.FC<WorkflowStagePageTemplateProps>
                         href={tool.route}
                         className="block p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 transition-colors"
                       >
-                        <div className="text-sm font-semibold text-white">{tool.name}</div>
+                        <div className="text-sm font-semibold text-white">{tool.title}</div>
                         <div className="text-xs text-slate-400 line-clamp-1">{tool.description}</div>
                       </a>
                     );

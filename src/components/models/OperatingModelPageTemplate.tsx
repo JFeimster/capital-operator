@@ -5,12 +5,13 @@
 
 import React from 'react';
 import { Layers, Check, AlertCircle, Cpu, User, Wrench, ChevronRight } from 'lucide-react';
-import type { OperatingModelEntityDef } from '../../data/operatingModelEntities.js';
-import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools.js';
-import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities.js';
-import { SEO } from '../SEO.js';
-import { SchemaScript } from '../SchemaScript.js';
-import { trackEvent } from '../../lib/analytics.js';
+import type { OperatingModelEntityDef } from '../../data/operatingModelEntities';
+import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools';
+import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities';
+import { SEO } from '../SEO';
+import { SchemaScript } from '../SchemaScript';
+import { trackEvent } from '../../lib/analytics';
+import { ANALYTICS_EVENTS } from '../../config/analyticsEvents';
 
 interface OperatingModelPageTemplateProps {
   model: OperatingModelEntityDef;
@@ -18,7 +19,7 @@ interface OperatingModelPageTemplateProps {
 
 export const OperatingModelPageTemplate: React.FC<OperatingModelPageTemplateProps> = ({ model }) => {
   React.useEffect(() => {
-    trackEvent('operating_model_viewed', { slug: model.slug, name: model.name });
+    trackEvent(ANALYTICS_EVENTS.OPERATING_MODEL_VIEWED, { slug: model.slug, name: model.name });
   }, [model.slug, model.name]);
 
   const pageSchema = {
@@ -213,7 +214,7 @@ export const OperatingModelPageTemplate: React.FC<OperatingModelPageTemplateProp
                 </p>
                 <a
                   href={`/models/${model.nextEvolutionSlug}`}
-                  onClick={() => trackEvent('operating_model_evolution_clicked', { from: model.slug, to: model.nextEvolutionSlug })}
+                  onClick={() => trackEvent(ANALYTICS_EVENTS.OPERATING_MODEL_EVOLUTION_CLICKED, { from: model.slug, to: model.nextEvolutionSlug })}
                   className="inline-flex items-center justify-center w-full px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-colors gap-2"
                 >
                   <span>Explore Next Model</span>
@@ -235,7 +236,7 @@ export const OperatingModelPageTemplate: React.FC<OperatingModelPageTemplateProp
                         href={tool.route}
                         className="block p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 transition-colors"
                       >
-                        <div className="text-sm font-semibold text-white">{tool.name}</div>
+                        <div className="text-sm font-semibold text-white">{tool.title}</div>
                         <div className="text-xs text-slate-400 line-clamp-1">{tool.description}</div>
                       </a>
                     );
