@@ -8,8 +8,7 @@ import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, AlertTriangle, UserCh
 import type { WorkflowStageEntityDef } from '../../data/workflowStageEntities';
 import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools';
 import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities';
-import { SEO } from '../SEO';
-import { SchemaScript } from '../SchemaScript';
+import { SEOHead } from '../site/SEOHead';
 import { trackEvent } from '../../lib/analytics';
 import { ANALYTICS_EVENTS } from '../../config/analyticsEvents';
 
@@ -25,56 +24,16 @@ export const WorkflowStagePageTemplate: React.FC<WorkflowStagePageTemplateProps>
   const previousStage = stage.previousStageSlug ? WORKFLOW_STAGE_ENTITIES[stage.previousStageSlug] : null;
   const nextStage = stage.nextStageSlug ? WORKFLOW_STAGE_ENTITIES[stage.nextStageSlug] : null;
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://capital-operator.vercel.app${stage.route}`
-    },
-    headline: `Stage ${stage.number}: ${stage.name} — Capital Operator Workflow`,
-    description: stage.stagePurpose,
-    author: {
-      '@type': 'Organization',
-      name: 'Capital Operator'
-    }
-  };
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: 'https://capital-operator.vercel.app/'
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Workflow Stages',
-        item: 'https://capital-operator.vercel.app/#workflow'
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: `Stage ${stage.number}: ${stage.name}`,
-        item: `https://capital-operator.vercel.app${stage.route}`
-      }
-    ]
-  };
-
   return (
     <>
-      <SEO
-        title={`Stage ${stage.number}: ${stage.name} — Capital Operator Workflow`}
-        description={stage.stagePurpose}
-        canonical={`https://capital-operator.vercel.app${stage.route}`}
-        keywords={[`stage ${stage.number}`, stage.name.toLowerCase(), stage.internalLabel.toLowerCase(), 'capital workflow stage']}
+      <SEOHead
+        seo={{
+          title: `Stage ${stage.number}: ${stage.name} — Capital Operator Workflow`,
+          description: stage.stagePurpose,
+          canonical: `https://capital-operator.vercel.app${stage.route}`,
+          keywords: [`stage ${stage.number}`, stage.name.toLowerCase(), stage.internalLabel.toLowerCase(), 'capital workflow stage']
+        }}
       />
-      <SchemaScript schema={pageSchema} />
-      <SchemaScript schema={breadcrumbSchema} />
 
       <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">

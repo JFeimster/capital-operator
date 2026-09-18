@@ -9,8 +9,7 @@ import type { KnowledgePageDef } from '../../data/knowledgePages';
 import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools';
 import { OPERATING_MODEL_ENTITIES } from '../../data/operatingModelEntities';
 import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities';
-import { SEO } from '../SEO';
-import { SchemaScript } from '../SchemaScript';
+import { SEOHead } from '../site/SEOHead';
 import { trackEvent } from '../../lib/analytics';
 import { ANALYTICS_EVENTS } from '../../config/analyticsEvents';
 
@@ -27,75 +26,16 @@ export const KnowledgePageTemplate: React.FC<KnowledgePageTemplateProps> = ({ pa
     ? PUBLIC_TOOLS[page.nextSteps.primaryToolSlug as PublicToolId]
     : null;
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://capital-operator.vercel.app${page.route}`
-    },
-    headline: page.headline,
-    description: page.metaDescription,
-    author: {
-      '@type': 'Organization',
-      name: 'Capital Operator'
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Moonshine Capital',
-      url: 'https://capital-operator.vercel.app'
-    }
-  };
-
-  const faqSchema = page.faqs && page.faqs.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: page.faqs.map(faq => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer
-      }
-    }))
-  } : null;
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: 'https://capital-operator.vercel.app/'
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Learn',
-        item: 'https://capital-operator.vercel.app/#learn'
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: page.shortTitle,
-        item: `https://capital-operator.vercel.app${page.route}`
-      }
-    ]
-  };
-
   return (
     <>
-      <SEO
-        title={page.title}
-        description={page.metaDescription}
-        canonical={`https://capital-operator.vercel.app${page.route}`}
-        keywords={page.keywords}
+      <SEOHead
+        seo={{
+          title: page.title,
+          description: page.metaDescription,
+          canonical: `https://capital-operator.vercel.app${page.route}`,
+          keywords: page.keywords
+        }}
       />
-      <SchemaScript schema={pageSchema} />
-      <SchemaScript schema={breadcrumbSchema} />
-      {faqSchema && <SchemaScript schema={faqSchema} />}
 
       <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">

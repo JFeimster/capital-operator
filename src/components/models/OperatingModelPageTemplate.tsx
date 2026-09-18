@@ -8,8 +8,7 @@ import { Layers, Check, AlertCircle, Cpu, User, Wrench, ChevronRight } from 'luc
 import type { OperatingModelEntityDef } from '../../data/operatingModelEntities';
 import { PUBLIC_TOOLS, type PublicToolId } from '../../config/publicTools';
 import { WORKFLOW_STAGE_ENTITIES } from '../../data/workflowStageEntities';
-import { SEO } from '../SEO';
-import { SchemaScript } from '../SchemaScript';
+import { SEOHead } from '../site/SEOHead';
 import { trackEvent } from '../../lib/analytics';
 import { ANALYTICS_EVENTS } from '../../config/analyticsEvents';
 
@@ -22,49 +21,16 @@ export const OperatingModelPageTemplate: React.FC<OperatingModelPageTemplateProp
     trackEvent(ANALYTICS_EVENTS.OPERATING_MODEL_VIEWED, { slug: model.slug, name: model.name });
   }, [model.slug, model.name]);
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'DefinedTerm',
-    name: model.name,
-    description: model.definition,
-    url: `https://capital-operator.vercel.app${model.route}`
-  };
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: 'https://capital-operator.vercel.app/'
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Operating Models',
-        item: 'https://capital-operator.vercel.app/#models'
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: model.name,
-        item: `https://capital-operator.vercel.app${model.route}`
-      }
-    ]
-  };
-
   return (
     <>
-      <SEO
-        title={`${model.name} Operating Model — Capital Operator`}
-        description={model.definition}
-        canonical={`https://capital-operator.vercel.app${model.route}`}
-        keywords={[model.name.toLowerCase(), 'capital operating model', 'lending capacity', 'debt desk workflow']}
+      <SEOHead
+        seo={{
+          title: `${model.name} Operating Model — Capital Operator`,
+          description: model.definition,
+          canonical: `https://capital-operator.vercel.app${model.route}`,
+          keywords: [model.name.toLowerCase(), 'capital operating model', 'lending capacity', 'debt desk workflow']
+        }}
       />
-      <SchemaScript schema={pageSchema} />
-      <SchemaScript schema={breadcrumbSchema} />
 
       <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
