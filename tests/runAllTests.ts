@@ -3,22 +3,23 @@
  * tests/runAllTests.ts
  */
 
-import { runAssessmentEngineTests } from './assessmentEngine.test';
-import { runRecommendationEngineTests } from './recommendationEngine.test';
-import { runComplianceGuardTests } from './complianceGuard.test';
-import { runCtaRouterTests } from './ctaRouter.test';
-import { runToolMatcherTests } from './toolMatcher.test';
-import { runApiHealthTests } from './apiHealth.test';
-import { runIntakeApiTests } from './intakeApi.test';
-import { runRoutingApiTests } from './routingApi.test';
-import { runWebhookSigningTests } from './webhookSigning.test';
-import { runIntegrationDispatchTests } from './integrationDispatch.test';
-import { runCapitalMathTests } from './capitalMath.test';
-import { runEcosystemRoutingTests } from './ecosystemRouting.test';
-import { runDocumentNormalizationTests } from './documentNormalization.test';
-import { runMcpContractTests } from './mcpContract.test';
-import { runIntelligenceManifestTests } from './intelligenceManifests.test';
-import { runPublicToolTests } from './publicTools.test';
+import { runAssessmentEngineTests } from './assessmentEngine.test.js';
+import { runRecommendationEngineTests } from './recommendationEngine.test.js';
+import { runComplianceGuardTests } from './complianceGuard.test.js';
+import { runCtaRouterTests } from './ctaRouter.test.js';
+import { runToolMatcherTests } from './toolMatcher.test.js';
+import { runApiHealthTests } from './apiHealth.test.js';
+import { runIntakeApiTests } from './intakeApi.test.js';
+import { runRoutingApiTests } from './routingApi.test.js';
+import { runWebhookSigningTests } from './webhookSigning.test.js';
+import { runIntegrationDispatchTests } from './integrationDispatch.test.js';
+import { runCapitalMathTests } from './capitalMath.test.js';
+import { runEcosystemRoutingTests } from './ecosystemRouting.test.js';
+import { runDocumentNormalizationTests } from './documentNormalization.test.js';
+import { runMcpContractTests } from './mcpContract.test.js';
+import { runIntelligenceManifestTests } from './intelligenceManifests.test.js';
+import { runPublicToolTests } from './publicTools.test.js';
+import { runPhase4BTests } from './phase4bKnowledge.test.js';
 
 async function main() {
   console.log('\n======================================================');
@@ -40,8 +41,9 @@ async function main() {
     { name: 'Ecosystem Capability Routing', fn: runEcosystemRoutingTests },
     { name: 'Document Intelligence Normalization', fn: runDocumentNormalizationTests },
     { name: 'MCP Contract', fn: runMcpContractTests },
-    { name: 'Skill & Agent Manifests', fn: runIntelligenceManifestTests }
-    ,{ name: 'Phase 4A Public Tools', fn: runPublicToolTests }
+    { name: 'Skill & Agent Manifests', fn: runIntelligenceManifestTests },
+    { name: 'Phase 4A Public Tools', fn: runPublicToolTests },
+    { name: 'Phase 4B Knowledge & Entity Layer', fn: runPhase4BTests }
   ];
 
   let passed = 0;
@@ -49,7 +51,7 @@ async function main() {
 
   for (const suite of testSuites) {
     try {
-      const result = await suite.fn();
+      await suite.fn();
       console.log(`  ✅ [PASS] ${suite.name}`);
       passed++;
     } catch (err: any) {

@@ -1,25 +1,38 @@
+/**
+ * Capital Operator — Application Router (Reconciled Phase 4B / C2)
+ * src/lib/router.tsx
+ */
+
 import React from 'react';
-import { Home } from '../pages/Home';
-import { HowItWorks } from '../pages/HowItWorks';
-import { ForAdvisors } from '../pages/ForAdvisors';
-import { ForOperators } from '../pages/ForOperators';
-import { ForPlatforms } from '../pages/ForPlatforms';
-import { ForPartners } from '../pages/ForPartners';
-import { CapitalStack } from '../pages/CapitalStack';
-import { PublicToolPage } from '../components/tools/PublicToolPage';
-import { PUBLIC_TOOLS, type PublicToolId } from '../config/publicTools';
-import { Assessment } from '../pages/Assessment';
-import { Blueprint } from '../pages/Blueprint';
-import { Tools } from '../pages/Tools';
-import { Ecosystem } from '../pages/Ecosystem';
-import { Resources } from '../pages/Resources';
-import { Docs } from '../pages/Docs';
-import { About } from '../pages/About';
-import { Methodology } from '../pages/Methodology';
-import { PrivacyPolicy } from '../pages/PrivacyPolicy';
-import { TermsOfService } from '../pages/TermsOfService';
-import { NotFound } from '../pages/NotFound';
-import { AssessmentAnswers, BlueprintResult } from '../types';
+import { Home } from '../pages/Home.js';
+import { HowItWorks } from '../pages/HowItWorks.js';
+import { ForAdvisors } from '../pages/ForAdvisors.js';
+import { ForOperators } from '../pages/ForOperators.js';
+import { ForPlatforms } from '../pages/ForPlatforms.js';
+import { ForPartners } from '../pages/ForPartners.js';
+import { CapitalStack } from '../pages/CapitalStack.js';
+import { PublicToolPage } from '../components/tools/PublicToolPage.js';
+import { PUBLIC_TOOLS, type PublicToolId } from '../config/publicTools.js';
+import { Assessment } from '../pages/Assessment.js';
+import { Blueprint } from '../pages/Blueprint.js';
+import { Tools } from '../pages/Tools.js';
+import { Ecosystem } from '../pages/Ecosystem.js';
+import { Resources } from '../pages/Resources.js';
+import { Docs } from '../pages/Docs.js';
+import { About } from '../pages/About.js';
+import { Methodology } from '../pages/Methodology.js';
+import { PrivacyPolicy } from '../pages/PrivacyPolicy.js';
+import { TermsOfService } from '../pages/TermsOfService.js';
+import { NotFound } from '../pages/NotFound.js';
+import { AssessmentAnswers, BlueprintResult } from '../types.js';
+
+// C2 Knowledge, Operating Model, and Workflow Stage Imports
+import { KNOWLEDGE_PAGES } from '../data/knowledgePages.js';
+import { OPERATING_MODEL_ENTITIES } from '../data/operatingModelEntities.js';
+import { WORKFLOW_STAGE_ENTITIES } from '../data/workflowStageEntities.js';
+import { KnowledgePageTemplate } from '../components/knowledge/KnowledgePageTemplate.js';
+import { OperatingModelPageTemplate } from '../components/models/OperatingModelPageTemplate.js';
+import { WorkflowStagePageTemplate } from '../components/workflow/WorkflowStagePageTemplate.js';
 
 export interface RouterProps {
   currentRoute: string;
@@ -48,9 +61,37 @@ export const AppRouter: React.FC<RouterProps> = ({
   onRestart,
   onStartAssessment
 }) => {
-  const cleanRoute = currentRoute.replace(/^#?\/?/, '').split('?')[0].split('/')[0].toLowerCase();
+  const rawPath = currentRoute.split('?')[0].replace(/^#?\/?/, '').toLowerCase();
+  const segments = rawPath.split('/').filter(Boolean);
+  const primarySegment = segments[0] || '';
+  const subSegment = segments[1] || '';
 
-  switch (cleanRoute) {
+  if (primarySegment === 'learn' && subSegment) {
+    const page = KNOWLEDGE_PAGES[subSegment];
+    if (page) {
+      return <KnowledgePageTemplate page={page} />;
+    }
+  }
+
+  if (primarySegment === 'models' && subSegment) {
+    const model = OPERATING_MODEL_ENTITIES[subSegment];
+    if (model) {
+      return <OperatingModelPageTemplate model={model} />;
+    }
+  }
+
+  if (primarySegment === 'workflow' && subSegment) {
+    const stage = WORKFLOW_STAGE_ENTITIES[subSegment];
+    if (stage) {
+      return <WorkflowStagePageTemplate stage={stage} />;
+    }
+  }
+
+  if (primarySegment in PUBLIC_TOOLS) {
+    return <PublicToolPage tool={PUBLIC_TOOLS[primarySegment as PublicToolId]} />;
+  }
+
+  switch (primarySegment) {
     case '':
     case 'home':
       return <Home />;
@@ -72,15 +113,6 @@ export const AppRouter: React.FC<RouterProps> = ({
 
     case 'capital-stack':
       return <CapitalStack />;
-
-    case 'capital-stack-builder':
-    case 'capital-ops-calculator':
-    case 'capital-workflow-builder':
-    case 'capital-tech-stack':
-    case 'capital-readiness-audit':
-    case 'embedded-capital-calculator':
-    case 'referral-revenue-calculator':
-      return <PublicToolPage tool={PUBLIC_TOOLS[cleanRoute as PublicToolId]} />;
 
     case 'assessment':
       return (
