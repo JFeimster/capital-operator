@@ -2,6 +2,7 @@ import type { AuditRecord, Deal } from '../../src/types/deals.js';
 import type { FundingIntent } from '../../src/types/funding.js';
 import type {
   CapitalCaseRecord,
+  DealAttributionRecord,
   FundingCondition,
   FundingDocument,
   Offer,
@@ -32,6 +33,7 @@ export class InMemoryCapitalRepository implements CapitalRepository {
   private offers = new Map<string, Offer>();
   private conditions = new Map<string, FundingCondition>();
   private relationships = new Map<string, RelationshipLifecycle>();
+  private attributions = new Map<string, DealAttributionRecord>();
   private audits: AuditRecord[] = [];
 
   private membershipKey(workspaceId: string, userId: string) { return `${workspaceId}:${userId}`; }
@@ -72,11 +74,7 @@ export class InMemoryCapitalRepository implements CapitalRepository {
   async putCapitalCase(v:CapitalCaseRecord) { this.capitalCases.set(this.dealEntityKey(v.workspaceId,v.dealId),structuredClone(v)); return structuredClone(v); }
   async getCapitalCase(workspaceId:string,dealId:string) { const v=this.capitalCases.get(this.dealEntityKey(workspaceId,dealId)); return v?structuredClone(v):null; }
 
-  async createDocument(v:FundingDocument) {
-    const k=this.entityKey(v.workspaceId,v.id);
-    if(this.documents.has(k)) throw new Error(`Document already exists: ${v.id}`);
-    this.documents.set(k,structuredClone(v)); return structuredClone(v);
-  }
+  async createDocument(v:FundingDocument) { const k=this.entityKey(v.workspaceId,v.id); if(this.documents.has(k)) throw new Error(`Document already exists: ${v.id}`); this.documents.set(k,structuredClone(v)); return structuredClone(v); }
   async getDocument(workspaceId:string,id:string) { const v=this.documents.get(this.entityKey(workspaceId,id)); return v?structuredClone(v):null; }
   async listDocuments(workspaceId:string,dealId:string) { return [...this.documents.values()].filter(v=>v.workspaceId===workspaceId&&v.dealId===dealId).map(v=>structuredClone(v)); }
   async updateDocument(v:FundingDocument) { const k=this.entityKey(v.workspaceId,v.id); if(!this.documents.has(k)) throw new Error(`Document not found: ${v.id}`); this.documents.set(k,structuredClone(v)); return structuredClone(v); }
@@ -103,14 +101,15 @@ export class InMemoryCapitalRepository implements CapitalRepository {
   async putRelationship(v:RelationshipLifecycle) { this.relationships.set(this.dealEntityKey(v.workspaceId,v.dealId),structuredClone(v)); return structuredClone(v); }
   async getRelationship(workspaceId:string,dealId:string) { const v=this.relationships.get(this.dealEntityKey(workspaceId,dealId)); return v?structuredClone(v):null; }
 
+  async putAttribution(v:DealAttributionRecord) { this.attributions.set(this.dealEntityKey(v.workspaceId,v.dealId),structuredClone(v)); return structuredClone(v); }
+  async getAttribution(workspaceId:string,dealId:string) { const v=this.attributions.get(this.dealEntityKey(workspaceId,dealId)); return v?structuredClone(v):null; }
+
   async appendAudit(v:AuditRecord) { this.audits.push(structuredClone(v)); return structuredClone(v); }
-  async listAudit(workspaceId:string,entityType:string,entityId:string) {
-    return this.audits.filter(v=>v.workspaceId===workspaceId&&v.entityType===entityType&&v.entityId===entityId).map(v=>structuredClone(v));
-  }
+  async listAudit(workspaceId:string,entityType:string,entityId:string) { return this.audits.filter(v=>v.workspaceId===workspaceId&&v.entityType===entityType&&v.entityId===entityId).map(v=>structuredClone(v)); }
 
   clearForTests() {
     this.workspaces.clear(); this.memberships.clear(); this.intents.clear(); this.deals.clear();
     this.capitalCases.clear(); this.documents.clear(); this.routingDecisions.clear(); this.submissions.clear();
-    this.offers.clear(); this.conditions.clear(); this.relationships.clear(); this.audits=[];
+    this.offers.clear(); this.conditions.clear(); this.relationships.clear(); this.attributions.clear(); this.audits=[];
   }
 }
