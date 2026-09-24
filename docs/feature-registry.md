@@ -31,7 +31,10 @@
 | `FEAT_LENDER_LOS_SYNC` | Direct bi-directional loan-origination-system integration. | Server / Integrations | **PLANNED** | Capital Partners |
 | `FEAT_MCP_TOOL_SERVER` | Production stateless HTTP JSON-RPC MCP server exposing validated Capital Operator tools. | Server / `/api/mcp` | **BETA** | AI Agents & Operators |
 | `FEAT_ECOSYSTEM_ROUTER` | Capability-driven ecosystem registry, matcher, router, and UI control plane. | Client / Control Plane | **BETA** | Operators & Platforms |
-| `FEAT_MULTI_USER_DESK` | Authenticated multi-user capital operations workspace. Phase 5 / Batch C. | Full-Stack / Platform | **PLANNED** | Enterprise Desks |
+| `FEAT_MULTI_USER_DESK` | Workspace/RBAC, deal lifecycle, transaction APIs, and operator console. Production use requires configured auth and durable persistence. | Full-Stack / Platform | **BETA** | Enterprise Desks |
 
 | `FEAT_AI_SKILLS` | Five bounded Capital Operator Skills backed by canonical tools/engines. | Skills / Agent Layer | **BETA** | AI Agents & Operators |
 | `FEAT_OPERATOR_AGENTS` | Four bounded agent definitions with explicit human checkpoints and prohibited autonomy. | Agents / Agent Layer | **BETA** | Operators |
+| `FEAT_CAPITAL_CLEARING_TX` | Document metadata, persistent capital cases, routing approval, submissions, offers, conditions, relationship lifecycle, attribution, and funded/closed outcome tracking. | Server / Transactions | **BETA** | Capital Operations |
+| `FEAT_FUNDING_OPERATOR_UI` | Outcome-first funding preparation and authenticated transaction console with live capability status. | Client / #funding | **BETA** | Operators |
+| `FEAT_VERIFIED_PROVIDER_REGISTRY` | Provider registry boundary requiring provenance and freshness before provider-specific results are exposed. No provider availability is claimed without verified records. | Server / Funding Registry | **SPECIFIED** | Capital Operations |
