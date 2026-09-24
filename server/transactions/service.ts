@@ -5,6 +5,8 @@ import { findFundingOptions } from '../../src/lib/fundingOptions.js';
 import type { AuditRecord, Deal, DealStatus } from '../../src/types/deals.js';
 import type {
   CapitalCaseRecord,
+  DealAttributionRecord,
+  FundingOutcomeRecord,
   ConditionStatus,
   FundingCondition,
   FundingDocument,
@@ -614,11 +616,13 @@ export async function listConditions(session:SessionContext,dealId:string):Promi
 export async function putRelationshipLifecycle(
   session:SessionContext,
   dealId:string,
-  input:Partial<RelationshipLifecycle>
+  input:Partial<RelationshipLifecycle>,
+  suppliedCorrelationId?:string
 ):Promise<RelationshipLifecycle>{
   requirePermission(session,'deal.update');
   const deal=await getDeal(session,dealId);
-  const existing=await getCapitalRepository().getRelationship(session.workspaceId,dealId);
+  const repo=getCapitalRepository();
+  const existing=await repo.getRelationship(session.workspaceId,dealId);
   const record:RelationshipLifecycle={
     id:existing?.id||`relationship_${crypto.randomBytes(8).toString('hex')}`,
     workspaceId:session.workspaceId,
@@ -633,7 +637,130 @@ export async function putRelationshipLifecycle(
     updatedAt:new Date().toISOString(),
     updatedBy:session.userId
   };
-  return getCapitalRepository().putRelationship(record);
+  await repo.putRelationship(record);
+  const correlation=corr(session,suppliedCorrelationId);
+  const event=await serverEventBus.emit('relationship.updated',{
+    relationship_id:record.id,
+    deal_id:dealId,
+    relationship_status:record.relationshipStatus,
+    next_action_date:record.nextActionDate
+  },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
+  await audit(session,'relationship',record.id,'relationship.updated',event.id,correlation,existing?.relationshipStatus,record.relationshipStatus);
+  if(record.relationshipStatus==='FOLLOW_UP'&&record.nextActionDate){
+    await serverEventBus.emit('relationship.followup_due',{
+      relationship_id:record.id,
+      deal_id:dealId,
+      next_action:record.nextAction,
+      next_action_date:record.nextActionDate
+    },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
+  }
+  return record;
+}
+
+export async function putDealAttribution(
+  session:SessionContext,
+  dealId:string,
+  input:Pick<DealAttributionRecord,'attribution'|'compensation'|'source'>,
+  suppliedCorrelationId?:string
+):Promise<DealAttributionRecord>{
+  requirePermission(session,'deal.update');
+  await getDeal(session,dealId);
+  if(!String(input.source||'').trim()){
+    throw new TransactionDomainError('VALIDATION_FAILED','Attribution source is required.',400);
+  }
+  if(input.compensation&&!String(input.compensation.source||'').trim()){
+    throw new TransactionDomainError('VALIDATION_FAILED','Compensation metadata requires its own source.',400);
+  }
+  const repo=getCapitalRepository();
+  const existing=await repo.getAttribution(session.workspaceId,dealId);
+  const now=new Date().toISOString();
+  const record:DealAttributionRecord={
+    id:existing?.id||`attribution_${crypto.randomBytes(8).toString('hex')}`,
+    workspaceId:session.workspaceId,
+    dealId,
+    attribution:{...(existing?.attribution||{}),...(input.attribution||{})},
+    compensation:input.compensation?{...(existing?.compensation||{}),...input.compensation}:existing?.compensation,
+    source:String(input.source),
+    createdAt:existing?.createdAt||now,
+    createdBy:existing?.createdBy||session.userId,
+    updatedAt:now,
+    updatedBy:session.userId
+  };
+  await repo.putAttribution(record);
+  const correlation=corr(session,suppliedCorrelationId);
+  const event=await serverEventBus.emit('attribution.updated',{
+    attribution_id:record.id,
+    deal_id:dealId,
+    compensation_status:record.compensation?.status
+  },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
+  await audit(session,'attribution',record.id,'attribution.updated',event.id,correlation,undefined,record.compensation?.status,{source:record.source});
+  return record;
+}
+
+export async function getDealAttribution(
+  session:SessionContext,
+  dealId:string
+):Promise<DealAttributionRecord|null>{
+  requirePermission(session,'deal.read');
+  await getDeal(session,dealId);
+  return getCapitalRepository().getAttribution(session.workspaceId,dealId);
+}
+
+export async function recordDealOutcome(
+  session:SessionContext,
+  input:FundingOutcomeRecord,
+  suppliedCorrelationId?:string
+):Promise<Deal>{
+  requirePermission(session,'deal.update');
+  const deal=await getDeal(session,input.dealId);
+  const reason=String(input.reason||'').trim();
+  if(!reason) throw new TransactionDomainError('VALIDATION_FAILED','Outcome reason is required.',400);
+
+  if(input.outcome==='FUNDED'){
+    requirePermission(session,'submission.authorize');
+    if(input.externalConfirmation!==true||!String(input.externalEvidence||'').trim()){
+      throw new TransactionDomainError(
+        'EXTERNAL_CONFIRMATION_REQUIRED',
+        'Recording FUNDED requires explicit confirmation and evidence of the external funding event.',
+        409
+      );
+    }
+    if(input.fundedAmount!==undefined&&(!Number.isFinite(input.fundedAmount)||input.fundedAmount<=0)){
+      throw new TransactionDomainError('VALIDATION_FAILED','fundedAmount must be greater than zero when supplied.',400);
+    }
+    if(deal.status!=='CONDITIONS'){
+      throw new TransactionDomainError('INVALID_STATUS_TRANSITION','A deal must be in CONDITIONS before it can be recorded as FUNDED.',409);
+    }
+    const correlation=corr(session,suppliedCorrelationId);
+    const funded=await transitionDeal(session,deal.id,'FUNDED',reason,correlation);
+    const event=await serverEventBus.emit('deal.funded',{
+      deal_id:deal.id,
+      funded_amount:input.fundedAmount,
+      funding_date:input.fundingDate,
+      external_evidence:input.externalEvidence
+    },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
+    await audit(session,'deal',deal.id,'deal.funded',event.id,correlation,'CONDITIONS','FUNDED',{
+      fundedAmount:input.fundedAmount,
+      fundingDate:input.fundingDate,
+      externalEvidence:input.externalEvidence
+    });
+    await putRelationshipLifecycle(session,deal.id,{
+      relationshipStatus:'FOLLOW_UP',
+      nextAction:'Schedule post-funding relationship follow-up',
+      followUpTrigger:'funded'
+    },correlation);
+    return funded;
+  }
+
+  const correlation=corr(session,suppliedCorrelationId);
+  const closed=await transitionDeal(session,deal.id,'CLOSED',reason,correlation);
+  const event=await serverEventBus.emit('deal.closed',{
+    deal_id:deal.id,
+    previous_status:deal.status,
+    reason
+  },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
+  await audit(session,'deal',deal.id,'deal.closed',event.id,correlation,deal.status,'CLOSED',{reason});
+  return closed;
 }
 
 export async function prepareFundingHandoff(session:SessionContext,dealId:string){
@@ -666,14 +793,15 @@ export async function prepareFundingHandoff(session:SessionContext,dealId:string
 export async function getTransactionStatus(session:SessionContext,dealId:string){
   const repo=getCapitalRepository();
   const deal=await getDeal(session,dealId);
-  const [capitalCase,documents,routing,submissions,offers,conditions,relationship]=await Promise.all([
+  const [capitalCase,documents,routing,submissions,offers,conditions,relationship,attribution]=await Promise.all([
     repo.getCapitalCase(session.workspaceId,dealId),
     repo.listDocuments(session.workspaceId,dealId),
     repo.listRoutingDecisions(session.workspaceId,dealId),
     repo.listSubmissions(session.workspaceId,dealId),
     repo.listOffers(session.workspaceId,dealId),
     repo.listConditions(session.workspaceId,dealId),
-    repo.getRelationship(session.workspaceId,dealId)
+    repo.getRelationship(session.workspaceId,dealId),
+    repo.getAttribution(session.workspaceId,dealId)
   ]);
   return {
     deal,
@@ -684,6 +812,7 @@ export async function getTransactionStatus(session:SessionContext,dealId:string)
     offers,
     outstandingConditions:conditions.filter(item=>!['COMPLETED','WAIVED'].includes(item.status)),
     conditions,
-    relationship
+    relationship,
+    attribution
   };
 }
