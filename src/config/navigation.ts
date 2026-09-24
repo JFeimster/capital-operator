@@ -1,6 +1,5 @@
 /**
  * Capital Operator — Navigation Structure & Routes
- * src/config/navigation.ts
  */
 
 export interface NavItem {
@@ -17,30 +16,35 @@ export interface NavSection {
 }
 
 export const MAIN_NAV: NavItem[] = [
-  { title: 'How It Works', href: '#how-it-works' },
-  { title: 'Capital Stack', href: '#capital-stack' },
-  { title: 'Get Funded', href: '#get-funded', badge: 'NEW' },
-  { title: 'Funding Ops', href: '#funding', badge: 'BETA' },
-  { title: 'Tools & Infra', href: '#tools' },
-  { title: 'Ecosystem', href: '#ecosystem' },
-  { title: 'Resources', href: '#resources' },
-  { title: 'Methodology', href: '#methodology' }
+  { title: 'Get Funded', href: '/get-funded', badge: 'ACTION' },
+  { title: 'Funding OS', href: '/funding', badge: 'BETA' },
+  { title: 'Capital', href: '/capital' },
+  { title: 'Tools', href: '/tools' }
+];
+
+export const MORE_NAV: NavItem[] = [
+  { title: 'Resources', href: '/resources', description: 'Checklists, calculators, playbooks, and operating resources' },
+  { title: 'How It Works', href: '/how-it-works', description: 'How Capital Operator moves demand through the capital workflow' },
+  { title: 'Ecosystem', href: '/ecosystem', description: 'Connected capabilities, systems, and handoff paths' },
+  { title: 'Methodology', href: '/methodology', description: 'Operating model and workflow methodology' },
+  { title: 'Docs & API', href: '/docs', description: 'MCP, APIs, webhooks, and developer documentation' },
+  { title: 'Run Diagnostic', href: '/assessment', description: 'Assess your current capital operating capability' }
 ];
 
 export const AUDIENCE_NAV: NavItem[] = [
-  { title: 'For Advisors', href: '#for-advisors', description: 'Fractional CFOs & Debt Consultants' },
-  { title: 'For Operators', href: '#for-operators', description: 'Commercial Loan Brokers & Syndicate Leads' },
-  { title: 'For Platforms', href: '#for-platforms', description: 'Fintech Portals & Aggregators' },
-  { title: 'For Partners', href: '#for-partners', description: 'Lender Networks & Referral Desks' }
+  { title: 'For Advisors', href: '/for-advisors', description: 'Fractional CFOs & capital advisors' },
+  { title: 'For Operators', href: '/for-operators', description: 'Funding teams, brokers & deal desks' },
+  { title: 'For Platforms', href: '/for-platforms', description: 'SaaS, fintech & embedded-capital platforms' },
+  { title: 'For Partners', href: '/for-partners', description: 'Referral, affiliate & capital partner ecosystems' }
 ];
 
 export const HEADER_ACTIONS = {
   primaryCTA: {
-    title: 'Run Diagnostic',
-    href: '#assessment'
+    title: 'Start Funding Request',
+    href: '/get-funded'
   },
   secondaryCTA: {
-    title: 'Docs & API',
-    href: '#docs'
+    title: 'Run Diagnostic',
+    href: '/assessment'
   }
 };

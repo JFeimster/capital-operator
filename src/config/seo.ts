@@ -15,10 +15,10 @@ export interface PageSEO {
 
 export const SEO_CONFIG: Record<string, PageSEO> = {
   home: {
-    title: 'Capital Operator — Turn Borrower Demand Into An Operating System',
+    title: 'Capital Operator — Turn Capital Demand Into an Operating System',
     description:
-      'Evaluate your capital advisory workflow across 8 operational stages. Generate an executive blueprint with quantified automation leaks and a 30-day transformation roadmap.',
-    keywords: ['capital operator', 'commercial lending OS', 'debt syndication system']
+      'Start with a capital need. Discover funding paths, products, provenance-gated provider candidates, document requirements, support resources, and the next action.',
+    keywords: ['capital operator', 'business funding discovery', 'capital operating system', 'funding options']
   },
   assessment: {
     title: 'Operational Diagnostic Matrix — Capital Operator',

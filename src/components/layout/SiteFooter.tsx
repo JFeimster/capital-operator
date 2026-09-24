@@ -2,6 +2,7 @@ import React from 'react';
 import { FOOTER_SECTIONS, FOOTER_DISCLAIMER } from '../../config/footer';
 import { SOCIAL_LINKS } from '../../config/socialLinks';
 import { ExternalLink } from '../site/ExternalLink';
+import { toAppHref } from '../../lib/routeLocation';
 
 export const SiteFooter: React.FC = () => {
   return (
@@ -19,7 +20,7 @@ export const SiteFooter: React.FC = () => {
               </span>
             </div>
             <p className="text-slate-400 max-w-sm leading-relaxed text-xs">
-              A high-conviction capital infrastructure diagnostic and blueprint engine for commercial advisors, loan brokers, fractional CFOs, and fintech platforms.
+              Capital intelligence, funding discovery, operator workflows, MCP, and reusable infrastructure for advisors, operators, platforms, and partner ecosystems.
             </p>
             <div className="pt-2 flex items-center space-x-4">
               {SOCIAL_LINKS.map((link, idx) => (
@@ -51,7 +52,7 @@ export const SiteFooter: React.FC = () => {
                         {link.label}
                       </ExternalLink>
                     ) : (
-                      <a href={link.href} className="hover:text-white transition-colors">
+                      <a href={toAppHref(link.href)} className="hover:text-white transition-colors">
                         {link.label}
                       </a>
                     )}

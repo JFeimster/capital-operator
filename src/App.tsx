@@ -1,7 +1,6 @@
 /**
  * Capital Operator — Main Application & Shell
  * Moonshine Capital
- * src/App.tsx
  */
 
 import React, { useState, useEffect } from 'react';
@@ -13,6 +12,7 @@ import { AssessmentAnswers, BlueprintResult } from './types';
 import { generateBlueprint } from './lib/recommendationEngine';
 import { trackEvent } from './lib/analytics';
 import { captureAttribution, updateAttributionDiagnostic } from './lib/attribution';
+import { resolveAppLocation, toAppHref } from './lib/routeLocation';
 
 const INITIAL_ANSWERS: AssessmentAnswers = {
   q1_currentHandling: '',
@@ -34,7 +34,7 @@ export default function App() {
     try {
       const saved = localStorage.getItem('capital_operator_answers');
       return saved ? JSON.parse(saved) : INITIAL_ANSWERS;
-    } catch (e) {
+    } catch {
       return INITIAL_ANSWERS;
     }
   });
@@ -43,7 +43,7 @@ export default function App() {
     try {
       const saved = localStorage.getItem('capital_operator_step');
       return saved ? Math.max(1, Math.min(parseInt(saved, 10), QUESTIONS.length)) : 1;
-    } catch (e) {
+    } catch {
       return 1;
     }
   });
@@ -51,7 +51,7 @@ export default function App() {
   const [isAssessing, setIsAssessing] = useState<boolean>(() => {
     try {
       return localStorage.getItem('capital_operator_is_assessing') === 'true';
-    } catch (e) {
+    } catch {
       return false;
     }
   });
@@ -60,62 +60,58 @@ export default function App() {
     try {
       const saved = localStorage.getItem('capital_operator_blueprint');
       return saved ? JSON.parse(saved) : null;
-    } catch (e) {
+    } catch {
       return null;
     }
   });
 
-  const activeLocation = () => {
-    if (window.location.hash) return window.location.hash;
-    const base = import.meta.env.BASE_URL;
-    const pathname = window.location.pathname.startsWith(base)
-      ? `/${window.location.pathname.slice(base.length)}`
-      : window.location.pathname;
-    return pathname === '/' ? '#home' : pathname;
-  };
+  const activeLocation = () =>
+    resolveAppLocation(window.location.pathname, window.location.hash, import.meta.env.BASE_URL);
+
   const [currentRoute, setCurrentRoute] = useState<string>(activeLocation);
 
   useEffect(() => {
     captureAttribution();
-    const onHashChange = () => {
-      setCurrentRoute(activeLocation());
+    const syncRoute = () => setCurrentRoute(activeLocation());
+    window.addEventListener('hashchange', syncRoute);
+    window.addEventListener('popstate', syncRoute);
+    return () => {
+      window.removeEventListener('hashchange', syncRoute);
+      window.removeEventListener('popstate', syncRoute);
     };
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  // Persist state changes to localStorage
   useEffect(() => {
     try {
       localStorage.setItem('capital_operator_answers', JSON.stringify(answers));
       localStorage.setItem('capital_operator_step', currentStep.toString());
       localStorage.setItem('capital_operator_is_assessing', isAssessing ? 'true' : 'false');
-      if (blueprint) {
-        localStorage.setItem('capital_operator_blueprint', JSON.stringify(blueprint));
-      } else {
-        localStorage.removeItem('capital_operator_blueprint');
-      }
-    } catch (e) {
-      // Storage quota or private browsing
+      if (blueprint) localStorage.setItem('capital_operator_blueprint', JSON.stringify(blueprint));
+      else localStorage.removeItem('capital_operator_blueprint');
+    } catch {
+      // Non-blocking browser storage failure.
     }
   }, [answers, currentStep, isAssessing, blueprint]);
 
+  const navigate = (path: string) => {
+    const href = toAppHref(path);
+    if (href.startsWith('#')) window.location.hash = href.slice(1);
+    else window.location.assign(href);
+  };
+
   const handleStartAssessment = () => {
     setIsAssessing(true);
-    window.location.hash = '#assessment';
     trackEvent('capital_operator_started');
+    navigate('/assessment');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectSituation = (situationText: string) => {
-    setAnswers(prev => ({
-      ...prev,
-      q1_currentHandling: situationText
-    }));
+    setAnswers(prev => ({ ...prev, q1_currentHandling: situationText }));
     setCurrentStep(2);
     setIsAssessing(true);
-    window.location.hash = '#assessment';
     trackEvent('capital_operator_started', { situation: situationText });
+    navigate('/assessment');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -142,24 +138,20 @@ export default function App() {
 
   const handleNext = () => {
     trackEvent('assessment_step_completed', { step: currentStep });
-
     if (currentStep < QUESTIONS.length) {
       setCurrentStep(prev => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // Completed all 12 questions -> generate blueprint
-      const result = generateBlueprint(answers);
-      setBlueprint(result);
-      setIsAssessing(false);
-      updateAttributionDiagnostic(result.segment, result.operatingModel);
-      trackEvent('assessment_completed', {
-        operatingModel: result.operatingModel,
-        segment: result.segment
-      });
-      trackEvent('blueprint_generated');
-      window.location.hash = '#blueprint';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
     }
+
+    const result = generateBlueprint(answers);
+    setBlueprint(result);
+    setIsAssessing(false);
+    updateAttributionDiagnostic(result.segment, result.operatingModel);
+    trackEvent('assessment_completed', { operatingModel: result.operatingModel, segment: result.segment });
+    trackEvent('blueprint_generated');
+    navigate('/blueprint');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBack = () => {
@@ -175,15 +167,15 @@ export default function App() {
       localStorage.removeItem('capital_operator_step');
       localStorage.removeItem('capital_operator_is_assessing');
       localStorage.removeItem('capital_operator_blueprint');
-    } catch (e) {
-      // Non-blocking
+    } catch {
+      // Non-blocking.
     }
     setAnswers(INITIAL_ANSWERS);
     setCurrentStep(1);
     setIsAssessing(false);
     setBlueprint(null);
     trackEvent('assessment_restarted');
-    window.location.hash = '#home';
+    navigate('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -202,8 +194,6 @@ export default function App() {
         onRestart={handleRestart}
         onStartAssessment={handleStartAssessment}
       />
-
-      {/* Hidden during normal view, rendered during window.print() */}
       {blueprint && <PrintView blueprint={blueprint} />}
     </SiteShell>
   );

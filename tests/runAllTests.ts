@@ -28,6 +28,7 @@ import { runDealApiTests } from './dealApi.test.js';
 import { runTransactionOpsTests } from './transactionOps.test.js';
 import { runResourceLayerTests } from './resourceLayer.test.js';
 import { runFundingDiscoveryActionTests } from './fundingDiscoveryAction.test.js';
+import { runProductSurfaceTests } from './productSurface.test.js';
 
 async function main() {
   console.log('\n======================================================');
@@ -59,7 +60,8 @@ async function main() {
     {name:'Phase 5 Deal APIs',fn:runDealApiTests},
     {name:'Phase 5 Transaction Operations',fn:runTransactionOpsTests},
     {name:'Canonical Resource Layer',fn:runResourceLayerTests},
-    {name:'Funding Discovery + Action Layer',fn:runFundingDiscoveryActionTests}
+    {name:'Funding Discovery + Action Layer',fn:runFundingDiscoveryActionTests},
+    {name:'Product Surface + Command Center UX',fn:runProductSurfaceTests}
   ];
 
   let passed=0;
