@@ -4,6 +4,7 @@
  */
 
 import type { ToolItem } from '../types.js';
+export { FUNDING_RESOURCE_ASSETS, LIVE_FUNDING_RESOURCE_ASSETS, RESOURCE_ASSET_SOURCE_STATUS, findFundingResourceAssets } from './resourceAssets.js';
 
 export const TOOLS_REGISTRY: Record<string, ToolItem> = {
   // === INTAKE & DEMAND GENERATION ===

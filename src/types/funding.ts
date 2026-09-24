@@ -231,6 +231,28 @@ export interface FundingProductRecord {
   provenance: ResourceProvenance;
 }
 
+
+export interface FundingResourceAssetRecord {
+  id: string;
+  slug: string;
+  aliases: string[];
+  name: string;
+  brand?: string;
+  persona?: string;
+  problem?: string;
+  painSolved?: string;
+  inputFields?: string;
+  coreLogic?: string;
+  outputArtifact?: string;
+  cta?: string;
+  assetType: string;
+  partnerChannel?: string;
+  status: 'LIVE' | 'CONCEPT';
+  sourceStatus: string;
+  liveUrl?: string;
+  provenance: ResourceProvenance;
+}
+
 export type ResourceRelationshipType = 'offers' | 'belongsTo' | 'mapsTo' | 'mergedInto';
 
 export interface ResourceRelationship {

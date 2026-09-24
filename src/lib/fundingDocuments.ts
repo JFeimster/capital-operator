@@ -8,7 +8,26 @@ const BASE: ChecklistRow[] = [
   ['government_id', 'Owner government-issued identification', true, 'Common identity-verification requirement.']
 ];
 
+export const FUNDING_VERIFICATION_PATHS = [
+  {id:'plaid-verification',name:'Plaid Verification (Same-Day Funding)',criteria:'Monthly revenue $3,000-$15,000 and 3+ months in business; also used above $15,000 when banking is in a personal name.',requiredItems:['Plaid Connected'],workflowNote:'Connected-bank verification path from the source registry; human review remains required.',provenance:'Registries.zip#intake-verification-paths.registry.json'},
+  {id:'document-upload',name:'Document Upload',criteria:'Monthly revenue above $15,000, 3+ months in business, and business banking.',requiredItems:['Bank Statements Uploaded (3 months)','Drivers License Uploaded','Voided Check Uploaded','Application Signed'],workflowNote:'Document-received state is complete only after all required items are present.',provenance:'Registries.zip#intake-verification-paths.registry.json'},
+  {id:'does-not-qualify',name:'Does Not Qualify',criteria:'Monthly revenue below $3,000 or time in business below 3 months.',requiredItems:[],workflowNote:'Historical source rule only; Capital Operator does not convert this into a universal lender decline rule.',provenance:'Registries.zip#intake-verification-paths.registry.json'}
+] as const;
+
 const PROFILES: Partial<Record<FundingPurpose, ChecklistRow[]>> = {
+  working_capital:[['interim_financials','Current-year P&L and balance sheet',false,'Adds operating context beyond bank activity.']],
+  business_line_of_credit:[['interim_financials','Current-year P&L and balance sheet',false,'Supports recurring liquidity review.'],['debt_schedule','Current business debt schedule',false,'Shows existing recurring obligations.']],
+  term_loan:[['business_tax_returns','Recent business tax returns',true,'Supports historical cash-flow review.'],['interim_financials','Current-year P&L and balance sheet',true,'Shows current operating performance.'],['debt_schedule','Current business debt schedule',true,'Shows existing obligations and debt service.']],
+  revenue_based_financing:[['processing_statements','Merchant processing statements when revenue is card-driven',false,'Can supplement bank deposits for revenue verification.']],
+  merchant_cash_advance:[['processing_statements','Merchant processing statements when applicable',false,'Supports receivables-volume review.']],
+  startup_capital:[['formation_documents','Business formation documents / EIN confirmation',true,'Establishes the new business entity.'],['business_plan','Business plan and use-of-funds budget',false,'Supports preparation for a newer business without mature revenue history.']],
+  purchase_order_finance:[['purchase_order','Customer purchase order / executable contract',true,'Establishes the transaction being financed.'],['supplier_quote','Supplier quote / production cost schedule',true,'Shows fulfillment cost and capital need.'],['customer_details','Customer / account-debtor information',true,'Supports transaction and payment-source review.']],
+  contract_payroll:[['contract_award','Award notice / executed contract',true,'Establishes the executable contract.'],['payroll_schedule','Payroll schedule and labor budget',true,'Shows the payroll funding requirement.']],
+  contract_equipment:[['contract_award','Award notice / executed contract',true,'Connects equipment needs to the contract.'],['equipment_quote','Equipment invoice, quote, or purchase order',true,'Defines the required asset and cost.']],
+  bridge_real_estate:[['property_contract','Purchase contract or payoff statement',true,'Documents transaction basis.'],['scope_budget','Renovation / repositioning scope and budget',false,'Supports bridge use-of-funds review.'],['exit_plan','Refinance, sale, or stabilization exit plan',true,'Explains the expected repayment path.']],
+  ecommerce_advertising:[['platform_statements','Marketplace / store sales history',true,'Supports channel revenue and payout review.'],['ad_account_history','Recent advertising spend and performance history',false,'Connects requested capital to advertising use.']],
+  business_credit_building:[['formation_documents','Business formation documents / EIN confirmation',true,'Establishes the business identity used for credit-building work.'],['business_credit_profiles','Existing business bureau profiles when available',false,'Shows current reporting and gaps without implying approval.']],
+  business_cards_or_loc:[['formation_documents','Business formation documents / EIN confirmation',true,'Establishes the applicant business.'],['interim_financials','Current business financials when requested',false,'May support issuer review depending on product and profile.']],
   business_acquisition: [
     ['purchase_agreement', 'Letter of intent or purchase agreement', true, 'Documents the proposed acquisition and economics.'],
     ['seller_financials', 'Seller business tax returns and financial statements', true, 'Supports historical cash-flow review.'],
