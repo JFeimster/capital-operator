@@ -1,4 +1,5 @@
 import type { AuditRecord, Deal } from '../../src/types/deals.js';
+import type { FundingIntent } from '../../src/types/funding.js';
 import type { Membership, Workspace } from '../../src/types/workspace.js';
 
 export interface PersistenceCapability {
@@ -17,6 +18,9 @@ export interface CapitalRepository {
 
   getMembership(workspaceId: string, userId: string): Promise<Membership | null>;
   putMembership(membership: Membership): Promise<Membership>;
+
+  createFundingIntent(intent: FundingIntent): Promise<FundingIntent>;
+  getFundingIntent(workspaceId: string, intentId: string): Promise<FundingIntent | null>;
 
   createDeal(deal: Deal): Promise<Deal>;
   getDeal(workspaceId: string, dealId: string): Promise<Deal | null>;
