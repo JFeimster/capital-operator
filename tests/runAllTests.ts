@@ -22,37 +22,42 @@ import { runPublicToolTests } from './publicTools.test.js';
 import { runPhase4BTests } from './phase4bKnowledge.test.js';
 import { runFundingOutcomeTests } from './fundingOutcome.test.js';
 import { runFundingApiTests } from './fundingApi.test.js';
+import { runWorkspaceAuthTests } from './workspaceAuth.test.js';
+import { runDealLifecycleTests } from './dealLifecycle.test.js';
+import { runDealApiTests } from './dealApi.test.js';
 
 async function main() {
   console.log('\n======================================================');
   console.log('🚀 Running Capital Operator Automated Test Suite');
   console.log('======================================================\n');
 
-  const testSuites = [
-    { name: 'Assessment Engine', fn: runAssessmentEngineTests },
-    { name: 'Recommendation Engine', fn: runRecommendationEngineTests },
-    { name: 'Compliance Guard', fn: runComplianceGuardTests },
-    { name: 'CTA Router', fn: runCtaRouterTests },
-    { name: 'Tool Matcher', fn: runToolMatcherTests },
-    { name: 'API Health Check', fn: runApiHealthTests },
-    { name: 'Intake API & Triage', fn: runIntakeApiTests },
-    { name: 'Buy-Box Routing Engine', fn: runRoutingApiTests },
-    { name: 'Webhook HMAC Signing & Verification', fn: runWebhookSigningTests },
-    { name: 'Integration Dispatch & Fallbacks', fn: runIntegrationDispatchTests },
-    { name: 'Deterministic Capital Math', fn: runCapitalMathTests },
-    { name: 'Ecosystem Capability Routing', fn: runEcosystemRoutingTests },
-    { name: 'Document Intelligence Normalization', fn: runDocumentNormalizationTests },
-    { name: 'MCP Contract', fn: runMcpContractTests },
-    { name: 'Skill & Agent Manifests', fn: runIntelligenceManifestTests },
-    { name: 'Phase 4A Public Tools', fn: runPublicToolTests },
-    { name: 'Phase 4B Knowledge & Entity Layer', fn: runPhase4BTests },
-    { name: 'Phase 5 Funding Outcome Domain', fn: runFundingOutcomeTests },
-    { name: 'Phase 5 Funding Outcome APIs', fn: runFundingApiTests }
+  const testSuites=[
+    {name:'Assessment Engine',fn:runAssessmentEngineTests},
+    {name:'Recommendation Engine',fn:runRecommendationEngineTests},
+    {name:'Compliance Guard',fn:runComplianceGuardTests},
+    {name:'CTA Router',fn:runCtaRouterTests},
+    {name:'Tool Matcher',fn:runToolMatcherTests},
+    {name:'API Health Check',fn:runApiHealthTests},
+    {name:'Intake API & Triage',fn:runIntakeApiTests},
+    {name:'Buy-Box Routing Engine',fn:runRoutingApiTests},
+    {name:'Webhook HMAC Signing & Verification',fn:runWebhookSigningTests},
+    {name:'Integration Dispatch & Fallbacks',fn:runIntegrationDispatchTests},
+    {name:'Deterministic Capital Math',fn:runCapitalMathTests},
+    {name:'Ecosystem Capability Routing',fn:runEcosystemRoutingTests},
+    {name:'Document Intelligence Normalization',fn:runDocumentNormalizationTests},
+    {name:'MCP Contract',fn:runMcpContractTests},
+    {name:'Skill & Agent Manifests',fn:runIntelligenceManifestTests},
+    {name:'Phase 4A Public Tools',fn:runPublicToolTests},
+    {name:'Phase 4B Knowledge & Entity Layer',fn:runPhase4BTests},
+    {name:'Phase 5 Funding Outcome Domain',fn:runFundingOutcomeTests},
+    {name:'Phase 5 Funding Outcome APIs',fn:runFundingApiTests},
+    {name:'Phase 5 Workspace / Auth',fn:runWorkspaceAuthTests},
+    {name:'Phase 5 Deal Lifecycle',fn:runDealLifecycleTests},
+    {name:'Phase 5 Deal APIs',fn:runDealApiTests}
   ];
 
   let passed=0;
   let failed=0;
-
   for(const suite of testSuites){
     try{
       await suite.fn();
