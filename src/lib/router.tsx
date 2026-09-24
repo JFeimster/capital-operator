@@ -20,6 +20,7 @@ import { Ecosystem } from '../pages/Ecosystem.js';
 import { Resources } from '../pages/Resources.js';
 import { Docs } from '../pages/Docs.js';
 import { FundingOperator } from '../pages/FundingOperator.js';
+import { GetFunded } from '../pages/GetFunded.js';
 import { About } from '../pages/About.js';
 import { Methodology } from '../pages/Methodology.js';
 import { PrivacyPolicy } from '../pages/PrivacyPolicy.js';
@@ -145,6 +146,9 @@ export const AppRouter: React.FC<RouterProps> = ({
 
     case 'resources':
       return <Resources />;
+
+    case 'get-funded':
+      return <GetFunded presetSlug={subSegment || undefined} />;
 
     case 'funding':
     case 'operator':

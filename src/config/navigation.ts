@@ -19,6 +19,7 @@ export interface NavSection {
 export const MAIN_NAV: NavItem[] = [
   { title: 'How It Works', href: '#how-it-works' },
   { title: 'Capital Stack', href: '#capital-stack' },
+  { title: 'Get Funded', href: '#get-funded', badge: 'NEW' },
   { title: 'Funding Ops', href: '#funding', badge: 'BETA' },
   { title: 'Tools & Infra', href: '#tools' },
   { title: 'Ecosystem', href: '#ecosystem' },
