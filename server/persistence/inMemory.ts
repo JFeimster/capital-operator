@@ -1,4 +1,5 @@
 import type { AuditRecord, Deal } from '../../src/types/deals.js';
+import type { FundingIntent } from '../../src/types/funding.js';
 import type { Membership, Workspace } from '../../src/types/workspace.js';
 import type { CapitalRepository, PersistenceCapability } from './types.js';
 
@@ -13,6 +14,7 @@ export class InMemoryCapitalRepository implements CapitalRepository {
 
   private workspaces = new Map<string, Workspace>();
   private memberships = new Map<string, Membership>();
+  private intents = new Map<string, FundingIntent>();
   private deals = new Map<string, Deal>();
   private audits: AuditRecord[] = [];
 
@@ -20,12 +22,17 @@ export class InMemoryCapitalRepository implements CapitalRepository {
     return `${workspaceId}:${userId}`;
   }
 
+  private intentKey(workspaceId: string, intentId: string) {
+    return `${workspaceId}:${intentId}`;
+  }
+
   private dealKey(workspaceId: string, dealId: string) {
     return `${workspaceId}:${dealId}`;
   }
 
   async getWorkspace(id: string): Promise<Workspace | null> {
-    return this.workspaces.get(id) || null;
+    const value = this.workspaces.get(id);
+    return value ? structuredClone(value) : null;
   }
 
   async putWorkspace(workspace: Workspace): Promise<Workspace> {
@@ -34,7 +41,8 @@ export class InMemoryCapitalRepository implements CapitalRepository {
   }
 
   async getMembership(workspaceId: string, userId: string): Promise<Membership | null> {
-    return this.memberships.get(this.membershipKey(workspaceId, userId)) || null;
+    const value = this.memberships.get(this.membershipKey(workspaceId, userId));
+    return value ? structuredClone(value) : null;
   }
 
   async putMembership(membership: Membership): Promise<Membership> {
@@ -43,6 +51,19 @@ export class InMemoryCapitalRepository implements CapitalRepository {
       structuredClone(membership)
     );
     return structuredClone(membership);
+  }
+
+  async createFundingIntent(intent: FundingIntent): Promise<FundingIntent> {
+    if (!intent.workspaceId) throw new Error('Persisted FundingIntent requires workspaceId.');
+    const key = this.intentKey(intent.workspaceId, intent.id);
+    if (this.intents.has(key)) throw new Error(`FundingIntent already exists: ${intent.id}`);
+    this.intents.set(key, structuredClone(intent));
+    return structuredClone(intent);
+  }
+
+  async getFundingIntent(workspaceId: string, intentId: string): Promise<FundingIntent | null> {
+    const value = this.intents.get(this.intentKey(workspaceId, intentId));
+    return value ? structuredClone(value) : null;
   }
 
   async createDeal(deal: Deal): Promise<Deal> {
@@ -89,6 +110,7 @@ export class InMemoryCapitalRepository implements CapitalRepository {
   clearForTests() {
     this.workspaces.clear();
     this.memberships.clear();
+    this.intents.clear();
     this.deals.clear();
     this.audits = [];
   }
