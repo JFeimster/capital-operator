@@ -113,6 +113,7 @@ export const AppRouter: React.FC<RouterProps> = ({
     case 'for-partners':
       return <ForPartners />;
 
+    case 'capital':
     case 'capital-stack':
       return <CapitalStack />;
 
