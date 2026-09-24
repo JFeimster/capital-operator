@@ -2,6 +2,7 @@ import React from 'react';
 import { FOOTER_SECTIONS, FOOTER_DISCLAIMER } from '../../config/footer';
 import { SOCIAL_LINKS } from '../../config/socialLinks';
 import { ExternalLink } from '../site/ExternalLink';
+import { toAppHref } from '../../lib/routeLocation';
 
 export const SiteFooter: React.FC = () => {
   return (
@@ -51,7 +52,7 @@ export const SiteFooter: React.FC = () => {
                         {link.label}
                       </ExternalLink>
                     ) : (
-                      <a href={link.href} className="hover:text-white transition-colors">
+                      <a href={toAppHref(link.href)} className="hover:text-white transition-colors">
                         {link.label}
                       </a>
                     )}
