@@ -19,6 +19,7 @@ import { Tools } from '../pages/Tools.js';
 import { Ecosystem } from '../pages/Ecosystem.js';
 import { Resources } from '../pages/Resources.js';
 import { Docs } from '../pages/Docs.js';
+import { FundingOperator } from '../pages/FundingOperator.js';
 import { About } from '../pages/About.js';
 import { Methodology } from '../pages/Methodology.js';
 import { PrivacyPolicy } from '../pages/PrivacyPolicy.js';
@@ -144,6 +145,10 @@ export const AppRouter: React.FC<RouterProps> = ({
 
     case 'resources':
       return <Resources />;
+
+    case 'funding':
+    case 'operator':
+      return <FundingOperator />;
 
     case 'docs':
     case 'api':
