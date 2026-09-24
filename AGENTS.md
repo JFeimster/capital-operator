@@ -61,3 +61,18 @@ This document provides system rules, operational guidelines, and architectural c
 - `src/config/capabilities.ts` and `src/config/ecosystem.ts` are the canonical ecosystem/control-plane registries. Do not hard-code duplicate product URLs or capability metadata in pages.
 - `server/documents/*` is provider-agnostic. Do not add paid OCR/data provider calls without an explicitly configured integration.
 - SANDBOX routing must always remain labeled informational and human-reviewed.
+
+---
+### 6. Phase 5 Capital Clearing Rules
+
+- server/auth/* is the only server identity/RBAC boundary. Never trust workspace/user IDs from API or MCP payloads.
+- server/persistence/* owns persistence truth. Never use serverless memory as production durability.
+- server/deals/* owns deal lifecycle transitions.
+- server/transactions/service.ts owns documents, capital cases, routing approval, submissions, offers, conditions, relationships, attribution, and outcome operations.
+- Provider-specific results require verified provenance in src/config/fundingProviders.ts.
+- Offers represent actual received terms only. Never invent missing terms or choose a winning offer.
+- External submissions require explicit human authorization and separate evidence that transmission actually occurred.
+- A deal may be recorded FUNDED only with explicit human confirmation and external evidence.
+- Compensation metadata must cite a source; never infer a commission amount.
+- Production auth and durable persistence remain SPECIFIED until actually configured.
+
