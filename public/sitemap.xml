@@ -73,4 +73,12 @@
   <url><loc>https://capital-operator.vercel.app/capital-readiness-audit</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://capital-operator.vercel.app/embedded-capital-calculator</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://capital-operator.vercel.app/referral-revenue-calculator</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/equipment</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/business-acquisition</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/working-capital</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/government-contract</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/factoring</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/commercial-real-estate</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://capital-operator.vercel.app/get-funded/ecommerce</loc><lastmod>2026-09-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
 </urlset>

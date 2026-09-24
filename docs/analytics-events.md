@@ -22,3 +22,14 @@ interface AnalyticsEventPayload {
 8. `partner_cta_clicked`: Triggered on clicks to Moonshine Capital partner application (`tally.so/r/mOe658`).
 9. `funding_cta_clicked`: Triggered on clicks to borrower quote application (`tally.so/r/mDEJB5`).
 10. `tool_clicked`: Triggered when a recommended tool link in the blueprint or stack preview is clicked.
+
+## Funding Discovery + Action Events
+
+- `funding_search_started` — a Get Funded or operator discovery request begins.
+- `funding_options_generated` — deterministic funding paths/products/provider candidates are returned.
+- `provider_candidate_viewed` — user inspects a verified provider candidate.
+- `product_candidate_viewed` — user inspects a canonical product candidate.
+- `document_checklist_generated` — an outcome-aware funding checklist is produced.
+- `support_tool_recommended` — a verified-live support resource is recommended.
+- `funding_handoff_prepared` — a user prepares/opens a human-controlled funding handoff.
+- `get_funded_started` / `get_funded_completed` — public Get Funded funnel boundaries.

@@ -84,3 +84,13 @@ This document provides system rules, operational guidelines, and architectural c
 - Imported provider/product guidance remains human-reviewed and must never become an approval, eligibility, pricing, or capital-availability claim.
 - Tool/calculator records marked `CONCEPT` are metadata only. Never surface them as live operational capabilities without a verified live destination.
 - Public APIs must project public-safe fields; commission/contact metadata remains internal.
+
+### 8. Funding Discovery + Action Layer Rules
+
+- `src/lib/fundingOptions.ts` is the shared deterministic discovery/ranking engine. Do not recreate matching logic in MCP, APIs, or UI.
+- `src/config/fundingPresets.ts` only preconfigures the shared engine; vertical routes must not fork funding logic.
+- Product matches may expose imported/review-required canonical metadata with explicit status. Provider candidates remain stricter: verified provider identity plus verified product-level criteria.
+- Known amount/credit/revenue/time-in-business mismatches may suppress a verified provider candidate; missing facts must be returned as qualification gaps rather than guessed.
+- Public `/get-funded`, operator UI, REST, and MCP consume the same funding-options contract.
+- Handoff preparation may choose a canonical provider application URL when verified criteria support the match, but external transmission remains explicit and human-controlled.
+- Concept-only resource records must never appear as working support tools.
