@@ -28,7 +28,7 @@ export default async function handler(req:any,res:any){
         ownerId:body.ownerId,nextAction:body.nextAction,nextActionDate:body.nextActionDate,
         relationshipStatus:body.relationshipStatus,renewalTrigger:body.renewalTrigger,
         followUpTrigger:body.followUpTrigger,notes:body.notes
-      });
+      },req.headers?.['x-correlation-id']);
       return res.status(200).json({status:'success',relationship,timestamp:new Date().toISOString()});
     }
     return res.status(405).json({status:'error',code:'METHOD_NOT_ALLOWED',message:'Expected GET or PATCH.',timestamp:new Date().toISOString()});
