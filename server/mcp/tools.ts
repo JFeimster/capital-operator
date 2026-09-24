@@ -16,6 +16,7 @@ import { createDealFromIntent, DealDomainError, getDeal } from '../deals/service
 import { getNextFundingActionForDeal } from '../deals/status.js';
 import { getPersistenceCapability } from '../persistence/index.js';
 import { PersistenceUnavailableError } from '../persistence/types.js';
+import { compareOffers, getTransactionStatus, prepareFundingHandoff, TransactionDomainError } from '../transactions/service.js';
 import type { AssessmentAnswers } from '../../src/types.js';
 import type { BuyBoxMatchRequest } from '../../src/types/api.js';
 import type { FundingIntentInput } from '../../src/types/funding.js';
@@ -87,6 +88,16 @@ export const MCP_TOOLS: McpToolDefinition[] = [
     inputSchema:{type:'object',required:['dealId'],properties:{dealId:{type:'string',minLength:1}}}
   },
   {
+    name:'compare_received_offers',
+    description:'COMPARE: authenticated read-only comparison of ACTUAL stored received terms. Missing terms remain missing and no winning offer is selected.',
+    inputSchema:{type:'object',required:['dealId'],properties:{dealId:{type:'string',minLength:1}}}
+  },
+  {
+    name:'initiate_funding_handoff',
+    description:'APPLY / HANDOFF: prepare the canonical funding-intake handoff and preserve deal context. This tool does not transmit externally; external action requires explicit human authorization.',
+    inputSchema:{type:'object',required:['dealId'],properties:{dealId:{type:'string',minLength:1}}}
+  },
+  {
     name:'recommend_funding_support_tools',
     description:'OPERATE: recommend canonical Capital Operator support tools that can move the current request forward without making a capital decision.',
     inputSchema:{type:'object',properties:{stage:{type:'integer',minimum:1,maximum:8},tag:{type:'string'},limit:{type:'integer',minimum:1,maximum:10}}}
@@ -108,7 +119,8 @@ function operationalError(error: unknown): McpToolResult {
   const known =
     error instanceof AuthenticationError ||
     error instanceof PersistenceUnavailableError ||
-    error instanceof DealDomainError;
+    error instanceof DealDomainError ||
+    error instanceof TransactionDomainError;
   const code = known && 'code' in error ? String(error.code) : 'TOOL_EXECUTION_FAILED';
   const message = error instanceof Error ? error.message : 'MCP tool execution failed.';
   const payload = {status:'error',code,message};
@@ -203,20 +215,35 @@ export async function callMcpTool(
       }
       case 'get_funding_status': {
         const session=authenticateHeaders(context.headers || {});
-        const deal=await getDeal(session,String(args.dealId || ''));
+        const tx=await getTransactionStatus(session,String(args.dealId || ''));
         return result({
           status:getPersistenceCapability().status,
           capability_group:'TRACK',
-          deal_stage:deal.status,
-          workflow_stage:deal.workflowStage,
-          capital_case_status:deal.capitalCaseId?'LINKED':'NOT_LINKED',
-          routing_review_status:deal.routingStatus,
-          documents:{capability_status:'SPECIFIED',records:[]},
-          submissions:{capability_status:'SPECIFIED',records:[]},
-          outstanding_conditions:{capability_status:'SPECIFIED',records:[]},
-          offers_received:{capability_status:'SPECIFIED',records:[]},
-          next_action:getNextFundingActionForDeal(deal),
+          deal_stage:tx.deal.status,
+          workflow_stage:tx.deal.workflowStage,
+          capital_case:tx.capitalCase,
+          documents:tx.documents,
+          routing_review:tx.routing,
+          submissions:tx.submissions,
+          outstanding_conditions:tx.outstandingConditions,
+          offers_received:tx.offers,
+          relationship:tx.relationship,
+          next_action:getNextFundingActionForDeal(tx.deal),
           human_review_required:true
+        });
+      }
+      case 'compare_received_offers': {
+        const session=authenticateHeaders(context.headers || {});
+        return result({
+          capability_group:'COMPARE',
+          ...(await compareOffers(session,String(args.dealId || '')))
+        });
+      }
+      case 'initiate_funding_handoff': {
+        const session=authenticateHeaders(context.headers || {});
+        return result({
+          capability_group:'APPLY / HANDOFF',
+          ...(await prepareFundingHandoff(session,String(args.dealId || '')))
         });
       }
       case 'recommend_funding_support_tools': {
