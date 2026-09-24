@@ -1,43 +1,40 @@
 import type { FundingProviderRecord, ProviderCandidate, ProviderCriteriaRecord } from '../types/funding.js';
+import { GENERATED_FUNDING_PROVIDERS, GENERATED_PROVIDER_CRITERIA } from '../data/fundingResources.generated.js';
 
-/**
- * Verified provider registry.
- *
- * Related JFeimster repositories contain useful product taxonomy and illustrative
- * provider-desk records, but Phase 5 does not promote those records to verified
- * lender availability without explicit source provenance and freshness metadata.
- */
-export const VERIFIED_FUNDING_PROVIDERS: FundingProviderRecord[] = [];
-export const VERIFIED_PROVIDER_CRITERIA: ProviderCriteriaRecord[] = [];
+export const FUNDING_PROVIDERS: FundingProviderRecord[] = GENERATED_FUNDING_PROVIDERS;
+export const PROVIDER_CRITERIA: ProviderCriteriaRecord[] = GENERATED_PROVIDER_CRITERIA;
+export const VERIFIED_FUNDING_PROVIDERS = FUNDING_PROVIDERS.filter(provider => provider.status === 'ACTIVE_VERIFIED');
+export const VERIFIED_PROVIDER_CRITERIA = PROVIDER_CRITERIA.filter(item => item.confidence === 'VERIFIED');
 
 export const PROVIDER_REGISTRY_STATUS = {
-  status: 'SPECIFIED' as const,
+  status: 'BETA' as const,
   canonicalConsumptionBoundary: 'src/config/fundingProviders.ts',
-  reviewedSources: [
-    'JFeimster/funding-partners-os-dashboard',
-    'JFeimster/funding-partners-os',
-    'JFeimster/FundStack-AI'
-  ],
-  reason: 'No provider records are promoted to ACTIVE_VERIFIED without source provenance and freshness metadata.'
+  sourcePackage: 'Registries.zip',
+  importedAt: '2026-09-24',
+  providerCount: FUNDING_PROVIDERS.length,
+  verifiedProviderCount: VERIFIED_FUNDING_PROVIDERS.length,
+  criteriaCount: PROVIDER_CRITERIA.length,
+  verifiedCriteriaCount: VERIFIED_PROVIDER_CRITERIA.length,
+  reviewedSources: ['Registries.zip','JFeimster/moonshine-ai-directory','JFeimster/funding-partners-os-dashboard','JFeimster/funding-partners-os','JFeimster/FundStack-AI'],
+  reason: 'Provider candidates require source-verified provider identity plus product-level VERIFIED criteria. Imported criteria remain available for human review only.'
 };
 
 export function findVerifiedProviderCandidates(productPathIds: string[]): ProviderCandidate[] {
+  const requested = new Set(productPathIds);
   const candidates: ProviderCandidate[] = [];
   for (const provider of VERIFIED_FUNDING_PROVIDERS) {
-    if (provider.status !== 'ACTIVE_VERIFIED') continue;
-    for (const productPathId of provider.productPathIds) {
-      if (!productPathIds.includes(productPathId)) continue;
-      const criteria = VERIFIED_PROVIDER_CRITERIA.find(item =>
-        item.providerId === provider.id &&
-        item.productPathId === productPathId &&
-        item.confidence === 'VERIFIED'
-      );
-      if (!criteria) continue;
+    for (const criteria of VERIFIED_PROVIDER_CRITERIA) {
+      if (criteria.providerId !== provider.id || !requested.has(criteria.productPathId)) continue;
       candidates.push({
         providerId: provider.id,
         providerName: provider.name,
-        productPathId,
-        whyRelevant: ['Verified provider product mapping exists in the canonical registry.'],
+        productId: criteria.productId,
+        productName: criteria.productName,
+        productPathId: criteria.productPathId,
+        whyRelevant: [
+          'Provider identity is source-verified in the canonical registry.',
+          'Product-level qualification criteria are explicitly marked VERIFIED in the source registry.'
+        ],
         criteriaSource: criteria.source,
         lastVerifiedAt: criteria.verifiedAt,
         applicationUrl: provider.applicationUrl,
@@ -45,5 +42,11 @@ export function findVerifiedProviderCandidates(productPathIds: string[]): Provid
       });
     }
   }
-  return candidates;
+  const seen = new Set<string>();
+  return candidates.filter(candidate => {
+    const key = `${candidate.providerId}:${candidate.productId || candidate.productPathId}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

@@ -1,4 +1,5 @@
 import type { FundingProductPath } from '../types/funding.js';
+import { GENERATED_FUNDING_PRODUCT_FAMILIES, GENERATED_FUNDING_PRODUCTS } from '../data/fundingResources.generated.js';
 
 const provenance = {
   sourceRepository: 'JFeimster/funding-partners-os-dashboard',
@@ -37,6 +38,32 @@ export const FUNDING_PRODUCT_PATHS: FundingProductPath[] = [
   { id:'business-credit-building', name:'Business Credit Building', vertical:'business_credit', purposes:['business_credit_building'], description:'Readiness and business-credit development path rather than a promise of immediate funding.', documentProfile:'business_credit', provenance },
   { id:'business-cards-or-loc', name:'Business Cards / Credit Lines', vertical:'business_credit', purposes:['business_cards_or_loc'], description:'Business revolving-credit path where supported by the applicant profile and issuing institution.', documentProfile:'business_credit', provenance }
 ];
+
+export const FUNDING_PRODUCT_FAMILIES = GENERATED_FUNDING_PRODUCT_FAMILIES;
+export const FUNDING_PRODUCTS = GENERATED_FUNDING_PRODUCTS;
+
+export const FUNDING_PRODUCT_REGISTRY_STATUS = {
+  status: 'BETA' as const,
+  productPathCount: FUNDING_PRODUCT_PATHS.length,
+  providerProductCount: FUNDING_PRODUCTS.length,
+  productFamilyCount: FUNDING_PRODUCT_FAMILIES.length,
+  verifiedProviderProductCount: FUNDING_PRODUCTS.filter(item => item.status === 'ACTIVE_VERIFIED').length,
+  sourcePackage: 'Registries.zip',
+  importedAt: '2026-09-24'
+};
+
+export function findFundingProductsByPathIds(productPathIds: string[]) {
+  const ids = new Set(productPathIds);
+  return FUNDING_PRODUCTS.filter(product => product.productPathId && ids.has(product.productPathId));
+}
+
+export function findFundingProductsByProvider(providerId: string) {
+  return FUNDING_PRODUCTS.filter(product => product.providerId === providerId);
+}
+
+export function findProductFamily(id: string) {
+  return FUNDING_PRODUCT_FAMILIES.find(family => family.id === id);
+}
 
 export function findProductPaths(vertical: string, purpose: string): FundingProductPath[] {
   return FUNDING_PRODUCT_PATHS.filter(path =>
