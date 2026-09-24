@@ -20,6 +20,8 @@ import { runMcpContractTests } from './mcpContract.test.js';
 import { runIntelligenceManifestTests } from './intelligenceManifests.test.js';
 import { runPublicToolTests } from './publicTools.test.js';
 import { runPhase4BTests } from './phase4bKnowledge.test.js';
+import { runFundingOutcomeTests } from './fundingOutcome.test.js';
+import { runFundingApiTests } from './fundingApi.test.js';
 
 async function main() {
   console.log('\n======================================================');
@@ -43,18 +45,20 @@ async function main() {
     { name: 'MCP Contract', fn: runMcpContractTests },
     { name: 'Skill & Agent Manifests', fn: runIntelligenceManifestTests },
     { name: 'Phase 4A Public Tools', fn: runPublicToolTests },
-    { name: 'Phase 4B Knowledge & Entity Layer', fn: runPhase4BTests }
+    { name: 'Phase 4B Knowledge & Entity Layer', fn: runPhase4BTests },
+    { name: 'Phase 5 Funding Outcome Domain', fn: runFundingOutcomeTests },
+    { name: 'Phase 5 Funding Outcome APIs', fn: runFundingApiTests }
   ];
 
-  let passed = 0;
-  let failed = 0;
+  let passed=0;
+  let failed=0;
 
-  for (const suite of testSuites) {
-    try {
+  for(const suite of testSuites){
+    try{
       await suite.fn();
       console.log(`  ✅ [PASS] ${suite.name}`);
       passed++;
-    } catch (err: any) {
+    }catch(err:any){
       console.error(`  ❌ [FAIL] ${suite.name}: ${err?.message || err}`);
       failed++;
     }
@@ -63,13 +67,10 @@ async function main() {
   console.log('\n------------------------------------------------------');
   console.log(`Summary: ${passed} passed, ${failed} failed (${testSuites.length} total)`);
   console.log('------------------------------------------------------\n');
-
-  if (failed > 0) {
-    process.exit(1);
-  }
+  if(failed>0) process.exit(1);
 }
 
-main().catch((err) => {
-  console.error('Fatal test runner error:', err);
+main().catch(err=>{
+  console.error('Fatal test runner error:',err);
   process.exit(1);
 });

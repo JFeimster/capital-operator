@@ -4,30 +4,40 @@
  */
 
 export type CapitalEventType =
-  // Diagnostic & Assessment Lifecycle
   | 'assessment.completed'
   | 'blueprint.generated'
-  // Lead & Intake Lifecycle
   | 'lead.submitted'
   | 'lead.routed'
-  // Pipeline & Underwriting Lifecycle
+  | 'funding_intent.created'
+  | 'funding_readiness.completed'
+  | 'capital_case.ready'
   | 'deal.created'
+  | 'deal.updated'
+  | 'deal.status_changed'
   | 'deal.submitted'
   | 'deal.qualified'
   | 'documents.received'
   | 'documents.extracted'
+  | 'document.received'
+  | 'document.verified'
   | 'capital_case.generated'
-  // Routing & Submission Lifecycle
+  | 'capital_case.reviewed'
   | 'routing.completed'
+  | 'route.approved'
   | 'lender.matched'
   | 'submission.created'
+  | 'submission.authorized'
+  | 'submission.submitted'
+  | 'submission.status_changed'
   | 'termsheet.issued'
   | 'offer.received'
-  // Closing & Post-Funding Lifecycle
+  | 'offer.reviewed'
+  | 'condition.created'
+  | 'condition.completed'
   | 'deal.funded'
+  | 'deal.closed'
   | 'facility.funded'
   | 'relationship.followup_due'
-  // Integration & Infrastructure Lifecycle
   | 'integration.dispatched'
   | 'integration.failed'
   | 'webhook.dispatched'
@@ -37,6 +47,8 @@ export interface CapitalEventContext {
   source?: string;
   environment?: string;
   requestId?: string;
+  correlationId?: string;
+  workspaceId?: string;
   partnerId?: string;
   userId?: string;
   userAgent?: string;
