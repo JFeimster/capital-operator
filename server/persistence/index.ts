@@ -46,6 +46,8 @@ class UnavailableCapitalRepository implements CapitalRepository {
   async updateCondition():Promise<never>{return this.fail();}
   async putRelationship():Promise<never>{return this.fail();}
   async getRelationship():Promise<never>{return this.fail();}
+  async putAttribution():Promise<never>{return this.fail();}
+  async getAttribution():Promise<never>{return this.fail();}
   async appendAudit():Promise<never>{return this.fail();}
   async listAudit():Promise<never>{return this.fail();}
 }
