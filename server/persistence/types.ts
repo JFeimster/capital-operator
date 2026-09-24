@@ -2,6 +2,7 @@ import type { AuditRecord, Deal } from '../../src/types/deals.js';
 import type { FundingIntent } from '../../src/types/funding.js';
 import type {
   CapitalCaseRecord,
+  DealAttributionRecord,
   FundingCondition,
   FundingDocument,
   Offer,
@@ -65,6 +66,9 @@ export interface CapitalRepository {
 
   putRelationship(record: RelationshipLifecycle): Promise<RelationshipLifecycle>;
   getRelationship(workspaceId: string, dealId: string): Promise<RelationshipLifecycle | null>;
+
+  putAttribution(record: DealAttributionRecord): Promise<DealAttributionRecord>;
+  getAttribution(workspaceId: string, dealId: string): Promise<DealAttributionRecord | null>;
 
   appendAudit(record: AuditRecord): Promise<AuditRecord>;
   listAudit(workspaceId: string, entityType: string, entityId: string): Promise<AuditRecord[]>;
