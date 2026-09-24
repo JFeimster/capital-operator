@@ -4,25 +4,75 @@
   "title": "Capital Operator Funding Intent",
   "type": "object",
   "properties": {
-    "objective": { "type": "string", "minLength": 2 },
-    "requestedAmount": { "type": "number", "exclusiveMinimum": 0 },
-    "useOfFunds": { "type": "string" },
-    "fundingPurpose": { "type": "string" },
-    "vertical": { "type": "string" },
-    "urgency": { "enum": ["ASAP", "30_DAYS", "60_90_DAYS", "PLANNING"] },
-    "location": { "type": "string" },
-    "businessProfile": { "type": "object" },
-    "assetContext": { "type": "object" },
-    "receivableContext": { "type": "object" },
-    "contractContext": { "type": "object" },
-    "acquisitionContext": { "type": "object" },
-    "realEstateContext": { "type": "object" },
-    "currentDebtContext": { "type": "object" }
+    "objective": {
+      "type": "string",
+      "minLength": 2
+    },
+    "requestedAmount": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "useOfFunds": {
+      "type": "string"
+    },
+    "fundingPurpose": {
+      "type": "string"
+    },
+    "vertical": {
+      "type": "string"
+    },
+    "urgency": {
+      "enum": [
+        "ASAP",
+        "30_DAYS",
+        "60_90_DAYS",
+        "PLANNING"
+      ]
+    },
+    "location": {
+      "type": "string"
+    },
+    "businessProfile": {
+      "type": "object"
+    },
+    "assetContext": {
+      "type": "object"
+    },
+    "receivableContext": {
+      "type": "object"
+    },
+    "contractContext": {
+      "type": "object"
+    },
+    "acquisitionContext": {
+      "type": "object"
+    },
+    "realEstateContext": {
+      "type": "object"
+    },
+    "currentDebtContext": {
+      "type": "object"
+    },
+    "collateralAvailable": {
+      "type": "boolean"
+    }
   },
   "anyOf": [
-    { "required": ["objective"] },
-    { "required": ["useOfFunds"] },
-    { "required": ["fundingPurpose"] }
+    {
+      "required": [
+        "objective"
+      ]
+    },
+    {
+      "required": [
+        "useOfFunds"
+      ]
+    },
+    {
+      "required": [
+        "fundingPurpose"
+      ]
+    }
   ],
   "additionalProperties": true
 }

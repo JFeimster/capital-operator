@@ -55,6 +55,12 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
     description: 'Partner with verified commercial borrowing demand screened by standardized financial intake protocols.',
     keywords: ['lender partner network', 'syndicate capital partners', 'pre-qualified loan flow']
   },
+  getFunded: {
+    title: 'Get Funded — Funding Discovery & Next Actions | Capital Operator',
+    description: 'Describe your capital need and get explainable funding paths, canonical product matches, verified provider candidates where supported, document requirements, and the next action.',
+    canonical: '/get-funded',
+    keywords: ['business funding options', 'equipment financing', 'working capital', 'funding discovery']
+  },
   capitalStack: {
     title: 'Modern Commercial Capital Stack Architecture',
     description: 'Interactive architectural breakdown of senior debt, asset-backed credit, SBA programs, revenue-based facilities, and mezzanine layers.',

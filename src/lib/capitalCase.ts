@@ -1,5 +1,6 @@
 import { calculateCommercialDscr } from './capitalMath.js';
 import { getFundingIntentMissingFields } from './fundingIntent.js';
+import { findFundingOptions } from './fundingOptions.js';
 import type { CapitalCase, CapitalCaseFact, FundingIntent } from '../types/funding.js';
 
 function addFact(facts: CapitalCaseFact[], key: string, value: unknown) {
@@ -63,6 +64,7 @@ export function buildCapitalCase(intent: FundingIntent): CapitalCase {
   }
 
   const missingInformation = getFundingIntentMissingFields(intent);
+  const options = findFundingOptions(intent);
   return {
     status: 'BETA',
     intentId: intent.id,
@@ -72,8 +74,15 @@ export function buildCapitalCase(intent: FundingIntent): CapitalCase {
     missingInformation,
     deterministicMetrics,
     assumptions: [],
-    sourceTrace: ['FundingIntent normalized from user-provided input.'],
+    sourceTrace: [
+      'FundingIntent normalized from user-provided input.',
+      ...options.productFamilyMatches.slice(0,3).map(item=>`Canonical funding family: ${item.familyName}.`),
+      ...options.providerCandidates.slice(0,3).map(item=>`Verified provider/product criteria reviewed: ${item.providerName} / ${item.productName||item.productPathId}.`)
+    ],
     reviewFlags: missingInformation.length ? ['MISSING_INFORMATION'] : [],
+    targetProductPathIds: options.categoryFits.slice(0,5).map(item=>item.productPathId),
+    targetProductFamilyIds: options.productFamilyMatches.slice(0,5).map(item=>item.familyId),
+    supportResourceIds: options.supportResources.map(item=>item.resourceId),
     humanReviewRequired: true
   };
 }

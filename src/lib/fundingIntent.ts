@@ -54,6 +54,7 @@ export function normalizeFundingIntent(input: FundingIntentInput): FundingIntent
     vertical,
     urgency: input.urgency || 'PLANNING',
     location: input.location,
+    collateralAvailable: input.collateralAvailable,
     source: input.source || 'capital-operator',
     attribution: input.attribution,
     businessProfile: input.businessProfile,

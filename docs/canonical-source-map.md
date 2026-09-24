@@ -38,7 +38,9 @@
 | **Auth / RBAC Boundary** | `server/auth/*` | Server-derived workspace identity and centralized permissions. |
 | **Persistence Boundary** | `server/persistence/*` | Repository interface; memory adapter is development-only and durable production storage remains SPECIFIED. |
 | **Funding Registries** | `src/config/fundingProducts.ts`, `src/config/fundingProviders.ts` | Provider-agnostic product paths plus provenance-gated verified provider records. |
-| **Funding Operator UI** | `src/pages/FundingOperator.tsx` | Public funding preparation and configuration-gated operator console. |
+| **Funding Discovery Engine** | `src/lib/fundingOptions.ts`, `src/config/fundingPresets.ts` | Explainable outcome/product/provider ranking, qualification gaps, documents, live resources, next action, and shared vertical presets. |
+| **Get Funded UI** | `src/pages/GetFunded.tsx` | Public outcome-first funding discovery surface shared by vertical routes. |
+| **Funding Operator UI** | `src/pages/FundingOperator.tsx` | Funding discovery, canonical registry search, and configuration-gated operator console. |
 | **Skills** | `skills/*/SKILL.md` | Bounded reusable AI Skill contracts. |
 | **Agents** | `agents/*.md` | Bounded operator-assistance agent contracts. |
 | **Document Intelligence Contracts** | `server/documents/*`, `src/schemas/document-extraction.schema.json` | Provider-agnostic extraction/normalization foundation. |

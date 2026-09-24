@@ -35,7 +35,7 @@ export async function runFundingApiTests() {
   const optionsRes=new MockResponse();
   await optionsHandler(req,optionsRes);
   if(optionsRes.statusCode!==200 || optionsRes.data?.providerDiscoveryStatus!=='NO_VERIFIED_PROVIDER_DATA') {
-    throw new Error('Funding options API provider truth boundary failed');
+    throw new Error('Funding options API provider truth boundary failed: '+JSON.stringify({statusCode:optionsRes.statusCode,providerDiscoveryStatus:optionsRes.data?.providerDiscoveryStatus,providerCandidates:optionsRes.data?.providerCandidates,vertical:optionsRes.data?.intent?.vertical,categoryFits:optionsRes.data?.categoryFits}));
   }
 
   const readinessRes=new MockResponse();

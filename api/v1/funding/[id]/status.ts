@@ -30,6 +30,8 @@ export default async function handler(req:any,res:any) {
       capability_status:getPersistenceCapability().status,
       deal_stage:tx.deal.status,
       workflow_stage:tx.deal.workflowStage,
+      funding_intent:tx.intent,
+      discovery:tx.discovery,
       capital_case:tx.capitalCase,
       documents:tx.documents,
       routing_review:tx.routing,
@@ -39,7 +41,15 @@ export default async function handler(req:any,res:any) {
       conditions:tx.conditions,
       relationship:tx.relationship,
       attribution:tx.attribution,
-      next_action:getNextFundingActionForDeal(tx.deal),
+      next_action:getNextFundingActionForDeal(tx.deal,{
+        missingInformationCount:tx.discovery?.missingInformation.length,
+        requiredDocumentCount:tx.discovery?.documentChecklist.items.filter(item=>item.required).length,
+        providerCandidateCount:tx.discovery?.providerCandidates.length,
+        routingDecisionCount:tx.routing.length,
+        submissionCount:tx.submissions.length,
+        offerCount:tx.offers.length,
+        outstandingConditionCount:tx.outstandingConditions.length
+      }),
       human_review_required:true,
       timestamp:new Date().toISOString()
     });
