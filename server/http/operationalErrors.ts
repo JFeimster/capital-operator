@@ -1,11 +1,13 @@
 import { AuthenticationError } from '../auth/types.js';
 import { DealDomainError } from '../deals/service.js';
 import { PersistenceUnavailableError } from '../persistence/types.js';
+import { TransactionDomainError } from '../transactions/service.js';
 
 export function sendOperationalError(res: any, error: unknown, fallbackMessage: string) {
   if (error instanceof AuthenticationError ||
       error instanceof DealDomainError ||
-      error instanceof PersistenceUnavailableError) {
+      error instanceof PersistenceUnavailableError ||
+      error instanceof TransactionDomainError) {
     return res.status(error.statusCode).json({
       status: 'error',
       code: error.code,
