@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, FileCheck2, Search, ShieldCheck, Wrench } from 'lucide-react';
+import { ArrowRight, BadgeDollarSign, Building2, FileCheck2, Gauge, Landmark, Route, Search, ShieldCheck, Sparkles, Truck, Wrench } from 'lucide-react';
 import { Breadcrumbs } from '../components/site/Breadcrumbs';
 import { SEOHead } from '../components/site/SEOHead';
 import { Container } from '../components/layout/Container';
@@ -8,6 +8,7 @@ import { getFundingPreset, FUNDING_DISCOVERY_PRESETS } from '../config/fundingPr
 import { SEO_CONFIG } from '../config/seo';
 import { getAttribution } from '../lib/attribution';
 import { trackEvent } from '../lib/analytics';
+import { toAppHref } from '../lib/routeLocation';
 
 const API_BASE=typeof window!=='undefined'&&window.location.hostname.endsWith('github.io')
   ?'https://capital-operator.vercel.app':'';
@@ -113,30 +114,87 @@ export const GetFunded:React.FC<{presetSlug?:string}>=({presetSlug})=>{
   return (
     <>
       <SEOHead seo={seo}/>
-      <div className="border-b border-slate-800 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,.12),transparent_38%)]">
+      <div className="relative overflow-hidden border-b border-slate-800 bg-[#07090d]">
+        <div className="absolute inset-0 bg-grid-pattern opacity-70"/>
+        <div className="absolute -top-48 left-[-8%] h-[420px] w-[420px] rounded-full bg-emerald-500/10 blur-3xl"/>
+        <div className="absolute top-10 right-[-6%] h-[360px] w-[360px] rounded-full bg-cyan-500/10 blur-3xl"/>
         <Container>
-          <div className="py-12 sm:py-16 max-w-5xl">
+          <div className="relative py-12 sm:py-16">
             <Breadcrumbs items={[{label:'Get Funded'}]} className="mb-6"/>
-            <div className="font-mono text-xs tracking-[.22em] text-emerald-400 mb-4">FUNDING DISCOVERY // ACTION LAYER</div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white">{preset?.label||'Tell Capital Operator what funding you need.'}</h1>
-            <p className="mt-5 text-slate-300 max-w-3xl text-base sm:text-lg leading-relaxed">
-              Describe the capital need. Capital Operator normalizes the request, ranks canonical funding paths and products, identifies verified provider candidates where supported, shows missing information and documents, and gives you the next action.
-            </p>
+            <div className="grid xl:grid-cols-[1.15fr_.85fr] gap-8 items-end">
+              <div className="max-w-4xl">
+                <div className="font-mono text-[11px] sm:text-xs tracking-[.22em] text-emerald-400 mb-4">FUNDING DISCOVERY // ACTION LAYER</div>
+                <h1 className="text-4xl sm:text-6xl font-black tracking-[-0.04em] leading-[1.02] text-white">
+                  {preset?.label||'Tell Capital Operator what funding you need.'}
+                </h1>
+                <p className="mt-5 text-slate-300 max-w-3xl text-base sm:text-lg leading-relaxed">
+                  Start with the capital need. Get ranked funding paths, product candidates, verified provider candidates where supported, qualification gaps, documents, tools, and the next action.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  {label:'Providers',value:'33',icon:Building2,tone:'emerald'},
+                  {label:'Products',value:'59',icon:BadgeDollarSign,tone:'cyan'},
+                  {label:'Presets',value:'11',icon:Route,tone:'violet'},
+                  {label:'Resources',value:'138',icon:Wrench,tone:'amber'}
+                ].map(({label,value,icon:Icon,tone})=>(
+                  <div key={label} className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 backdrop-blur">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[10px] tracking-[.16em] text-slate-500">{label.toUpperCase()}</span>
+                      <Icon className={"h-4 w-4 "+(tone==='emerald'?'text-emerald-400':tone==='cyan'?'text-cyan-400':tone==='violet'?'text-violet-400':'text-amber-400')}/>
+                    </div>
+                    <div className="mt-2 text-2xl font-black text-white">{value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </Container>
       </div>
-
       <Section>
         <Container>
-          <div className="mb-8 flex flex-wrap gap-2">
-            {FUNDING_DISCOVERY_PRESETS.slice(0,8).map(item=>
-              <a key={item.id} href={'#get-funded/'+item.slug} className={'rounded-lg border px-3 py-2 text-xs font-semibold '+(preset?.id===item.id?'border-emerald-500 bg-emerald-500/10 text-emerald-300':'border-slate-800 bg-slate-900/50 text-slate-300 hover:border-slate-700')}>{item.label}</a>
-            )}
+          <div className="mb-8">
+            <div className="flex items-end justify-between gap-4 mb-4">
+              <div>
+                <div className="font-mono text-[10px] tracking-[.2em] text-cyan-400">CHOOSE A FUNDING MISSION</div>
+                <h2 className="mt-1 text-xl sm:text-2xl font-black text-white">Start with the outcome.</h2>
+              </div>
+              <a href={toAppHref('/funding')} className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-slate-400 hover:text-white">
+                Open Funding OS <ArrowRight className="h-3.5 w-3.5"/>
+              </a>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {FUNDING_DISCOVERY_PRESETS.slice(0,8).map((item,index)=>{
+                const Icon=index===0?Gauge:index===2?Truck:index===3?Building2:index===4?Landmark:Route;
+                const active=preset?.id===item.id;
+                return (
+                  <a key={item.id} href={toAppHref('/get-funded/'+item.slug)}
+                    className={'group rounded-2xl border p-4 transition-all duration-200 hover:-translate-y-0.5 '+(active
+                      ?'border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-950/20'
+                      :'border-slate-800 bg-slate-900/45 hover:border-slate-700 hover:bg-slate-900/70')}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className={'rounded-xl border p-2 '+(active?'border-emerald-500/30 bg-emerald-500/10':'border-slate-800 bg-slate-950')}>
+                        <Icon className={'h-4 w-4 '+(active?'text-emerald-300':'text-slate-400 group-hover:text-cyan-300')}/>
+                      </div>
+                      {active&&<span className="font-mono text-[9px] text-emerald-300">ACTIVE</span>}
+                    </div>
+                    <div className="mt-3 text-sm font-bold text-white">{item.label}</div>
+                    <div className="mt-1 text-[11px] leading-relaxed text-slate-500">{item.description}</div>
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="grid xl:grid-cols-[.85fr_1.15fr] gap-8">
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8">
-              <h2 className="text-xl font-bold text-white">Start with the capital need</h2>
+          <div className="grid xl:grid-cols-[.82fr_1.18fr] gap-6 lg:gap-8 items-start">
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/50 p-6 sm:p-8 shadow-2xl shadow-black/20 xl:sticky xl:top-24">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="font-mono text-[10px] tracking-[.18em] text-emerald-400">REQUEST BUILDER</div>
+                  <h2 className="mt-1 text-xl font-black text-white">Build the funding request</h2>
+                </div>
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-2.5"><Sparkles className="h-5 w-5 text-emerald-400"/></div>
+              </div>
               <div className="mt-6 space-y-4">
                 <label className="block"><span className="text-xs font-mono text-slate-400">WHAT DO YOU NEED FUNDING FOR?</span>
                   <textarea rows={3} value={objective} onChange={e=>setObjective(e.target.value)} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"/>
@@ -165,7 +223,34 @@ export const GetFunded:React.FC<{presetSlug?:string}>=({presetSlug})=>{
             </div>
 
             <div className="space-y-5">
-              {!result&&<div className="rounded-3xl border border-slate-800 bg-slate-900/25 p-8 text-slate-400"><ShieldCheck className="w-8 h-8 text-emerald-400 mb-4"/><h2 className="text-xl font-bold text-white">Explainable funding discovery</h2><p className="mt-2 text-sm leading-relaxed">Results are ranked from canonical product/provider data. Imported criteria stay marked for review. Verified provider candidates require verified provider identity and verified product-level criteria.</p></div>}
+              {!result&&<div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/35 p-7 text-slate-400">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(6,182,212,.10),transparent_42%)]"/>
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-mono text-[10px] tracking-[.2em] text-cyan-400">CAPITAL COMMAND PREVIEW</div>
+                      <h2 className="mt-1 text-2xl font-black text-white">What happens when you run discovery</h2>
+                    </div>
+                    <ShieldCheck className="w-7 h-7 text-emerald-400"/>
+                  </div>
+                  <div className="mt-6 grid sm:grid-cols-2 gap-3">
+                    {[
+                      ['01','Rank capital paths','Outcome + product-family fit'],
+                      ['02','Find product candidates','Criteria-aware matching'],
+                      ['03','Surface providers','Verified candidates where supported'],
+                      ['04','Expose gaps','Qualification + document needs'],
+                      ['05','Recommend resources','Live tools and calculators'],
+                      ['06','Give next action','Handoff or operator workflow']
+                    ].map(([n,title,desc])=>(
+                      <div key={n} className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+                        <div className="font-mono text-[10px] text-slate-600">{n}</div>
+                        <div className="mt-2 text-sm font-bold text-white">{title}</div>
+                        <div className="mt-1 text-[11px] text-slate-500">{desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>}
               {result&&<>
                 <div className="rounded-3xl border border-emerald-900/70 bg-emerald-950/15 p-6">
                   <div className="text-xs font-mono text-emerald-400">PRIMARY NEXT ACTION</div>

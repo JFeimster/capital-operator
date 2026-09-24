@@ -72,6 +72,15 @@ export default function App() {
 
   useEffect(() => {
     captureAttribution();
+
+    // Migrate legacy route-like hashes on Vercel to their canonical clean path.
+    // Example: /get-funded#get-funded/business-acquisition -> /get-funded/business-acquisition.
+    if (!window.location.hostname.endsWith('github.io') && /^#(?:get-funded|funding|tools|resources|docs|capital|assessment)(?:\/|$)/.test(window.location.hash)) {
+      const canonicalPath = '/' + window.location.hash.slice(1).replace(/^\//, '');
+      window.history.replaceState({}, '', canonicalPath + window.location.search);
+      setCurrentRoute(canonicalPath);
+    }
+
     const syncRoute = () => setCurrentRoute(activeLocation());
     window.addEventListener('hashchange', syncRoute);
     window.addEventListener('popstate', syncRoute);

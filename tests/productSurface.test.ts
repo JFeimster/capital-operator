@@ -22,9 +22,19 @@ export async function runProductSurfaceTests() {
   const hero=fs.readFileSync(path.resolve('src/components/home/Hero.tsx'),'utf8');
   const deck=fs.readFileSync(path.resolve('src/components/home/ActionDeck.tsx'),'utf8');
   const router=fs.readFileSync(path.resolve('src/lib/router.tsx'),'utf8');
+  const getFunded=fs.readFileSync(path.resolve('src/pages/GetFunded.tsx'),'utf8');
+  const capital=fs.readFileSync(path.resolve('src/pages/CapitalStack.tsx'),'utf8');
+  const tools=fs.readFileSync(path.resolve('src/pages/Tools.tsx'),'utf8');
+  const fundingOs=fs.readFileSync(path.resolve('src/pages/FundingOperator.tsx'),'utf8');
   if(!hero.includes('Turn Capital Demand Into an')) throw new Error('Homepage hero is not aligned to canonical product positioning');
   if(!deck.includes('What are you trying to fund?')) throw new Error('Homepage action deck missing');
   if(!router.includes("case 'capital':")) throw new Error('Capital hub clean route missing');
+  if(getFunded.includes("href={'#get-funded/")) throw new Error('Get Funded still emits legacy hash vertical URLs');
+  if(!getFunded.includes("toAppHref('/get-funded/'+item.slug)")) throw new Error('Get Funded verticals must use canonical route helper');
+  if(!getFunded.includes('CAPITAL COMMAND PREVIEW')) throw new Error('Get Funded command UI missing');
+  if(!capital.includes('CAPITAL INTELLIGENCE // STRUCTURE')) throw new Error('Capital action hub UI missing');
+  if(!tools.includes('OPERATOR TOOLBOX // 138 CANONICAL RESOURCES')) throw new Error('Tools command surface missing');
+  if(!fundingOs.includes('FUNDING OS // OPERATOR COMMAND CENTER')) throw new Error('Funding OS command surface missing');
 
   return {passed:true,testName:'runProductSurfaceTests'};
 }
