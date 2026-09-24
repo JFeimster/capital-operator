@@ -10,21 +10,66 @@ import { getFundingDocumentChecklist } from '../../src/lib/fundingDocuments.js';
 import { findVerifiedProviderCandidates } from '../../src/config/fundingProviders.js';
 import { TOOLS_CATALOG } from '../../src/config/tools.js';
 import { WORKFLOW_STAGES } from '../../src/config/workflowStages.js';
+import { authenticateHeaders } from '../auth/authService.js';
+import { AuthenticationError } from '../auth/types.js';
+import { createDealFromIntent, DealDomainError, getDeal } from '../deals/service.js';
+import { getNextFundingActionForDeal } from '../deals/status.js';
+import { getPersistenceCapability } from '../persistence/index.js';
+import { PersistenceUnavailableError } from '../persistence/types.js';
 import type { AssessmentAnswers } from '../../src/types.js';
 import type { BuyBoxMatchRequest } from '../../src/types/api.js';
 import type { FundingIntentInput } from '../../src/types/funding.js';
-import type { McpToolDefinition, McpToolResult } from './types.js';
+import type { McpExecutionContext, McpToolDefinition, McpToolResult } from './types.js';
+
+const FUNDING_INTENT_PROPERTIES = {
+  objective:{type:'string'},
+  requestedAmount:{type:'number',exclusiveMinimum:0},
+  useOfFunds:{type:'string'},
+  fundingPurpose:{type:'string'},
+  vertical:{type:'string'},
+  urgency:{type:'string'},
+  location:{type:'string'},
+  source:{type:'string'},
+  attribution:{type:'object'},
+  businessProfile:{type:'object'},
+  assetContext:{type:'object'},
+  receivableContext:{type:'object'},
+  contractContext:{type:'object'},
+  acquisitionContext:{type:'object'},
+  realEstateContext:{type:'object'},
+  currentDebtContext:{type:'object'}
+};
 
 export const MCP_TOOLS: McpToolDefinition[] = [
   {
     name:'start_funding_request',
     description:'GET FUNDED: normalize a plain-language funding objective into a non-persistent FundingIntent, identify missing fields, and return the next practical action.',
-    inputSchema:{type:'object',properties:{objective:{type:'string'},requestedAmount:{type:'number',exclusiveMinimum:0},useOfFunds:{type:'string'},fundingPurpose:{type:'string'},vertical:{type:'string'},urgency:{type:'string'},location:{type:'string'},businessProfile:{type:'object'},assetContext:{type:'object'},receivableContext:{type:'object'},contractContext:{type:'object'},acquisitionContext:{type:'object'},realEstateContext:{type:'object'},currentDebtContext:{type:'object'}}}
+    inputSchema:{type:'object',properties:FUNDING_INTENT_PROPERTIES}
+  },
+  {
+    name:'create_deal',
+    description:'GET FUNDED: authenticated state-creating tool that persists a normalized FundingIntent and creates a workspace-scoped Deal when a persistence adapter is available.',
+    inputSchema:{type:'object',properties:{intent:{type:'object'},...FUNDING_INTENT_PROPERTIES}}
+  },
+  {
+    name:'check_funding_readiness',
+    description:'PREPARE: identify missing information, document preparation items, capital-case readiness, and routing readiness. This is not a funding probability score.',
+    inputSchema:{type:'object',properties:FUNDING_INTENT_PROPERTIES}
+  },
+  {
+    name:'build_capital_case',
+    description:'PREPARE: build a structured, source-traceable capital case from supplied facts and deterministic metrics. Missing facts are never invented.',
+    inputSchema:{type:'object',properties:FUNDING_INTENT_PROPERTIES}
+  },
+  {
+    name:'get_funding_document_checklist',
+    description:'PREPARE: return a purpose/vertical-specific preparation checklist and distinguish canonical preparation guidance from provider-specific requirements.',
+    inputSchema:{type:'object',properties:FUNDING_INTENT_PROPERTIES}
   },
   {
     name:'find_funding_options',
     description:'FIND CAPITAL: return deterministic capital-category paths and only verified provider candidates when canonical provider provenance exists. Never implies approval or eligibility.',
-    inputSchema:{type:'object',properties:{objective:{type:'string'},requestedAmount:{type:'number'},useOfFunds:{type:'string'},fundingPurpose:{type:'string'},vertical:{type:'string'},businessProfile:{type:'object'},assetContext:{type:'object'},receivableContext:{type:'object'},contractContext:{type:'object'},acquisitionContext:{type:'object'},realEstateContext:{type:'object'}}}
+    inputSchema:{type:'object',properties:FUNDING_INTENT_PROPERTIES}
   },
   {
     name:'find_capital_providers',
@@ -32,19 +77,14 @@ export const MCP_TOOLS: McpToolDefinition[] = [
     inputSchema:{type:'object',required:['productPathIds'],properties:{productPathIds:{type:'array',items:{type:'string'},minItems:1}}}
   },
   {
-    name:'check_funding_readiness',
-    description:'PREPARE: identify missing information, document preparation items, capital-case readiness, and routing readiness. This is not a funding probability score.',
-    inputSchema:{type:'object',properties:{objective:{type:'string'},requestedAmount:{type:'number'},useOfFunds:{type:'string'},fundingPurpose:{type:'string'},vertical:{type:'string'},businessProfile:{type:'object'},assetContext:{type:'object'},receivableContext:{type:'object'},contractContext:{type:'object'},acquisitionContext:{type:'object'},realEstateContext:{type:'object'}}}
+    name:'get_next_funding_action',
+    description:'TRACK: authenticated read-only tool that returns the blocking item, responsible party, human checkpoint, and next action for a workspace-scoped deal.',
+    inputSchema:{type:'object',required:['dealId'],properties:{dealId:{type:'string',minLength:1}}}
   },
   {
-    name:'build_capital_case',
-    description:'PREPARE: build a structured, source-traceable capital case from supplied facts and deterministic metrics. Missing facts are never invented.',
-    inputSchema:{type:'object',properties:{objective:{type:'string'},requestedAmount:{type:'number'},useOfFunds:{type:'string'},fundingPurpose:{type:'string'},vertical:{type:'string'},businessProfile:{type:'object'},assetContext:{type:'object'},receivableContext:{type:'object'},contractContext:{type:'object'},acquisitionContext:{type:'object'},realEstateContext:{type:'object'}}}
-  },
-  {
-    name:'get_funding_document_checklist',
-    description:'PREPARE: return a purpose/vertical-specific preparation checklist and distinguish canonical preparation guidance from provider-specific requirements.',
-    inputSchema:{type:'object',properties:{objective:{type:'string'},requestedAmount:{type:'number'},useOfFunds:{type:'string'},fundingPurpose:{type:'string'},vertical:{type:'string'},businessProfile:{type:'object'},assetContext:{type:'object'},receivableContext:{type:'object'},contractContext:{type:'object'},acquisitionContext:{type:'object'},realEstateContext:{type:'object'}}}
+    name:'get_funding_status',
+    description:'TRACK: authenticated read-only funding status for a workspace-scoped deal. Transaction subsystems not yet persisted are explicitly marked SPECIFIED.',
+    inputSchema:{type:'object',required:['dealId'],properties:{dealId:{type:'string',minLength:1}}}
   },
   {
     name:'recommend_funding_support_tools',
@@ -61,14 +101,34 @@ export const MCP_TOOLS: McpToolDefinition[] = [
 ];
 
 function result(data: Record<string, unknown>): McpToolResult {
-  return { content:[{type:'text',text:JSON.stringify(data)}], structuredContent:data };
+  return {content:[{type:'text',text:JSON.stringify(data)}],structuredContent:data};
+}
+
+function operationalError(error: unknown): McpToolResult {
+  const known =
+    error instanceof AuthenticationError ||
+    error instanceof PersistenceUnavailableError ||
+    error instanceof DealDomainError;
+  const code = known && 'code' in error ? String(error.code) : 'TOOL_EXECUTION_FAILED';
+  const message = error instanceof Error ? error.message : 'MCP tool execution failed.';
+  const payload = {status:'error',code,message};
+  return {
+    content:[{type:'text',text:JSON.stringify(payload)}],
+    structuredContent:payload,
+    isError:true
+  };
 }
 
 function intentFrom(args: Record<string, any>) {
-  return normalizeFundingIntent(args as FundingIntentInput);
+  const source = args.intent && typeof args.intent === 'object' ? args.intent : args;
+  return normalizeFundingIntent(source as FundingIntentInput);
 }
 
-export async function callMcpTool(name: string, args: Record<string, any>): Promise<McpToolResult> {
+export async function callMcpTool(
+  name: string,
+  args: Record<string, any>,
+  context: McpExecutionContext={}
+): Promise<McpToolResult> {
   try {
     switch(name) {
       case 'start_funding_request': {
@@ -88,6 +148,31 @@ export async function callMcpTool(name: string, args: Record<string, any>): Prom
           human_review_required:true
         });
       }
+      case 'create_deal': {
+        const session=authenticateHeaders(context.headers || {});
+        const intent=intentFrom(args);
+        const deal=await createDealFromIntent(session,intent);
+        return result({
+          status:getPersistenceCapability().status,
+          capability_group:'GET FUNDED',
+          deal,
+          funding_intent_persistence:'PERSISTED',
+          workspace_id:session.workspaceId,
+          human_review_required:true
+        });
+      }
+      case 'check_funding_readiness': {
+        const intent=intentFrom(args);
+        return result({capability_group:'PREPARE',intent,readiness:checkFundingReadiness(intent)});
+      }
+      case 'build_capital_case': {
+        const intent=intentFrom(args);
+        return result({capability_group:'PREPARE',intent,capital_case:buildCapitalCase(intent)});
+      }
+      case 'get_funding_document_checklist': {
+        const intent=intentFrom(args);
+        return result({capability_group:'PREPARE',intent,document_checklist:getFundingDocumentChecklist(intent)});
+      }
       case 'find_funding_options': {
         const intent=intentFrom(args);
         return result({capability_group:'FIND CAPITAL',...findFundingOptions(intent)});
@@ -105,17 +190,34 @@ export async function callMcpTool(name: string, args: Record<string, any>): Prom
           human_review_required:true
         });
       }
-      case 'check_funding_readiness': {
-        const intent=intentFrom(args);
-        return result({capability_group:'PREPARE',intent,readiness:checkFundingReadiness(intent)});
+      case 'get_next_funding_action': {
+        const session=authenticateHeaders(context.headers || {});
+        const deal=await getDeal(session,String(args.dealId || ''));
+        return result({
+          status:getPersistenceCapability().status,
+          capability_group:'TRACK',
+          deal_id:deal.id,
+          next_action:getNextFundingActionForDeal(deal),
+          human_review_required:true
+        });
       }
-      case 'build_capital_case': {
-        const intent=intentFrom(args);
-        return result({capability_group:'PREPARE',intent,capital_case:buildCapitalCase(intent)});
-      }
-      case 'get_funding_document_checklist': {
-        const intent=intentFrom(args);
-        return result({capability_group:'PREPARE',intent,document_checklist:getFundingDocumentChecklist(intent)});
+      case 'get_funding_status': {
+        const session=authenticateHeaders(context.headers || {});
+        const deal=await getDeal(session,String(args.dealId || ''));
+        return result({
+          status:getPersistenceCapability().status,
+          capability_group:'TRACK',
+          deal_stage:deal.status,
+          workflow_stage:deal.workflowStage,
+          capital_case_status:deal.capitalCaseId?'LINKED':'NOT_LINKED',
+          routing_review_status:deal.routingStatus,
+          documents:{capability_status:'SPECIFIED',records:[]},
+          submissions:{capability_status:'SPECIFIED',records:[]},
+          outstanding_conditions:{capability_status:'SPECIFIED',records:[]},
+          offers_received:{capability_status:'SPECIFIED',records:[]},
+          next_action:getNextFundingActionForDeal(deal),
+          human_review_required:true
+        });
       }
       case 'recommend_funding_support_tools': {
         const limit=Math.min(Number(args.limit)||5,10);
@@ -129,11 +231,19 @@ export async function callMcpTool(name: string, args: Record<string, any>): Prom
       }
       case 'generate_capital_blueprint':
         if (!args.answers || typeof args.answers !== 'object') throw new Error('answers object is required.');
-        return result({status:'LIVE', blueprint: generateBlueprint(args.answers as AssessmentAnswers), human_review_required:true});
+        return result({status:'LIVE',blueprint:generateBlueprint(args.answers as AssessmentAnswers),human_review_required:true});
       case 'calculate_commercial_dscr':
-        return result({status:'LIVE', ...calculateCommercialDscr({netOperatingIncome:Number(args.netOperatingIncome),annualDebtService:Number(args.annualDebtService)})});
+        return result({status:'LIVE',...calculateCommercialDscr({netOperatingIncome:Number(args.netOperatingIncome),annualDebtService:Number(args.annualDebtService)})});
       case 'recommend_capital_stack':
-        return result({ ...recommendCapitalStack({ requestedAmount:Number(args.requestedAmount), useOfFunds:args.useOfFunds, collateralAvailable:args.collateralAvailable, recurringWorkingCapitalNeed:args.recurringWorkingCapitalNeed, receivablesDriven:args.receivablesDriven, realEstateRelated:args.realEstateRelated, preserveLiquidity:args.preserveLiquidity }), human_review_required:true });
+        return result({...recommendCapitalStack({
+          requestedAmount:Number(args.requestedAmount),
+          useOfFunds:args.useOfFunds,
+          collateralAvailable:args.collateralAvailable,
+          recurringWorkingCapitalNeed:args.recurringWorkingCapitalNeed,
+          receivablesDriven:args.receivablesDriven,
+          realEstateRelated:args.realEstateRelated,
+          preserveLiquidity:args.preserveLiquidity
+        }),human_review_required:true});
       case 'query_capital_tools': {
         const limit=Math.min(Number(args.limit)||10,25);
         const tools=TOOLS_CATALOG.filter(tool =>
@@ -163,7 +273,7 @@ export async function callMcpTool(name: string, args: Record<string, any>): Prom
       default:
         return {content:[{type:'text',text:`Unknown MCP tool: ${name}`}],isError:true};
     }
-  } catch (error:any) {
-    return {content:[{type:'text',text:error?.message||'MCP tool execution failed.'}],isError:true};
+  } catch (error) {
+    return operationalError(error);
   }
 }
