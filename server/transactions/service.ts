@@ -470,6 +470,40 @@ export async function listOffers(session:SessionContext,dealId:string):Promise<O
   return getCapitalRepository().listOffers(session.workspaceId,dealId);
 }
 
+export async function updateOffer(
+  session:SessionContext,
+  offerId:string,
+  patch:Partial<Pick<Offer,'providerId'|'providerName'|'amount'|'pricing'|'termMonths'|'paymentAmount'|'paymentFrequency'|'fees'|'collateral'|'guarantees'|'conditions'|'expiration'|'source'|'sourceDocument'|'verificationStatus'>>,
+  suppliedCorrelationId?:string
+):Promise<Offer>{
+  requirePermission(session,'offer.manage');
+  const repo=getCapitalRepository();
+  const existing=await repo.getOffer(session.workspaceId,offerId);
+  if(!existing) throw new TransactionDomainError('NOT_FOUND','Offer was not found in this workspace.',404);
+
+  const updated:Offer={
+    ...existing,
+    ...Object.fromEntries(Object.entries(patch).filter(([,value])=>value!==undefined)),
+    id:existing.id,
+    workspaceId:existing.workspaceId,
+    dealId:existing.dealId,
+    receivedAt:existing.receivedAt,
+    createdBy:existing.createdBy,
+    updatedAt:new Date().toISOString(),
+    updatedBy:session.userId
+  };
+  if(!String(updated.source||'').trim()||!hasActualOfferTerm(updated)){
+    throw new TransactionDomainError('VALIDATION_FAILED','Offer source and at least one actual received term are required.',400);
+  }
+  await repo.updateOffer(updated);
+  const correlation=corr(session,suppliedCorrelationId);
+  const event=await serverEventBus.emit('offer.reviewed',{
+    offer_id:updated.id,deal_id:updated.dealId,verification_status:updated.verificationStatus
+  },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
+  await audit(session,'offer',updated.id,'offer.reviewed',event.id,correlation,existing.verificationStatus,updated.verificationStatus);
+  return updated;
+}
+
 export async function compareOffers(session:SessionContext,dealId:string){
   const offers=await listOffers(session,dealId);
   return {
