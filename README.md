@@ -201,7 +201,7 @@ Results remain visible without a lead gate. Inputs stay client-side; analytics r
 ## Tech Stack
 
 - React 19
-- TypeScript 5
+- TypeScript 7
 - Vite 8
 - Tailwind CSS 4
 - Vercel Serverless Functions
@@ -272,7 +272,8 @@ The canonical Phase 0–5 roadmap is tracked in [GitHub Issue #8](https://github
 
 ## Live Ecosystem Links
 
-- **Public Application:** https://jfeimster.github.io/capital-operator/
+- **Canonical Production Application:** https://capital-operator.vercel.app
+- **Static Mirror / Fallback:** https://jfeimster.github.io/capital-operator/
 - **Distilled Funding:** https://www.distilledfunding.com
 - **Partner & Advisor Onboarding:** https://tally.so/r/mOe658
 - **Funding Intake:** https://tally.so/r/mDEJB5
