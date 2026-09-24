@@ -1,3 +1,4 @@
+import type { FundingAttribution } from './funding.js';
 import type { CapitalCase } from './funding.js';
 
 export type DocumentStatus = 'RECEIVED' | 'PROCESSING' | 'READY' | 'NEEDS_REVIEW' | 'VERIFIED' | 'REJECTED';
@@ -155,4 +156,44 @@ export interface RelationshipLifecycle {
   notes?: string;
   updatedAt: string;
   updatedBy: string;
+}
+
+export type CompensationStatus = 'UNKNOWN' | 'EXPECTED' | 'EARNED' | 'PAID' | 'DISPUTED' | 'NOT_APPLICABLE';
+
+export interface CompensationMetadata {
+  status: CompensationStatus;
+  model?: 'FLAT_FEE' | 'PERCENT_OF_FUNDED_AMOUNT' | 'BPS' | 'REVENUE_SHARE' | 'OTHER';
+  rate?: number;
+  amount?: number;
+  currency?: string;
+  payor?: string;
+  recipient?: string;
+  source: string;
+  sourceReference?: string;
+  earnedAt?: string;
+  paidAt?: string;
+  notes?: string;
+}
+
+export interface DealAttributionRecord {
+  id: string;
+  workspaceId: string;
+  dealId: string;
+  attribution: FundingAttribution;
+  compensation?: CompensationMetadata;
+  source: string;
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  updatedBy: string;
+}
+
+export interface FundingOutcomeRecord {
+  dealId: string;
+  outcome: 'FUNDED' | 'CLOSED';
+  externalConfirmation?: boolean;
+  externalEvidence?: string;
+  fundedAmount?: number;
+  fundingDate?: string;
+  reason: string;
 }
