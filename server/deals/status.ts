@@ -131,9 +131,33 @@ const NEXT_ACTIONS: Record<DealStatus, Omit<NextFundingAction,'currentLifecycleS
   }
 };
 
-export function getNextFundingActionForDeal(deal: Deal): NextFundingAction {
-  return {
-    currentLifecycleState: deal.status,
-    ...NEXT_ACTIONS[deal.status]
-  };
+export interface FundingActionContext {
+  missingInformationCount?: number;
+  requiredDocumentCount?: number;
+  receivedDocumentTypes?: string[];
+  providerCandidateCount?: number;
+  routingDecisionCount?: number;
+  submissionCount?: number;
+  offerCount?: number;
+  outstandingConditionCount?: number;
+}
+
+export function getNextFundingActionForDeal(deal: Deal, context: FundingActionContext = {}): NextFundingAction {
+  const base={currentLifecycleState:deal.status,...NEXT_ACTIONS[deal.status]};
+  if((context.outstandingConditionCount||0)>0){
+    return {...base,blockingItem:`${context.outstandingConditionCount} outstanding funding condition(s).`,nextRequiredAction:'Complete and verify the outstanding conditions.',responsibleParty:'APPLICANT',humanCheckpoint:'Operator verifies evidence before any completion claim.'};
+  }
+  if((context.missingInformationCount||0)>0 && ['DRAFT','INTAKE','INFORMATION_REQUIRED'].includes(deal.status)){
+    return {...base,blockingItem:`${context.missingInformationCount} required funding fact(s) are missing.`,nextRequiredAction:'Collect the highest-priority missing information from the discovery/readiness result.',responsibleParty:'APPLICANT',humanCheckpoint:'Operator confirms the supplied facts before routing.'};
+  }
+  if(deal.status==='READY_FOR_ROUTING' && (context.providerCandidateCount||0)>0){
+    return {...base,blockingItem:null,nextRequiredAction:'Review the verified provider/product candidates and approve the routing path.',responsibleParty:'OPERATOR',humanCheckpoint:'Provider relevance is not approval or availability.'};
+  }
+  if(deal.status==='READY_FOR_SUBMISSION' && (context.submissionCount||0)===0){
+    return {...base,blockingItem:'No submission package has been created.',nextRequiredAction:'Prepare a handoff destination and create a submission package for explicit authorization.',responsibleParty:'OPERATOR',humanCheckpoint:'External transmission remains human-authorized.'};
+  }
+  if((context.offerCount||0)>0 && ['SUBMITTED','TERMS_RECEIVED','OFFER_REVIEW'].includes(deal.status)){
+    return {...base,blockingItem:null,nextRequiredAction:'Compare the actual received offer terms and conditions.',responsibleParty:'OPERATOR',humanCheckpoint:'Capital Operator normalizes terms but does not select a winner.'};
+  }
+  return base;
 }

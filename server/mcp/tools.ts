@@ -70,13 +70,13 @@ export const MCP_TOOLS: McpToolDefinition[] = [
   },
   {
     name:'find_funding_options',
-    description:'FIND CAPITAL: return deterministic capital-category paths and only verified provider candidates when canonical provider provenance exists. Never implies approval or eligibility.',
+    description:'FIND CAPITAL: return ranked funding outcomes, families, products, verified provider candidates, qualification gaps, documents, live support resources, handoff route, and next action. Never implies approval or eligibility.',
     inputSchema:{type:'object',properties:FUNDING_INTENT_PROPERTIES}
   },
   {
     name:'find_capital_providers',
-    description:'FIND CAPITAL: search only ACTIVE_VERIFIED canonical provider records mapped to supplied productPathIds. Returns no fabricated providers.',
-    inputSchema:{type:'object',required:['productPathIds'],properties:{productPathIds:{type:'array',items:{type:'string'},minItems:1}}}
+    description:'FIND CAPITAL: search canonical verified provider/product criteria using product-path filters or a funding request. Returns explainable relevance, qualification gaps, provenance, and handoff routes without implying approval.',
+    inputSchema:{type:'object',properties:{productPathIds:{type:'array',items:{type:'string'},minItems:1},...FUNDING_INTENT_PROPERTIES}}
   },
   {
     name:'get_next_funding_action',
@@ -100,8 +100,8 @@ export const MCP_TOOLS: McpToolDefinition[] = [
   },
   {
     name:'recommend_funding_support_tools',
-    description:'OPERATE: recommend canonical Capital Operator support tools that can move the current request forward without making a capital decision.',
-    inputSchema:{type:'object',properties:{stage:{type:'integer',minimum:1,maximum:8},tag:{type:'string'},includeConcepts:{type:'boolean'},limit:{type:'integer',minimum:1,maximum:10}}}
+    description:'OPERATE: recommend canonical live support tools in the context of a funding request or workflow stage without making a capital decision.',
+    inputSchema:{type:'object',properties:{stage:{type:'integer',minimum:1,maximum:8},tag:{type:'string'},includeConcepts:{type:'boolean'},limit:{type:'integer',minimum:1,maximum:10},...FUNDING_INTENT_PROPERTIES}}
   },
 
   { name:'generate_capital_blueprint', description:'Generate a deterministic Capital Operator blueprint from canonical assessment answers.', inputSchema:{type:'object',required:['answers'],properties:{answers:{type:'object'}}} },
@@ -191,26 +191,51 @@ export async function callMcpTool(
         return result({capability_group:'FIND CAPITAL',...findFundingOptions(intent)});
       }
       case 'find_capital_providers': {
-        const ids=Array.isArray(args.productPathIds)?args.productPathIds.map(String):[];
-        if(!ids.length) throw new Error('productPathIds must contain at least one product path ID.');
-        const providers=findVerifiedProviderCandidates(ids);
+        const suppliedIds=Array.isArray(args.productPathIds)?args.productPathIds.map(String):[];
+        if(suppliedIds.length){
+          const providers=findVerifiedProviderCandidates(suppliedIds);
+          return result({
+            status:providers.length?'BETA':'SPECIFIED',
+            capability_group:'FIND CAPITAL',
+            provider_discovery_status:providers.length?'VERIFIED_RESULTS':'NO_VERIFIED_PROVIDER_DATA',
+            providers,
+            disclaimer:'Only provider records with verified criteria provenance are returned. No provider availability or eligibility is implied.',
+            human_review_required:true
+          });
+        }
+        const intent=intentFrom(args);
+        const discovery=findFundingOptions(intent);
         return result({
-          status:providers.length?'BETA':'SPECIFIED',
+          status:discovery.providerCandidates.length?'BETA':'SPECIFIED',
           capability_group:'FIND CAPITAL',
-          provider_discovery_status:providers.length?'VERIFIED_RESULTS':'NO_VERIFIED_PROVIDER_DATA',
-          providers,
-          disclaimer:'Only provider records with verified criteria provenance are returned. No provider availability or eligibility is implied.',
+          intent,
+          provider_discovery_status:discovery.providerDiscoveryStatus,
+          providers:discovery.providerCandidates,
+          related_products:discovery.productMatches.slice(0,10),
+          missing_information:discovery.missingInformation,
+          handoff:discovery.handoff,
+          disclaimer:discovery.disclaimer,
           human_review_required:true
         });
       }
       case 'get_next_funding_action': {
         const session=authenticateHeaders(context.headers || {});
-        const deal=await getDeal(session,String(args.dealId || ''));
+        const tx=await getTransactionStatus(session,String(args.dealId || ''));
         return result({
           status:getPersistenceCapability().status,
           capability_group:'TRACK',
-          deal_id:deal.id,
-          next_action:getNextFundingActionForDeal(deal),
+          deal_id:tx.deal.id,
+          discovery:tx.discovery,
+          next_action:getNextFundingActionForDeal(tx.deal,{
+            missingInformationCount:tx.discovery?.missingInformation.length,
+            requiredDocumentCount:tx.discovery?.documentChecklist.items.filter(item=>item.required).length,
+            providerCandidateCount:tx.discovery?.providerCandidates.length,
+            routingDecisionCount:tx.routing.length,
+            submissionCount:tx.submissions.length,
+            offerCount:tx.offers.length,
+            outstandingConditionCount:tx.outstandingConditions.length
+          }),
+          supporting_actions:tx.discovery?.missingInformation.slice(0,3).map(item=>item.reason)||[],
           human_review_required:true
         });
       }
@@ -222,6 +247,8 @@ export async function callMcpTool(
           capability_group:'TRACK',
           deal_stage:tx.deal.status,
           workflow_stage:tx.deal.workflowStage,
+          funding_intent:tx.intent,
+          discovery:tx.discovery,
           capital_case:tx.capitalCase,
           documents:tx.documents,
           routing_review:tx.routing,
@@ -230,7 +257,15 @@ export async function callMcpTool(
           offers_received:tx.offers,
           relationship:tx.relationship,
           attribution:tx.attribution,
-          next_action:getNextFundingActionForDeal(tx.deal),
+          next_action:getNextFundingActionForDeal(tx.deal,{
+            missingInformationCount:tx.discovery?.missingInformation.length,
+            requiredDocumentCount:tx.discovery?.documentChecklist.items.filter(item=>item.required).length,
+            providerCandidateCount:tx.discovery?.providerCandidates.length,
+            routingDecisionCount:tx.routing.length,
+            submissionCount:tx.submissions.length,
+            offerCount:tx.offers.length,
+            outstandingConditionCount:tx.outstandingConditions.length
+          }),
           human_review_required:true
         });
       }
@@ -256,7 +291,11 @@ export async function callMcpTool(
           (!stage || tool.workflowStage===stage) &&
           (!tag || tool.tags.some(item=>item.toLowerCase().includes(tag)) || tool.category.toLowerCase().includes(tag))
         ).slice(0,limit);
-        const resourceAssets=findFundingResourceAssets({query:tag||undefined,status:args.includeConcepts===true?'ANY':'LIVE',limit});
+        const hasFundingContext=Boolean(args.objective||args.fundingPurpose||args.vertical||args.requestedAmount);
+        const contextual=hasFundingContext?findFundingOptions(intentFrom(args)).supportResources:[];
+        const resourceAssets=contextual.length
+          ? contextual.slice(0,limit)
+          : findFundingResourceAssets({query:tag||undefined,status:args.includeConcepts===true?'ANY':'LIVE',limit});
         return result({status:'LIVE',capability_group:'OPERATE',tools,resource_assets:resourceAssets,resource_source_status:RESOURCE_ASSET_SOURCE_STATUS,human_review_required:true});
       }
       case 'generate_capital_blueprint':

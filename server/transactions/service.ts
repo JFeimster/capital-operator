@@ -769,31 +769,60 @@ export async function prepareFundingHandoff(session:SessionContext,dealId:string
   const deal=await getDeal(session,dealId);
   const intent=await repo.getFundingIntent(session.workspaceId,deal.fundingIntentId);
   if(!intent) throw new TransactionDomainError('NOT_FOUND','FundingIntent for this deal was not found.',404);
+  const discovery=findFundingOptions(intent);
+  const selectedProvider=discovery.providerCandidates.find(item=>item.handoffUrl);
+  const selectedProduct=selectedProvider?.productId
+    ? discovery.productMatches.find(item=>item.productId===selectedProvider.productId)
+    : discovery.productMatches[0];
+  const destination=selectedProvider?.handoffUrl
+    ? {
+        id:selectedProvider.providerId,
+        name:selectedProvider.providerName,
+        type:'CAPITAL_PARTNER' as const,
+        url:selectedProvider.handoffUrl
+      }
+    : {
+        id:'distilled-funding-intake',
+        name:'Distilled Funding',
+        type:'INTAKE_WORKFLOW' as const,
+        url:CTAS_CONFIG.businessFunding.url
+      };
   return {
     status:'LIVE' as const,
     dealId:deal.id,
-    destination:{
-      id:'distilled-funding-intake',
-      name:'Distilled Funding',
-      type:'INTAKE_WORKFLOW',
-      url:CTAS_CONFIG.businessFunding.url
+    destination,
+    selection:{
+      fundingPurpose:intent.fundingPurpose,
+      vertical:intent.vertical,
+      productPathId:selectedProvider?.productPathId||discovery.categoryFits[0]?.productPathId,
+      productFamilyId:selectedProduct?.productFamilyId,
+      productId:selectedProvider?.productId||selectedProduct?.productId,
+      providerId:selectedProvider?.providerId,
+      providerVerificationStatus:selectedProvider?.verificationStatus,
+      humanReviewRequired:true
     },
     context:{
       fundingIntent:intent,
-      attribution:deal.attribution,
+      attribution:{...(intent.attribution||{}),...(deal.attribution||{})},
       source:deal.source,
+      sourceTool:intent.attribution?.sourceTool,
+      sourceAsset:intent.attribution?.sourceAsset,
+      campaign:intent.attribution?.campaign||intent.attribution?.utmCampaign,
+      referralPartner:intent.attribution?.referralPartner,
+      affiliateSubId:intent.attribution?.affiliateSubId,
       dealId:deal.id
     },
     explicitAuthorizationRequired:true,
     transmissionPerformed:false,
-    nextAction:'Open the canonical intake workflow or create an authorized Submission record. Capital Operator has not transmitted data externally.'
+    nextAction:'Human-review the selected route, then open the destination or create an authorized Submission record. Capital Operator has not transmitted data externally.'
   };
 }
 
 export async function getTransactionStatus(session:SessionContext,dealId:string){
   const repo=getCapitalRepository();
   const deal=await getDeal(session,dealId);
-  const [capitalCase,documents,routing,submissions,offers,conditions,relationship,attribution]=await Promise.all([
+  const [intent,capitalCase,documents,routing,submissions,offers,conditions,relationship,attribution]=await Promise.all([
+    repo.getFundingIntent(session.workspaceId,deal.fundingIntentId),
     repo.getCapitalCase(session.workspaceId,dealId),
     repo.listDocuments(session.workspaceId,dealId),
     repo.listRoutingDecisions(session.workspaceId,dealId),
@@ -803,8 +832,11 @@ export async function getTransactionStatus(session:SessionContext,dealId:string)
     repo.getRelationship(session.workspaceId,dealId),
     repo.getAttribution(session.workspaceId,dealId)
   ]);
+  const discovery=intent?findFundingOptions(intent):null;
   return {
     deal,
+    intent,
+    discovery,
     capitalCase,
     documents,
     routing,

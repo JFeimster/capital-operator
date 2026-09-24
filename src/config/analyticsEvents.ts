@@ -58,7 +58,16 @@ export const ANALYTICS_EVENTS = {
   OPERATING_MODEL_VIEWED: 'operating_model_viewed',
   OPERATING_MODEL_EVOLUTION_CLICKED: 'operating_model_evolution_clicked',
   LEARN_TO_TOOL_HANDOFF: 'learn_to_tool_handoff',
-  LEARN_TO_ECOSYSTEM_HANDOFF: 'learn_to_ecosystem_handoff'
+  LEARN_TO_ECOSYSTEM_HANDOFF: 'learn_to_ecosystem_handoff',
+  FUNDING_SEARCH_STARTED: 'funding_search_started',
+  FUNDING_OPTIONS_GENERATED: 'funding_options_generated',
+  PROVIDER_CANDIDATE_VIEWED: 'provider_candidate_viewed',
+  PRODUCT_CANDIDATE_VIEWED: 'product_candidate_viewed',
+  DOCUMENT_CHECKLIST_GENERATED: 'document_checklist_generated',
+  SUPPORT_TOOL_RECOMMENDED: 'support_tool_recommended',
+  FUNDING_HANDOFF_PREPARED: 'funding_handoff_prepared',
+  GET_FUNDED_STARTED: 'get_funded_started',
+  GET_FUNDED_COMPLETED: 'get_funded_completed'
 } as const;
 
 export type AnalyticsEventName = typeof ANALYTICS_EVENTS[keyof typeof ANALYTICS_EVENTS];
