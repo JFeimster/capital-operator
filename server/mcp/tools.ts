@@ -31,6 +31,7 @@ const FUNDING_INTENT_PROPERTIES = {
   vertical:{type:'string'},
   urgency:{type:'string'},
   location:{type:'string'},
+  collateralAvailable:{type:'boolean'},
   source:{type:'string'},
   attribution:{type:'object'},
   businessProfile:{type:'object'},

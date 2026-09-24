@@ -1,5 +1,6 @@
 import { CTAS_CONFIG } from '../config/ctas.js';
 import { FUNDING_PRODUCT_FAMILIES, FUNDING_PRODUCTS, FUNDING_PRODUCT_PATHS } from '../config/fundingProducts.js';
+import { FUNDING_TAXONOMY } from '../config/fundingTaxonomy.js';
 import { PROVIDER_CRITERIA, VERIFIED_FUNDING_PROVIDERS, VERIFIED_PROVIDER_CRITERIA } from '../config/fundingProviders.js';
 import { LIVE_FUNDING_RESOURCE_ASSETS } from '../config/resourceAssets.js';
 import { getFundingDocumentChecklist } from './fundingDocuments.js';
@@ -134,12 +135,19 @@ function rankSupportResources(intent: FundingIntent): FundingSupportResourceMatc
 }
 
 export function findFundingOptions(intent: FundingIntent): FundingOptionsResult {
+  const requestText=[intent.objective,intent.useOfFunds].filter(Boolean).join(' ').toLowerCase();
+  const secondaryPurposes=new Set(
+    FUNDING_TAXONOMY.filter(entry=>entry.keywords.some(keyword=>requestText.includes(keyword.toLowerCase()))).map(entry=>entry.purpose)
+  );
   const categoryFits=FUNDING_PRODUCT_PATHS.map(path=>{
     let score=0; const reasons:string[]=[];
     if(path.purposes.includes(intent.fundingPurpose)){score+=100;reasons.push(`Directly supports ${intent.fundingPurpose.replace(/_/g,' ')}.`);}
     if(path.vertical===intent.vertical){score+=55;reasons.push(`Matches ${intent.vertical.replace(/_/g,' ')} funding vertical.`);}
-    if(intent.useOfFunds && path.description.toLowerCase().includes(intent.useOfFunds.toLowerCase())) score+=5;
-    return {productPathId:path.id,productName:path.name,fit:score>=100?'POTENTIAL_PATH' as const:'REVIEW' as const,score,reasons,humanReviewRequired:true as const};
+    const secondary=path.purposes.filter(purpose=>secondaryPurposes.has(purpose)&&purpose!==intent.fundingPurpose);
+    if(secondary.length){score+=85;reasons.push(`Also matches stated need: ${secondary.map(item=>item.replace(/_/g,' ')).join(', ')}.`);}
+    const nameTokens=path.name.toLowerCase().split(/\s+/).filter(token=>token.length>4);
+    if(nameTokens.some(token=>requestText.includes(token))){score+=8;reasons.push('Path terminology appears in the funding request.');}
+    return {productPathId:path.id,productName:path.name,fit:score>=85?'POTENTIAL_PATH' as const:'REVIEW' as const,score,reasons,humanReviewRequired:true as const};
   }).filter(item=>item.score>0).sort((a,b)=>(b.score||0)-(a.score||0));
 
   const pathIds=new Set(categoryFits.map(item=>item.productPathId));
@@ -177,13 +185,22 @@ export function findFundingOptions(intent: FundingIntent): FundingOptionsResult 
     if(!pathIds.has(criteria.productPathId)) continue;
     const provider=verifiedProvidersById.get(criteria.providerId);
     if(!provider) continue;
+    const industry=String(intent.businessProfile?.industry||'').trim().toLowerCase();
+    const restricted=(provider.restrictedIndustries||[]).map(value=>String(value).toLowerCase());
+    if(industry && restricted.some(value=>value&&industry.includes(value))) continue;
+    const geography=(provider.geography||[]).map(value=>String(value).toLowerCase());
+    const state=String(intent.businessProfile?.state||intent.location||'').trim().toLowerCase();
+    if(state && geography.length && !geography.some(value=>value==='us'||value==='usa'||value===state)) continue;
     const evaluation=evaluateCriteria(criteria,intent);
     if(evaluation.outside) continue;
     const product=FUNDING_PRODUCTS.find(item=>item.id===criteria.productId);
     providerCandidates.push({
       providerId:provider.id,providerName:provider.name,productId:criteria.productId,productName:criteria.productName,
-      productPathId:criteria.productPathId,score:100+evaluation.reasons.length*8-evaluation.gaps.length*3,
-      whyRelevant:['Provider identity is source-verified.','Product-level qualification criteria are explicitly verified.',...evaluation.reasons],
+      productPathId:criteria.productPathId,score:100+evaluation.reasons.length*8-evaluation.gaps.length*3+
+        ((provider.industryAppetite||[]).some(value=>industry&&String(value).toLowerCase().includes(industry))?8:0),
+      whyRelevant:['Provider identity is source-verified.','Product-level qualification criteria are explicitly verified.',
+        ...((provider.industryAppetite||[]).some(value=>industry&&String(value).toLowerCase().includes(industry))?['Reported industry appears in provider appetite metadata.']:[]),
+        ...evaluation.reasons],
       qualificationCriteria:criteria.criteria,qualificationGaps:evaluation.gaps,criteriaSource:criteria.source,lastVerifiedAt:criteria.verifiedAt,
       verificationStatus:'VERIFIED',applicationUrl:provider.applicationUrl,handoffUrl:provider.applicationUrl,humanReviewRequired:true
     });

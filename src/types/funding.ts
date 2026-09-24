@@ -86,6 +86,7 @@ export interface FundingIntentInput {
   vertical?: FundingVertical;
   urgency?: FundingUrgency;
   location?: string;
+  collateralAvailable?: boolean;
   source?: string;
   attribution?: FundingAttribution;
   businessProfile?: BusinessFundingProfile;
