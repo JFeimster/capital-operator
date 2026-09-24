@@ -6,11 +6,21 @@ import type { SessionContext } from '../auth/types.js';
 import type { WorkspacePermission } from '../../src/types/workspace.js';
 import type { AuditRecord, Deal, DealStatus } from '../../src/types/deals.js';
 import type { FundingIntent } from '../../src/types/funding.js';
-import { canTransitionDeal, externalSubmissionGuardRequired, routingPermissionRequired, workflowStageForStatus } from './lifecycle.js';
+import {
+  canTransitionDeal,
+  externalSubmissionGuardRequired,
+  routingPermissionRequired,
+  workflowStageForStatus
+} from './lifecycle.js';
 
 export class DealDomainError extends Error {
   constructor(
-    public readonly code: 'FORBIDDEN' | 'DEAL_NOT_FOUND' | 'INVALID_TRANSITION' | 'EXTERNAL_SUBMISSION_GUARD' | 'VALIDATION_FAILED',
+    public readonly code:
+      | 'FORBIDDEN'
+      | 'DEAL_NOT_FOUND'
+      | 'INVALID_TRANSITION'
+      | 'EXTERNAL_SUBMISSION_GUARD'
+      | 'VALIDATION_FAILED',
     message: string,
     public readonly statusCode: 400 | 403 | 404 | 409
   ) {
@@ -92,20 +102,27 @@ export async function createDealFromIntent(
   const repo = getCapitalRepository();
   await ensureWorkspaceContext(repo, session);
 
+  const persistedIntent: FundingIntent = {
+    ...intent,
+    workspaceId: session.workspaceId,
+    persistence: 'PERSISTED'
+  };
+  await repo.createFundingIntent(persistedIntent);
+
   const now = new Date().toISOString();
   const deal: Deal = {
     id: `deal_${crypto.randomBytes(8).toString('hex')}`,
     workspaceId: session.workspaceId,
-    fundingIntentId: intent.id,
+    fundingIntentId: persistedIntent.id,
     ownerId: session.userId,
-    source: intent.source,
-    attribution: intent.attribution,
+    source: persistedIntent.source,
+    attribution: persistedIntent.attribution,
     status: 'DRAFT',
     workflowStage: workflowStageForStatus('DRAFT'),
-    requestedAmount: intent.requestedAmount,
-    useOfFunds: intent.useOfFunds,
-    fundingPurpose: intent.fundingPurpose,
-    vertical: intent.vertical,
+    requestedAmount: persistedIntent.requestedAmount,
+    useOfFunds: persistedIntent.useOfFunds,
+    fundingPurpose: persistedIntent.fundingPurpose,
+    vertical: persistedIntent.vertical,
     routingStatus: 'NOT_STARTED',
     createdAt: now,
     updatedAt: now,
@@ -117,7 +134,7 @@ export async function createDealFromIntent(
   const correlation = correlationId(session, suppliedCorrelationId);
   const event = await serverEventBus.emit('deal.created', {
     deal_id: deal.id,
-    funding_intent_id: intent.id,
+    funding_intent_id: persistedIntent.id,
     status: deal.status,
     requested_amount: deal.requestedAmount
   }, {
@@ -165,7 +182,11 @@ export async function updateDeal(
   }
   if (patch.routingStatus === 'HUMAN_APPROVED') requirePermission(session, 'deal.route');
   if (patch.routingStatus === 'CAPITAL_PARTNER_DECISION') {
-    throw new DealDomainError('FORBIDDEN', 'CAPITAL_PARTNER_DECISION cannot be asserted by an operator update.', 403);
+    throw new DealDomainError(
+      'FORBIDDEN',
+      'CAPITAL_PARTNER_DECISION cannot be asserted by an operator update.',
+      403
+    );
   }
 
   const updated: Deal = {
@@ -191,7 +212,17 @@ export async function updateDeal(
     correlationId: correlation,
     requestId: session.requestId
   });
-  await appendDealAudit(repo, updated, session, 'deal.updated', event.id, correlation, existing.status, updated.status, { patch });
+  await appendDealAudit(
+    repo,
+    updated,
+    session,
+    'deal.updated',
+    event.id,
+    correlation,
+    existing.status,
+    updated.status,
+    { patch }
+  );
   return updated;
 }
 
@@ -210,7 +241,11 @@ export async function transitionDeal(
   const existing = await getDeal(session, dealId);
 
   if (!canTransitionDeal(existing.status, to)) {
-    throw new DealDomainError('INVALID_TRANSITION', `Cannot transition deal from ${existing.status} to ${to}.`, 409);
+    throw new DealDomainError(
+      'INVALID_TRANSITION',
+      `Cannot transition deal from ${existing.status} to ${to}.`,
+      409
+    );
   }
   if (routingPermissionRequired(to)) requirePermission(session, 'deal.route');
   if (externalSubmissionGuardRequired(to)) {
@@ -257,7 +292,10 @@ export async function transitionDeal(
   return updated;
 }
 
-export async function getDealAudit(session: SessionContext, dealId: string): Promise<AuditRecord[]> {
+export async function getDealAudit(
+  session: SessionContext,
+  dealId: string
+): Promise<AuditRecord[]> {
   requirePermission(session, 'audit.read');
   await getDeal(session, dealId);
   return getCapitalRepository().listAudit(session.workspaceId, 'deal', dealId);
