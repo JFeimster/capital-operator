@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, Database, FileCheck2, GitBranch, KeyRound, RefreshCw, ShieldCheck, Waypoints } from 'lucide-react';
+import { Activity, ArrowRight, Database, FileCheck2, GitBranch, KeyRound, RefreshCw, SearchCheck, ShieldCheck, Waypoints, Workflow } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { Section } from '../components/layout/Section';
 import { CTAS_CONFIG } from '../config/ctas';
 import { trackEvent } from '../lib/analytics';
+import { toAppHref } from '../lib/routeLocation';
 
 type CapabilityStatus = {
   status?: string;
@@ -126,12 +127,12 @@ export const FundingOperator: React.FC = () => {
       <div className="border-b border-slate-800 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.10),transparent_36%)]">
         <Container>
           <div className="py-14 sm:py-20 max-w-5xl">
-            <div className="font-mono text-xs tracking-[0.22em] text-emerald-400 mb-4">CAPITAL CLEARING // OPERATOR SURFACE</div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white max-w-4xl">
-              Turn a funding request into an operating workflow.
+            <div className="font-mono text-xs tracking-[0.22em] text-cyan-400 mb-4">FUNDING OS // OPERATOR COMMAND CENTER</div>
+            <h1 className="text-4xl sm:text-6xl font-black tracking-[-0.04em] leading-[1.03] text-white max-w-5xl">
+              Work the capital request from discovery to next action.
             </h1>
             <p className="mt-5 text-slate-300 text-base sm:text-lg max-w-3xl leading-relaxed">
-              Start with the funding objective. Normalize the request, expose missing information, identify capital categories, prepare the case, and move the deal through human-controlled routing and submission.
+              Prepare funding paths, inspect provider/product candidates, expose missing information, move the deal through the workflow, and keep human control over routing and submission.
             </p>
           </div>
         </Container>
@@ -139,7 +140,26 @@ export const FundingOperator: React.FC = () => {
 
       <Section>
         <Container>
-          <div className="grid lg:grid-cols-3 gap-5 mb-10">
+          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
+            {[
+              {label:'Run Funding Discovery',desc:'Start with the capital need.',href:'/get-funded',icon:SearchCheck,tone:'emerald'},
+              {label:'Explore Capital',desc:'Products, paths and structure.',href:'/capital',icon:Waypoints,tone:'cyan'},
+              {label:'Operator Toolbox',desc:'Calculators and workflow resources.',href:'/tools',icon:Workflow,tone:'violet'},
+              {label:'Workspace Status',desc:transactionReady?'Transactional layer available.':'Auth / persistence activation pending.',href:'#workspace-status',icon:Activity,tone:'amber'}
+            ].map(({label,desc,href,icon:Icon,tone})=>(
+              <a key={label} href={href.startsWith('#')?href:toAppHref(href)}
+                className="group rounded-2xl border border-slate-800 bg-slate-900/45 p-4 hover:-translate-y-0.5 hover:border-slate-700 transition-all">
+                <div className="flex items-start justify-between gap-3">
+                  <div className={'rounded-xl border border-slate-800 bg-slate-950 p-2.5 '+(tone==='emerald'?'text-emerald-400':tone==='cyan'?'text-cyan-400':tone==='violet'?'text-violet-400':'text-amber-400')}><Icon className="h-5 w-5"/></div>
+                  <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-white"/>
+                </div>
+                <div className="mt-3 text-sm font-bold text-white">{label}</div>
+                <div className="mt-1 text-[11px] text-slate-500">{desc}</div>
+              </a>
+            ))}
+          </div>
+
+          <div id="workspace-status" className="grid lg:grid-cols-3 gap-5 mb-10">
             <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
               <div className="flex items-center gap-2 text-white font-semibold"><ShieldCheck className="w-4 h-4 text-emerald-400"/>Authentication</div>
               <div className="font-mono text-xs mt-3 text-slate-300">{workspace?.auth?.status||'CHECKING'}</div>
@@ -298,7 +318,13 @@ export const FundingOperator: React.FC = () => {
           </div>
 
           <div className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/35 p-6 sm:p-8">
-            <div className="text-xs font-mono text-cyan-400">CANONICAL REGISTRY SEARCH</div>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-mono text-cyan-400">CAPITAL INTELLIGENCE SEARCH</div>
+                <div className="mt-1 text-xl font-black text-white">Search providers and products</div>
+              </div>
+              <SearchCheck className="h-6 w-6 text-cyan-400"/>
+            </div>
             <div className="mt-4 flex gap-3">
               <input value={registryQuery} onChange={e=>setRegistryQuery(e.target.value)} placeholder="provider, product, funding type…" className="flex-1 rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white"/>
               <button onClick={async()=>{const q=encodeURIComponent(registryQuery);const [providers,products]=await Promise.all([jsonRequest('/api/v1/providers?q='+q),jsonRequest('/api/v1/products?q='+q)]);setRegistryResult({providers,products});}} className="rounded-xl border border-cyan-800 bg-cyan-950/30 px-4 py-3 text-sm font-semibold text-cyan-300">Search</button>
