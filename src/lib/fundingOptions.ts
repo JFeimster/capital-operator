@@ -148,8 +148,9 @@ export function findFundingOptions(intent: FundingIntent): FundingOptionsResult 
     if(path.vertical===intent.vertical){score+=55;reasons.push(`Matches ${intent.vertical.replace(/_/g,' ')} funding vertical.`);}
     const secondary=path.purposes.filter(purpose=>secondaryPurposes.has(purpose)&&purpose!==intent.fundingPurpose);
     if(secondary.length){score+=85;reasons.push(`Also matches stated need: ${secondary.map(item=>item.replace(/_/g,' ')).join(', ')}.`);}
-    const nameTokens=path.name.toLowerCase().split(/\s+/).filter(token=>token.length>4);
-    if(nameTokens.some(token=>requestText.includes(token))){score+=8;reasons.push('Path terminology appears in the funding request.');}
+    const genericTerms=new Set(['funding','financing','business','capital','commercial','loan','loans']);
+    const nameTokens=path.name.toLowerCase().split(/\s+/).filter(token=>token.length>4&&!genericTerms.has(token));
+    if(nameTokens.some(token=>requestText.includes(token))){score+=8;reasons.push('Specific path terminology appears in the funding request.');}
     return {productPathId:path.id,productName:path.name,fit:score>=85?'POTENTIAL_PATH' as const:'REVIEW' as const,score,reasons,humanReviewRequired:true as const};
   }).filter(item=>item.score>0).sort((a,b)=>(b.score||0)-(a.score||0));
 

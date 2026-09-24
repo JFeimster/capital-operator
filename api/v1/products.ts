@@ -2,7 +2,7 @@ import { applyCors } from '../../server/http/cors.js';
 import { FUNDING_PRODUCT_FAMILIES, FUNDING_PRODUCTS, FUNDING_PRODUCT_PATHS, FUNDING_PRODUCT_REGISTRY_STATUS } from '../../src/config/fundingProducts.js';
 
 function first(value:any):string { return Array.isArray(value)?String(value[0]||''):String(value||''); }
-function number(value:any):number|undefined { const parsed=Number(first(value)); return Number.isFinite(parsed)?parsed:undefined; }
+function number(value:any):number|undefined { const raw=first(value).trim(); if(!raw) return undefined; const parsed=Number(raw); return Number.isFinite(parsed)?parsed:undefined; }
 function bool(value:any):boolean|undefined { const raw=first(value).toLowerCase(); if(raw==='true') return true; if(raw==='false') return false; return undefined; }
 
 export default async function handler(req:any,res:any){

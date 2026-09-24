@@ -5,7 +5,9 @@ function first(value:any):string {
   return Array.isArray(value)?String(value[0]||''):String(value||'');
 }
 function number(value:any):number|undefined {
-  const parsed=Number(first(value));
+  const raw=first(value).trim();
+  if(!raw) return undefined;
+  const parsed=Number(raw);
   return Number.isFinite(parsed)?parsed:undefined;
 }
 
