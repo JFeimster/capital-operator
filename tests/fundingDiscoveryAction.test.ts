@@ -85,7 +85,7 @@ export async function runFundingDiscoveryActionTests() {
 
   const providerRes=new MockResponse();
   await providersHandler({method:'GET',headers:{},query:{q:'7 Figures'}},providerRes);
-  if(providerRes.statusCode!==200||!providerRes.data?.providers?.some((item:any)=>item.id==='7-figures-funding')) throw new Error('Provider API search filter failed');
+  if(providerRes.statusCode!==200||!providerRes.data?.providers?.some((item:any)=>item.id==='7-figures-funding')) throw new Error('Provider API search filter failed: '+JSON.stringify({statusCode:providerRes.statusCode,count:providerRes.data?.count,filters:providerRes.data?.filters,ids:providerRes.data?.providers?.map((item:any)=>item.id)}));
 
   const productRes=new MockResponse();
   await productsHandler({method:'GET',headers:{},query:{verification:'VERIFIED'}},productRes);
