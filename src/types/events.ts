@@ -33,6 +33,7 @@ export type CapitalEventType =
   | 'offer.received'
   | 'offer.reviewed'
   | 'condition.created'
+  | 'condition.updated'
   | 'condition.completed'
   | 'deal.funded'
   | 'deal.closed'
