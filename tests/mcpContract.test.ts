@@ -7,7 +7,7 @@ export async function runMcpContractTests() {
     'start_funding_request','create_deal',
     'find_funding_options','find_capital_providers','check_funding_readiness',
     'build_capital_case','get_funding_document_checklist',
-    'get_next_funding_action','get_funding_status',
+    'get_next_funding_action','get_funding_status','compare_received_offers','initiate_funding_handoff',
     'recommend_funding_support_tools',
     'generate_capital_blueprint','calculate_commercial_dscr','recommend_capital_stack',
     'query_capital_tools','explain_operating_stage','match_capital_routes'
