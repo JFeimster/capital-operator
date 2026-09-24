@@ -52,7 +52,17 @@ export type AuditActorType = 'USER' | 'SYSTEM' | 'AI' | 'INTEGRATION' | 'CAPITAL
 export interface AuditRecord {
   eventId: string;
   workspaceId: string;
-  entityType: 'workspace' | 'membership' | 'deal' | 'capital_case' | 'document' | 'submission' | 'offer' | 'condition' | 'relationship';
+  entityType:
+    | 'workspace'
+    | 'membership'
+    | 'deal'
+    | 'capital_case'
+    | 'document'
+    | 'submission'
+    | 'offer'
+    | 'condition'
+    | 'relationship'
+    | 'attribution';
   entityId: string;
   action: string;
   previousState?: string;

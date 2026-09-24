@@ -77,8 +77,8 @@ export async function runDealApiTests() {
     if(statusRes.statusCode!==200 || statusRes.data?.deal_stage!=='INTAKE') {
       throw new Error('Funding status API failed');
     }
-    if(statusRes.data?.submissions?.capability_status!=='SPECIFIED') {
-      throw new Error('Unimplemented transaction subsystems must be truthfully marked SPECIFIED');
+    if(!Array.isArray(statusRes.data?.submissions) || !Array.isArray(statusRes.data?.offers_received)) {
+      throw new Error('Funding status API must expose transaction collections');
     }
 
     const unauthRes=new MockResponse();

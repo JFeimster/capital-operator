@@ -32,6 +32,13 @@
 | **Navigation & SEO** | `src/config/navigation.ts` & `src/config/seo.ts` | Route hierarchy and metadata. |
 | **Design / Agent Rules** | `AGENTS.md` & `src/index.css` | Repository operating guidance and design tokens. |
 | **MCP Server** | `api/mcp.ts`, `server/mcp/*` | Stateless HTTP JSON-RPC MCP capability discovery and tool execution. |
+| **Funding Outcome Domain** | `src/types/funding.ts`, `src/lib/funding*.ts`, `src/lib/capitalCase.ts` | Funding intent, readiness, capital paths, checklists, and capital-case synthesis. |
+| **Deal Lifecycle** | `src/types/deals.ts`, `server/deals/*` | Workspace-scoped deal state machine and next-action logic. |
+| **Transaction Operations** | `src/types/transactions.ts`, `server/transactions/service.ts` | Documents, cases, routing approval, submissions, offers, conditions, relationships, attribution, and outcomes. |
+| **Auth / RBAC Boundary** | `server/auth/*` | Server-derived workspace identity and centralized permissions. |
+| **Persistence Boundary** | `server/persistence/*` | Repository interface; memory adapter is development-only and durable production storage remains SPECIFIED. |
+| **Funding Registries** | `src/config/fundingProducts.ts`, `src/config/fundingProviders.ts` | Provider-agnostic product paths plus provenance-gated verified provider records. |
+| **Funding Operator UI** | `src/pages/FundingOperator.tsx` | Public funding preparation and configuration-gated operator console. |
 | **Skills** | `skills/*/SKILL.md` | Bounded reusable AI Skill contracts. |
 | **Agents** | `agents/*.md` | Bounded operator-assistance agent contracts. |
 | **Document Intelligence Contracts** | `server/documents/*`, `src/schemas/document-extraction.schema.json` | Provider-agnostic extraction/normalization foundation. |
@@ -43,3 +50,6 @@
 - The intake API does not own a separate credit-underwriting or lender-eligibility engine.
 - `/api/v1/routing/match-buy-box` is currently a **SANDBOX** capability router, not a verified live lender buy-box source.
 - Production MCP is implemented in Batch B and reuses these canonical sources rather than duplicating their logic. `match_capital_routes` remains **SANDBOX** and consequential capital decisions remain human-controlled.
+- Phase 5 authenticated operations derive workspace identity from the server auth boundary and never trust workspace/user identifiers from request payloads.
+- Provider-specific output remains empty unless the verified-provider registry contains provenance-backed records.
+- External submission and FUNDED states require explicit human confirmation/evidence.

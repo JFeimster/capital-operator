@@ -1,8 +1,8 @@
 import { applyCors } from '../../../../server/http/cors.js';
 import { authenticateHeaders, headersFromRequest } from '../../../../server/auth/authService.js';
-import { getDeal } from '../../../../server/deals/service.js';
 import { getNextFundingActionForDeal } from '../../../../server/deals/status.js';
 import { getPersistenceCapability } from '../../../../server/persistence/index.js';
+import { getTransactionStatus } from '../../../../server/transactions/service.js';
 import { sendOperationalError } from '../../../../server/http/operationalErrors.js';
 
 function routeId(req:any): string {
@@ -24,20 +24,22 @@ export default async function handler(req:any,res:any) {
       status:'error',code:'VALIDATION_FAILED',message:'Deal id is required.',timestamp:new Date().toISOString()
     });
 
-    const deal=await getDeal(session,id);
-    const nextAction=getNextFundingActionForDeal(deal);
+    const tx=await getTransactionStatus(session,id);
     return res.status(200).json({
       status:'success',
       capability_status:getPersistenceCapability().status,
-      deal_stage:deal.status,
-      workflow_stage:deal.workflowStage,
-      capital_case_status:deal.capitalCaseId?'LINKED':'NOT_LINKED',
-      routing_review_status:deal.routingStatus,
-      documents:{capability_status:'SPECIFIED',records:[]},
-      submissions:{capability_status:'SPECIFIED',records:[]},
-      outstanding_conditions:{capability_status:'SPECIFIED',records:[]},
-      offers_received:{capability_status:'SPECIFIED',records:[]},
-      next_action:nextAction,
+      deal_stage:tx.deal.status,
+      workflow_stage:tx.deal.workflowStage,
+      capital_case:tx.capitalCase,
+      documents:tx.documents,
+      routing_review:tx.routing,
+      submissions:tx.submissions,
+      offers_received:tx.offers,
+      outstanding_conditions:tx.outstandingConditions,
+      conditions:tx.conditions,
+      relationship:tx.relationship,
+      attribution:tx.attribution,
+      next_action:getNextFundingActionForDeal(tx.deal),
       human_review_required:true,
       timestamp:new Date().toISOString()
     });

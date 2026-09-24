@@ -201,7 +201,7 @@ Results remain visible without a lead gate. Inputs stay client-side; analytics r
 ## Tech Stack
 
 - React 19
-- TypeScript 5
+- TypeScript 7
 - Vite 8
 - Tailwind CSS 4
 - Vercel Serverless Functions
@@ -272,7 +272,8 @@ The canonical Phase 0–5 roadmap is tracked in [GitHub Issue #8](https://github
 
 ## Live Ecosystem Links
 
-- **Public Application:** https://jfeimster.github.io/capital-operator/
+- **Canonical Production Application:** https://capital-operator.vercel.app
+- **Static Mirror / Fallback:** https://jfeimster.github.io/capital-operator/
 - **Distilled Funding:** https://www.distilledfunding.com
 - **Partner & Advisor Onboarding:** https://tally.so/r/mOe658
 - **Funding Intake:** https://tally.so/r/mDEJB5
@@ -284,3 +285,18 @@ The canonical Phase 0–5 roadmap is tracked in [GitHub Issue #8](https://github
 Licensed under the **Apache-2.0 License**. See [LICENSE](LICENSE) for details.
 
 Capital Operator provides operational diagnostics, workflow architecture, routing assistance, and software infrastructure. Diagnostic outputs and sandbox routing results are for operational planning and human review; they are not credit decisions, loan commitments, lender approvals, or legal/underwriting advice.
+
+---
+## Phase 5 — Capital Clearing
+
+Phase 5 transaction infrastructure is implemented behind explicit production-truth boundaries. Public funding preparation is live; authenticated deal operations are configuration-gated because production auth and durable persistence are not configured by default.
+
+Key surfaces:
+- Operator UI: #funding
+- REST: /api/v1/funding/*, /api/v1/deals/*, routing, submissions, offers, conditions, audit
+- MCP: outcome-driven funding tools plus authenticated deal status/actions
+- Detailed status and safety gates: docs/phase-5-capital-clearing.md
+
+Canonical production app: https://capital-operator.vercel.app
+Static mirror/fallback: https://jfeimster.github.io/capital-operator/
+

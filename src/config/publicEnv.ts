@@ -7,7 +7,8 @@
 
 export const PUBLIC_ENV = {
   appName: 'Capital Operator',
-  appUrl: 'https://jfeimster.github.io/capital-operator/',
+  appUrl: 'https://capital-operator.vercel.app',
+  staticMirrorUrl: 'https://jfeimster.github.io/capital-operator/',
   distilledFundingUrl: 'https://www.distilledfunding.com',
   repoUrl: 'https://github.com/JFeimster/capital-operator',
 

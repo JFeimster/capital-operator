@@ -134,3 +134,22 @@ The MCP server at `/api/mcp` exposes canonical deterministic logic through state
 ## 8. Ecosystem Control Plane
 
 `src/config/capabilities.ts` and `src/config/ecosystem.ts` are the canonical control-plane registries. `src/lib/capabilityMatcher.ts` and `src/lib/ecosystemRouter.ts` turn diagnosed gaps into structured handoffs, fallbacks, and human checkpoints.
+
+---
+## 9. Phase 5 Transaction Architecture
+
+Transaction requests flow from the browser or MCP client through either the public funding-preparation layer or the authenticated workspace boundary, then through centralized RBAC, deal/transaction services, and the CapitalRepository interface.
+
+Canonical transaction logic lives in server/deals/* and server/transactions/service.ts. The repository boundary is server/persistence/types.ts. Ephemeral memory is development-only and is never represented as durable production storage.
+
+Current production capability truth:
+- public FundingIntent/readiness/options: LIVE
+- funding product catalog: BETA
+- verified provider registry: SPECIFIED boundary with no promoted provider records
+- auth adapter: BETA code path, SPECIFIED until configured
+- durable persistence: SPECIFIED
+- deal/document/case/routing/submission/offer/condition/relationship/attribution operations: BETA, configuration-gated
+- external submission and funded outcome recording: human-confirmed only
+
+See docs/phase-5-capital-clearing.md.
+
