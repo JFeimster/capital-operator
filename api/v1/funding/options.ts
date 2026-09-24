@@ -17,9 +17,11 @@ export default async function handler(req: any, res: any) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
     const intent = normalizeFundingIntent(body.intent || body);
+    const { status: capabilityStatus, ...options } = findFundingOptions(intent);
     return res.status(200).json({
       status: 'success',
-      ...findFundingOptions(intent),
+      capability_status: capabilityStatus,
+      ...options,
       timestamp: new Date().toISOString()
     });
   } catch (err: any) {
