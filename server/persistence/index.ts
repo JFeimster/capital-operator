@@ -21,6 +21,8 @@ class UnavailableCapitalRepository implements CapitalRepository {
   async putWorkspace(): Promise<never> { return this.fail(); }
   async getMembership(): Promise<never> { return this.fail(); }
   async putMembership(): Promise<never> { return this.fail(); }
+  async createFundingIntent(): Promise<never> { return this.fail(); }
+  async getFundingIntent(): Promise<never> { return this.fail(); }
   async createDeal(): Promise<never> { return this.fail(); }
   async getDeal(): Promise<never> { return this.fail(); }
   async listDeals(): Promise<never> { return this.fail(); }
