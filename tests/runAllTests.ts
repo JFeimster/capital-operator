@@ -25,6 +25,7 @@ import { runFundingApiTests } from './fundingApi.test.js';
 import { runWorkspaceAuthTests } from './workspaceAuth.test.js';
 import { runDealLifecycleTests } from './dealLifecycle.test.js';
 import { runDealApiTests } from './dealApi.test.js';
+import { runTransactionOpsTests } from './transactionOps.test.js';
 
 async function main() {
   console.log('\n======================================================');
@@ -53,7 +54,8 @@ async function main() {
     {name:'Phase 5 Funding Outcome APIs',fn:runFundingApiTests},
     {name:'Phase 5 Workspace / Auth',fn:runWorkspaceAuthTests},
     {name:'Phase 5 Deal Lifecycle',fn:runDealLifecycleTests},
-    {name:'Phase 5 Deal APIs',fn:runDealApiTests}
+    {name:'Phase 5 Deal APIs',fn:runDealApiTests},
+    {name:'Phase 5 Transaction Operations',fn:runTransactionOpsTests}
   ];
 
   let passed=0;
