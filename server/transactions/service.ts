@@ -563,7 +563,7 @@ export async function updateCondition(
   };
   await repo.updateCondition(updated);
   const correlation=corr(session,suppliedCorrelationId);
-  const eventType=input.status==='COMPLETED'?'condition.completed':'condition.created';
+  const eventType=input.status==='COMPLETED'?'condition.completed':'condition.updated';
   const event=await serverEventBus.emit(eventType,{
     condition_id:updated.id,deal_id:updated.dealId,previous_status:existing.status,new_status:updated.status
   },{workspaceId:session.workspaceId,userId:session.userId,correlationId:correlation,requestId:session.requestId});
