@@ -38,6 +38,7 @@ export default async function handler(req:any,res:any) {
       outstanding_conditions:tx.outstandingConditions,
       conditions:tx.conditions,
       relationship:tx.relationship,
+      attribution:tx.attribution,
       next_action:getNextFundingActionForDeal(tx.deal),
       human_review_required:true,
       timestamp:new Date().toISOString()
