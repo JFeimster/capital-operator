@@ -134,16 +134,16 @@ export const Docs: React.FC = () => {
                 <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-6">
                   <div>
                     <h3 className="text-xl font-bold text-white">API Authentication & Headers</h3>
-                    <p className="text-xs text-slate-400 mt-1">Authenticate all server-to-server requests using Bearer token authentication.</p>
+                    <p className="text-xs text-slate-400 mt-1">Authenticated transaction endpoints use the configured server-side auth adapter. Production auth is not available unless the deployment reports it as configured.</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700">Base URL: https://api.moonshinecapital.io/v1</span>
+                    <span className="font-mono text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700">Canonical API: https://capital-operator.vercel.app/api/v1</span>
                   </div>
                 </div>
 
                 <div className="space-y-3 font-mono text-xs text-slate-300 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
                   <div className="text-slate-500">// Standard HTTP Headers</div>
-                  <div><span className="text-cyan-400">Authorization:</span> Bearer co_live_sk_948f9382f7104</div>
+                  <div><span className="text-cyan-400">Authorization:</span> Bearer <configured-server-token></div>
                   <div><span className="text-cyan-400">Content-Type:</span> application/json</div>
                   <div><span className="text-cyan-400">X-Partner-ID:</span> ptr_moonshine_alpha</div>
                 </div>
@@ -183,7 +183,7 @@ export const Docs: React.FC = () => {
                 </div>
 
                 <p className="text-xs text-slate-300 mb-4 leading-relaxed">
-                  Submits a commercial financing inquiry into the automated underwriting queue. Triggers instant DSCR analysis, preliminary qualification scoring, and lender buy-box routing.
+                  Submits intake data into Capital Operator's API layer for deterministic normalization and triage. It does not perform lender underwriting, promise eligibility, or represent lender approval.
                 </p>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -195,10 +195,10 @@ export const Docs: React.FC = () => {
                         onClick={() =>
                           copyToClipboard(
                             selectedLanguage === 'curl'
-                              ? `curl -X POST https://api.moonshinecapital.io/v1/intake/submit \\\n  -H "Authorization: Bearer co_live_sk_..." \\\n  -H "Content-Type: application/json" \\\n  -d '{"business_name":"Apex Logistics LLC","annual_revenue":3200000,"requested_facility":"ABL_REVOLVER","monthly_deposits":265000}'`
+                              ? `curl -X POST https://capital-operator.vercel.app/api/v1/intake/submit \\\n  -H "Authorization: Bearer <configured-server-token>" \\\n  -H "Content-Type: application/json" \\\n  -d '{"business_name":"Apex Logistics LLC","annual_revenue":3200000,"requested_facility":"ABL_REVOLVER","monthly_deposits":265000}'`
                               : selectedLanguage === 'typescript'
-                              ? `const response = await fetch("https://api.moonshinecapital.io/v1/intake/submit", {\n  method: "POST",\n  headers: {\n    "Authorization": "Bearer co_live_sk_...",\n    "Content-Type": "application/json"\n  },\n  body: JSON.stringify({\n    business_name: "Apex Logistics LLC",\n    ein: "82-1234567",\n    annual_revenue: 3200000,\n    avg_monthly_deposits: 265000,\n    time_in_business_months: 48,\n    requested_facility: "ABL_REVOLVER",\n    target_amount: 500000\n  })\n});\nconst result = await response.json();`
-                              : `import requests\n\npayload = {\n    "business_name": "Apex Logistics LLC",\n    "annual_revenue": 3200000,\n    "avg_monthly_deposits": 265000,\n    "requested_facility": "ABL_REVOLVER",\n    "target_amount": 500000\n}\nheaders = {\n    "Authorization": "Bearer co_live_sk_...",\n    "Content-Type": "application/json"\n}\nres = requests.post("https://api.moonshinecapital.io/v1/intake/submit", json=payload, headers=headers)\nprint(res.json())`,
+                              ? `const response = await fetch("https://capital-operator.vercel.app/api/v1/intake/submit", {\n  method: "POST",\n  headers: {\n    "Authorization": "Bearer <configured-server-token>",\n    "Content-Type": "application/json"\n  },\n  body: JSON.stringify({\n    business_name: "Apex Logistics LLC",\n    ein: "82-1234567",\n    annual_revenue: 3200000,\n    avg_monthly_deposits: 265000,\n    time_in_business_months: 48,\n    requested_facility: "ABL_REVOLVER",\n    target_amount: 500000\n  })\n});\nconst result = await response.json();`
+                              : `import requests\n\npayload = {\n    "business_name": "Apex Logistics LLC",\n    "annual_revenue": 3200000,\n    "avg_monthly_deposits": 265000,\n    "requested_facility": "ABL_REVOLVER",\n    "target_amount": 500000\n}\nheaders = {\n    "Authorization": "Bearer <configured-server-token>",\n    "Content-Type": "application/json"\n}\nres = requests.post("https://capital-operator.vercel.app/api/v1/intake/submit", json=payload, headers=headers)\nprint(res.json())`,
                             'endpoint_intake'
                           )
                         }
@@ -210,8 +210,8 @@ export const Docs: React.FC = () => {
                     </div>
 
                     <pre className="p-4 rounded-xl bg-slate-950 font-mono text-[11px] text-slate-300 overflow-x-auto border border-slate-800/80 leading-relaxed">
-                      {selectedLanguage === 'curl' && `curl -X POST https://api.moonshinecapital.io/v1/intake/submit \\
-  -H "Authorization: Bearer co_live_sk_..." \\
+                      {selectedLanguage === 'curl' && `curl -X POST https://capital-operator.vercel.app/api/v1/intake/submit \\
+  -H "Authorization: Bearer <configured-server-token>" \\
   -H "Content-Type: application/json" \\
   -d '{
     "business_name": "Apex Logistics LLC",
@@ -221,10 +221,10 @@ export const Docs: React.FC = () => {
     "target_amount": 500000
   }'`}
 
-                      {selectedLanguage === 'typescript' && `const response = await fetch("https://api.moonshinecapital.io/v1/intake/submit", {
+                      {selectedLanguage === 'typescript' && `const response = await fetch("https://capital-operator.vercel.app/api/v1/intake/submit", {
   method: "POST",
   headers: {
-    "Authorization": "Bearer co_live_sk_...",
+    "Authorization": "Bearer <configured-server-token>",
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
@@ -249,10 +249,10 @@ payload = {
     "target_amount": 500000
 }
 headers = {
-    "Authorization": "Bearer co_live_sk_...",
+    "Authorization": "Bearer <configured-server-token>",
     "Content-Type": "application/json"
 }
-res = requests.post("https://api.moonshinecapital.io/v1/intake/submit", json=payload, headers=headers)
+res = requests.post("https://capital-operator.vercel.app/api/v1/intake/submit", json=payload, headers=headers)
 print(res.json())`}
                     </pre>
                   </div>
