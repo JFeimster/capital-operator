@@ -311,8 +311,46 @@ export interface CapitalCategoryFit {
   productPathId: string;
   productName: string;
   fit: 'POTENTIAL_PATH' | 'REVIEW';
+  score?: number;
   reasons: string[];
   humanReviewRequired: true;
+}
+
+export interface FundingProductMatch {
+  productId: string;
+  productName: string;
+  providerId: string;
+  providerName: string;
+  productFamilyId: string;
+  productPathId?: string;
+  fundingType: string;
+  score: number;
+  matchStatus: 'POTENTIAL_MATCH' | 'REVIEW_REQUIRED' | 'OUTSIDE_KNOWN_CRITERIA';
+  reasons: string[];
+  qualificationCriteria: Record<string, string | number | boolean | string[] | null>;
+  qualificationGaps: MissingFundingField[];
+  verificationStatus: ResourceVerificationStatus;
+  lastVerifiedAt?: string;
+  humanReviewRequired: true;
+}
+
+export interface FundingFamilyMatch {
+  familyId: string;
+  familyName: string;
+  score: number;
+  reasons: string[];
+  productIds: string[];
+  status: 'ACTIVE' | 'DEPRECATED';
+}
+
+export interface FundingSupportResourceMatch {
+  resourceId: string;
+  name: string;
+  assetType: string;
+  score: number;
+  reasons: string[];
+  liveUrl: string;
+  status: 'LIVE';
 }
 
 export interface ProviderCandidate {
@@ -321,10 +359,15 @@ export interface ProviderCandidate {
   productId?: string;
   productName?: string;
   productPathId: string;
+  score?: number;
   whyRelevant: string[];
+  qualificationCriteria?: Record<string, string | number | boolean | string[] | null>;
+  qualificationGaps?: MissingFundingField[];
   criteriaSource: string;
   lastVerifiedAt: string;
+  verificationStatus?: ResourceVerificationStatus;
   applicationUrl?: string;
+  handoffUrl?: string;
   humanReviewRequired: true;
 }
 
@@ -332,8 +375,21 @@ export interface FundingOptionsResult {
   status: 'LIVE' | 'BETA';
   intent: FundingIntent;
   categoryFits: CapitalCategoryFit[];
+  outcomeMatches: CapitalCategoryFit[];
+  productFamilyMatches: FundingFamilyMatch[];
+  productMatches: FundingProductMatch[];
   providerCandidates: ProviderCandidate[];
   providerDiscoveryStatus: 'VERIFIED_RESULTS' | 'NO_VERIFIED_PROVIDER_DATA';
+  missingInformation: MissingFundingField[];
+  documentChecklist: FundingDocumentChecklist;
+  supportResources: FundingSupportResourceMatch[];
+  handoff: {
+    destinationType: 'PROVIDER_APPLICATION' | 'CANONICAL_INTAKE';
+    providerId?: string;
+    productId?: string;
+    url: string;
+    preservesAttribution: true;
+  };
   disclaimer: string;
   nextAction: string;
   humanReviewRequired: true;
@@ -388,6 +444,9 @@ export interface CapitalCase {
   assumptions: string[];
   sourceTrace: string[];
   reviewFlags: string[];
+  targetProductPathIds?: string[];
+  targetProductFamilyIds?: string[];
+  supportResourceIds?: string[];
   humanReviewRequired: true;
 }
 
