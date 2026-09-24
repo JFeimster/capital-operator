@@ -47,7 +47,7 @@ export const FundingOperator: React.FC = () => {
   const [operatorBusy,setOperatorBusy]=useState(false);
 
   const transactionReady=Boolean(workspace?.auth?.configured&&workspace?.persistence?.configured);
-  const authHeaders=useMemo(()=>token.trim()?{
+  const authHeaders=useMemo<Record<string,string>>(()=>token.trim()?{
     Authorization:'Bearer ' + token.trim(),
     'Content-Type':'application/json'
   }:{'Content-Type':'application/json'},[token]);
