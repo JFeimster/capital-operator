@@ -9,6 +9,7 @@ import { buildCapitalCase } from '../../src/lib/capitalCase.js';
 import { getFundingDocumentChecklist } from '../../src/lib/fundingDocuments.js';
 import { findVerifiedProviderCandidates } from '../../src/config/fundingProviders.js';
 import { TOOLS_CATALOG } from '../../src/config/tools.js';
+import { findFundingResourceAssets, RESOURCE_ASSET_SOURCE_STATUS } from '../../src/config/resourceAssets.js';
 import { WORKFLOW_STAGES } from '../../src/config/workflowStages.js';
 import { authenticateHeaders } from '../auth/authService.js';
 import { AuthenticationError } from '../auth/types.js';
@@ -100,7 +101,7 @@ export const MCP_TOOLS: McpToolDefinition[] = [
   {
     name:'recommend_funding_support_tools',
     description:'OPERATE: recommend canonical Capital Operator support tools that can move the current request forward without making a capital decision.',
-    inputSchema:{type:'object',properties:{stage:{type:'integer',minimum:1,maximum:8},tag:{type:'string'},limit:{type:'integer',minimum:1,maximum:10}}}
+    inputSchema:{type:'object',properties:{stage:{type:'integer',minimum:1,maximum:8},tag:{type:'string'},includeConcepts:{type:'boolean'},limit:{type:'integer',minimum:1,maximum:10}}}
   },
 
   { name:'generate_capital_blueprint', description:'Generate a deterministic Capital Operator blueprint from canonical assessment answers.', inputSchema:{type:'object',required:['answers'],properties:{answers:{type:'object'}}} },
@@ -255,7 +256,8 @@ export async function callMcpTool(
           (!stage || tool.workflowStage===stage) &&
           (!tag || tool.tags.some(item=>item.toLowerCase().includes(tag)) || tool.category.toLowerCase().includes(tag))
         ).slice(0,limit);
-        return result({status:'LIVE',capability_group:'OPERATE',tools,human_review_required:true});
+        const resourceAssets=findFundingResourceAssets({query:tag||undefined,status:args.includeConcepts===true?'ANY':'LIVE',limit});
+        return result({status:'LIVE',capability_group:'OPERATE',tools,resource_assets:resourceAssets,resource_source_status:RESOURCE_ASSET_SOURCE_STATUS,human_review_required:true});
       }
       case 'generate_capital_blueprint':
         if (!args.answers || typeof args.answers !== 'object') throw new Error('answers object is required.');

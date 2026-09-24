@@ -157,28 +157,154 @@ export interface FundingProductPath {
   };
 }
 
+
+export type ResourceVerificationStatus = 'VERIFIED' | 'IMPORTED' | 'REVIEW_REQUIRED' | 'CONCEPT' | 'LIVE_VERIFIED';
+
+export interface ResourceProvenance {
+  sourceType: 'REGISTRY_IMPORT' | 'CANONICAL_CONFIG' | 'GENERATED';
+  sourceRepo?: string;
+  sourceFile: string;
+  sourceRecordId?: string;
+  sourceUrl?: string;
+  generatedFrom?: string[];
+  importedAt: string;
+  verifiedAt?: string;
+  verificationStatus: ResourceVerificationStatus;
+  notes?: string[];
+}
+
+export interface FundingProductFamilyRecord {
+  id: string;
+  slug: string;
+  name: string;
+  publicName?: string;
+  route?: string;
+  category?: string;
+  summary: string;
+  bestFitBorrower: string[];
+  avoidWhen: string[];
+  commonUseCases: string[];
+  qualificationSignals?: {
+    minCreditScoreGuide?: number | null;
+    minMonthlyRevenueGuide?: number | null;
+    minTimeInBusinessMonthsGuide?: number | null;
+    creditTier?: string[];
+    repaymentSource?: string | null;
+  };
+  speedProfile?: { label?: string; typicalTimeToFunding?: string } | null;
+  requiredDocuments: string[];
+  fastDisqualifiers: string[];
+  productIds: string[];
+  providerIds: string[];
+  status: 'ACTIVE' | 'DEPRECATED';
+  visibility: 'public' | 'internal';
+  mergedInto: string[];
+  primaryCta?: { label: string; href: string; trackingId?: string };
+  provenance: ResourceProvenance;
+}
+
+export interface FundingProductRecord {
+  id: string;
+  slug: string;
+  name: string;
+  providerId: string;
+  providerName: string;
+  productFamily: string;
+  category: string;
+  fundingType: string;
+  minAmount?: number;
+  maxAmount?: number;
+  minCreditScore?: number;
+  minMonthlyRevenue?: number;
+  minMonthlyRevenueNote?: string | null;
+  minTimeInBusinessMonths?: number;
+  creditTier?: string;
+  termLength?: string;
+  paymentType?: string;
+  rateCostRange?: string;
+  timeToFunding?: string;
+  startupEligible?: boolean;
+  ctaLabel?: string;
+  productPathId?: string;
+  status: 'ACTIVE_VERIFIED' | 'ACTIVE_IMPORTED' | 'REVIEW_REQUIRED' | 'INACTIVE';
+  visibility: 'public' | 'internal';
+  provenance: ResourceProvenance;
+}
+
+
+export interface FundingResourceAssetRecord {
+  id: string;
+  slug: string;
+  aliases: string[];
+  name: string;
+  brand?: string;
+  persona?: string;
+  problem?: string;
+  painSolved?: string;
+  inputFields?: string;
+  coreLogic?: string;
+  outputArtifact?: string;
+  cta?: string;
+  assetType: string;
+  partnerChannel?: string;
+  status: 'LIVE' | 'CONCEPT';
+  sourceStatus: string;
+  liveUrl?: string;
+  provenance: ResourceProvenance;
+}
+
+export type ResourceRelationshipType = 'offers' | 'belongsTo' | 'mapsTo' | 'mergedInto';
+
+export interface ResourceRelationship {
+  id: string;
+  fromId: string;
+  type: ResourceRelationshipType;
+  toId: string;
+  provenance: 'CANONICAL_RESOURCE_LAYER';
+}
+
 export interface ProviderCriteriaRecord {
   id: string;
   providerId: string;
+  productId?: string;
+  productName?: string;
   productPathId: string;
   source: string;
   verifiedAt: string;
   reviewDate?: string;
   confidence: 'VERIFIED' | 'REVIEW_REQUIRED';
-  criteria: Record<string, string | number | boolean | string[]>;
+  criteria: Record<string, string | number | boolean | string[] | null>;
 }
 
 export interface FundingProviderRecord {
   id: string;
+  slug?: string;
   name: string;
   status: 'ACTIVE_VERIFIED' | 'INACTIVE' | 'REVIEW_REQUIRED';
+  visibility?: 'public' | 'internal';
   source: string;
   sourceUrl?: string;
   lastVerifiedAt: string;
   geography?: string[];
   applicationUrl?: string;
+  website?: string;
+  affiliateUrl?: string;
+  categories?: string[];
+  productFamilyIds?: string[];
+  financingProducts?: string[];
+  industryAppetite?: string[];
+  restrictedIndustries?: string[];
+  typicalBorrowerProfile?: string;
+  eligibility?: { minCreditScore?: number | null; minMonthlyRevenue?: number | null; minTimeInBusinessMonths?: number | null };
+  requirements?: { pgType?: string | null; disqualifiers?: string[] | string | null; requirementsNote?: string | null };
+  fundingAmountText?: string;
+  commissionMetadata?: string;
+  contactEmail?: string;
+  keyContact?: string;
+  productIds: string[];
   productPathIds: string[];
   criteriaIds: string[];
+  provenance: ResourceProvenance;
 }
 
 export interface CapitalCategoryFit {
@@ -192,6 +318,8 @@ export interface CapitalCategoryFit {
 export interface ProviderCandidate {
   providerId: string;
   providerName: string;
+  productId?: string;
+  productName?: string;
   productPathId: string;
   whyRelevant: string[];
   criteriaSource: string;

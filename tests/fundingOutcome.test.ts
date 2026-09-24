@@ -37,8 +37,11 @@ export async function runFundingOutcomeTests() {
   if(!options.categoryFits.some(item=>item.productPathId==='equipment-financing')) {
     throw new Error('Equipment product path missing');
   }
-  if(options.providerCandidates.length!==0 || VERIFIED_FUNDING_PROVIDERS.length!==0) {
-    throw new Error('Unverified provider data must not be promoted');
+  if(VERIFIED_FUNDING_PROVIDERS.length===0) {
+    throw new Error('Canonical source-verified provider data should be loaded');
+  }
+  if(options.providerCandidates.length!==0) {
+    throw new Error('Equipment request must not receive provider candidates without VERIFIED product-level criteria');
   }
   if(options.providerDiscoveryStatus!=='NO_VERIFIED_PROVIDER_DATA') {
     throw new Error('Provider discovery status must remain truthful');
