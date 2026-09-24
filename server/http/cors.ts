@@ -27,6 +27,10 @@ export function applyCors(req: any, res: any, methods: string[] = ['GET', 'POST'
   res.setHeader('Access-Control-Allow-Methods', methods.join(','));
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Accept, Accept-Version, Authorization, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-CSRF-Token, X-Partner-ID, X-Requested-With'
+    [
+      'Accept','Accept-Version','Authorization','Content-Length','Content-MD5','Content-Type','Date',
+      'X-Api-Version','X-CSRF-Token','X-Partner-ID','X-Requested-With','X-Correlation-ID',
+      'X-Capital-User-ID','X-Capital-Workspace-ID','X-Capital-Role','X-Request-ID'
+    ].join(', ')
   );
 }
