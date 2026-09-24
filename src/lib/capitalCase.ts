@@ -53,10 +53,13 @@ export function buildCapitalCase(intent: FundingIntent): CapitalCase {
   const noi = intent.realEstateContext?.annualNetOperatingIncome;
   const debtService = intent.realEstateContext?.annualDebtService;
   if (typeof noi === 'number' && typeof debtService === 'number' && debtService > 0) {
-    deterministicMetrics.dscr = calculateCommercialDscr({
+    const dscrResult = calculateCommercialDscr({
       netOperatingIncome: noi,
       annualDebtService: debtService
-    }).dscr;
+    });
+    if (dscrResult.dscr !== null) {
+      deterministicMetrics.dscr = dscrResult.dscr;
+    }
   }
 
   const missingInformation = getFundingIntentMissingFields(intent);
