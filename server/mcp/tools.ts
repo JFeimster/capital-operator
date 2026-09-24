@@ -228,6 +228,7 @@ export async function callMcpTool(
           outstanding_conditions:tx.outstandingConditions,
           offers_received:tx.offers,
           relationship:tx.relationship,
+          attribution:tx.attribution,
           next_action:getNextFundingActionForDeal(tx.deal),
           human_review_required:true
         });
