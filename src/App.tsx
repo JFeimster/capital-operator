@@ -73,10 +73,12 @@ export default function App() {
   useEffect(() => {
     captureAttribution();
 
-    // Clean legacy route-like hashes on Vercel so old links such as
-    // /get-funded#get-funded/business-acquisition become canonical clean URLs.
-    if (!window.location.hostname.endsWith('github.io') && window.location.pathname !== '/' && /^#(?:get-funded|funding|tools|resources|docs|capital|assessment)(?:\/|$)/.test(window.location.hash)) {
-      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    // Migrate legacy route-like hashes on Vercel to their canonical clean path.
+    // Example: /get-funded#get-funded/business-acquisition -> /get-funded/business-acquisition.
+    if (!window.location.hostname.endsWith('github.io') && /^#(?:get-funded|funding|tools|resources|docs|capital|assessment)(?:\/|$)/.test(window.location.hash)) {
+      const canonicalPath = '/' + window.location.hash.slice(1).replace(/^\//, '');
+      window.history.replaceState({}, '', canonicalPath + window.location.search);
+      setCurrentRoute(canonicalPath);
     }
 
     const syncRoute = () => setCurrentRoute(activeLocation());
