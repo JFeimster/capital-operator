@@ -1,6 +1,5 @@
 /**
  * Capital Operator — Footer Links & Legal Disclosures
- * src/config/footer.ts
  */
 
 export interface FooterLinkGroup {
@@ -15,44 +14,42 @@ export interface FooterLinkGroup {
 
 export const FOOTER_SECTIONS: FooterLinkGroup[] = [
   {
-    title: 'Framework & Engine',
+    title: 'Act',
     links: [
-      { label: 'Run Diagnostic', href: '#assessment' },
-      { label: 'How It Works', href: '#how-it-works' },
-      { label: 'Capital Stack Architecture', href: '#capital-stack' },
-      { label: 'Diagnostic Methodology', href: '#methodology' },
-      { label: 'Operating Blueprint', href: '#blueprint' }
+      { label: 'Get Funded', href: '/get-funded' },
+      { label: 'Open Funding OS', href: '/funding' },
+      { label: 'Explore Capital', href: '/capital' },
+      { label: 'Run Diagnostic', href: '/assessment' }
     ]
   },
   {
-    title: 'Audience Pathways',
+    title: 'Platform',
     links: [
-      { label: 'For Fractional CFOs & Advisors', href: '#for-advisors' },
-      { label: 'For Loan Brokers & Operators', href: '#for-operators' },
-      { label: 'For Fintech Platforms', href: '#for-platforms' },
-      { label: 'For Lender Partners', href: '#for-partners' }
+      { label: 'Tools', href: '/tools' },
+      { label: 'Resources', href: '/resources' },
+      { label: 'Ecosystem', href: '/ecosystem' },
+      { label: 'Docs & API', href: '/docs', badge: 'API' }
     ]
   },
   {
-    title: 'Ecosystem & Tools',
+    title: 'Playbooks',
     links: [
-      { label: 'Underwriting Tools Directory', href: '#tools' },
-      { label: 'Operator Playbooks & Resources', href: '#resources' },
-      { label: 'Developer Docs & REST API', href: '#docs', badge: 'API' },
-      { label: 'Distilled Funding', href: 'https://www.distilledfunding.com', isExternal: true },
-      { label: 'Operator Underwriting Suite', href: 'https://tools.distilledfunding.com', isExternal: true }
+      { label: 'For Advisors', href: '/for-advisors' },
+      { label: 'For Operators', href: '/for-operators' },
+      { label: 'For Platforms', href: '/for-platforms' },
+      { label: 'For Partners', href: '/for-partners' }
     ]
   },
   {
-    title: 'Governance & Privacy',
+    title: 'Governance',
     links: [
-      { label: 'About Moonshine Capital', href: '#about' },
-      { label: 'Privacy Policy', href: '#privacy' },
-      { label: 'Terms of Service', href: '#terms' },
+      { label: 'Methodology', href: '/methodology' },
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
       { label: 'GitHub Source Repository', href: 'https://github.com/JFeimster/capital-operator', isExternal: true }
     ]
   }
 ];
 
 export const FOOTER_DISCLAIMER =
-  'Capital Operator is an operational diagnostics software system provided by Moonshine Capital. Diagnostic blueprints and operational findings do not constitute a credit decision, loan commitment, or legal advice. Capital availability depends on verified borrower documentation, market liquidity, and independent underwriting criteria.';
+  'Capital Operator provides capital discovery, workflow, and decision-support infrastructure. Outputs do not constitute a credit decision, loan commitment, or legal advice. Capital availability and final terms remain subject to independent provider review and underwriting.';
