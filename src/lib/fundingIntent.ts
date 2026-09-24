@@ -46,15 +46,23 @@ export function normalizeFundingIntent(input: FundingIntentInput): FundingIntent
     : parseAmount(objective);
 
   return {
-    ...input,
     id: `funding_intent_${crypto.randomBytes(6).toString('hex')}`,
     objective: objective || undefined,
     requestedAmount,
     useOfFunds,
-    vertical,
     fundingPurpose,
+    vertical,
     urgency: input.urgency || 'PLANNING',
+    location: input.location,
     source: input.source || 'capital-operator',
+    attribution: input.attribution,
+    businessProfile: input.businessProfile,
+    assetContext: input.assetContext,
+    receivableContext: input.receivableContext,
+    contractContext: input.contractContext,
+    acquisitionContext: input.acquisitionContext,
+    realEstateContext: input.realEstateContext,
+    currentDebtContext: input.currentDebtContext,
     createdAt: new Date().toISOString(),
     persistence: 'NON_PERSISTENT'
   };
@@ -109,9 +117,11 @@ export function getFundingIntentMissingFields(intent: FundingIntent): MissingFun
     add('receivableContext.outstandingReceivables', 'Outstanding eligible receivables are needed for receivables financing review.');
   }
 
-  if (intent.vertical === 'real_estate' &&
-      !intent.realEstateContext?.propertyValue &&
-      !intent.realEstateContext?.purchasePrice) {
+  if (
+    intent.vertical === 'real_estate' &&
+    !intent.realEstateContext?.propertyValue &&
+    !intent.realEstateContext?.purchasePrice
+  ) {
     add('realEstateContext.propertyValue_or_purchasePrice', 'Property value or purchase price is needed for real-estate financing review.');
   }
 
