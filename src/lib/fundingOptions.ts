@@ -137,7 +137,10 @@ function rankSupportResources(intent: FundingIntent): FundingSupportResourceMatc
 export function findFundingOptions(intent: FundingIntent): FundingOptionsResult {
   const requestText=[intent.objective,intent.useOfFunds].filter(Boolean).join(' ').toLowerCase();
   const secondaryPurposes=new Set(
-    FUNDING_TAXONOMY.filter(entry=>entry.keywords.some(keyword=>requestText.includes(keyword.toLowerCase()))).map(entry=>entry.purpose)
+    FUNDING_TAXONOMY
+      .filter(entry=>entry.keywords.some(keyword=>requestText.includes(keyword.toLowerCase())))
+      .map(entry=>entry.purpose)
+      .filter(purpose=>purpose!=='general_business_funding'||intent.fundingPurpose==='general_business_funding')
   );
   const categoryFits=FUNDING_PRODUCT_PATHS.map(path=>{
     let score=0; const reasons:string[]=[];
