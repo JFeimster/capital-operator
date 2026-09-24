@@ -3,6 +3,7 @@ import { ArrowRight, Database, FileCheck2, GitBranch, KeyRound, RefreshCw, Shiel
 import { Container } from '../components/layout/Container';
 import { Section } from '../components/layout/Section';
 import { CTAS_CONFIG } from '../config/ctas';
+import { trackEvent } from '../lib/analytics';
 
 type CapabilityStatus = {
   status?: string;
@@ -36,6 +37,12 @@ export const FundingOperator: React.FC = () => {
   const [amount,setAmount]=useState('250000');
   const [timeInBusiness,setTimeInBusiness]=useState('36');
   const [annualRevenue,setAnnualRevenue]=useState('1200000');
+  const [monthlyDeposits,setMonthlyDeposits]=useState('100000');
+  const [creditScore,setCreditScore]=useState('680');
+  const [industry,setIndustry]=useState('construction');
+  const [businessState,setBusinessState]=useState('VA');
+  const [registryQuery,setRegistryQuery]=useState('');
+  const [registryResult,setRegistryResult]=useState<any>(null);
   const [fundingResult,setFundingResult]=useState<any>(null);
   const [fundingBusy,setFundingBusy]=useState(false);
   const [fundingError,setFundingError]=useState('');
@@ -73,18 +80,24 @@ export const FundingOperator: React.FC = () => {
         requestedAmount:Number(amount)||undefined,
         businessProfile:{
           timeInBusinessMonths:Number(timeInBusiness)||undefined,
-          annualRevenue:Number(annualRevenue)||undefined
+          annualRevenue:Number(annualRevenue)||undefined,
+          avgMonthlyDeposits:Number(monthlyDeposits)||undefined,
+          creditScore:Number(creditScore)||undefined,
+          industry:industry||undefined,
+          state:businessState||undefined
         },
         source:'funding-operator-ui'
       };
       const body=JSON.stringify(payload);
       const headers={'Content-Type':'application/json'};
+      trackEvent('funding_search_started',{surface:'operator'});
       const [intent,readiness,options]=await Promise.all([
         jsonRequest('/api/v1/funding/intents',{method:'POST',headers,body}),
         jsonRequest('/api/v1/funding/readiness',{method:'POST',headers,body}),
         jsonRequest('/api/v1/funding/options',{method:'POST',headers,body})
       ]);
       setFundingResult({intent,readiness,options,payload});
+      trackEvent('funding_options_generated',{surface:'operator',products:options?.productMatches?.length||0,providers:options?.providerCandidates?.length||0});
     }catch(error:any){
       setFundingError(error?.message||'Funding request could not be prepared.');
     }finally{setFundingBusy(false);}
@@ -169,6 +182,22 @@ export const FundingOperator: React.FC = () => {
                     <input value={annualRevenue} onChange={e=>setAnnualRevenue(e.target.value)} inputMode="numeric"
                       className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"/>
                   </label>
+                  <label><span className="text-xs font-mono text-slate-400">MONTHLY DEPOSITS</span>
+                    <input value={monthlyDeposits} onChange={e=>setMonthlyDeposits(e.target.value)} inputMode="numeric"
+                      className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"/>
+                  </label>
+                  <label><span className="text-xs font-mono text-slate-400">CREDIT SCORE</span>
+                    <input value={creditScore} onChange={e=>setCreditScore(e.target.value)} inputMode="numeric"
+                      className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"/>
+                  </label>
+                  <label><span className="text-xs font-mono text-slate-400">INDUSTRY</span>
+                    <input value={industry} onChange={e=>setIndustry(e.target.value)}
+                      className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"/>
+                  </label>
+                  <label><span className="text-xs font-mono text-slate-400">STATE</span>
+                    <input value={businessState} onChange={e=>setBusinessState(e.target.value)}
+                      className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"/>
+                  </label>
                 </div>
                 <button onClick={runFundingRequest} disabled={fundingBusy}
                   className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-400 disabled:opacity-50">
@@ -193,6 +222,26 @@ export const FundingOperator: React.FC = () => {
                       {(fundingResult.options?.categoryFits||[]).map((item:any)=><span key={item.productPathId} className="text-xs border border-cyan-900 bg-cyan-950/30 text-cyan-200 rounded-lg px-2.5 py-1.5">{item.productName}</span>)}
                     </div>
                     <div className="mt-3 text-xs text-slate-500">Provider discovery: {fundingResult.options?.providerDiscoveryStatus||'NO VERIFIED PROVIDER DATA'}</div>
+                  </div>
+                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5">
+                    <div className="text-xs font-mono text-violet-400">PRODUCT + PROVIDER CANDIDATES</div>
+                    <div className="mt-3 space-y-2">
+                      {(fundingResult.options?.productMatches||[]).slice(0,4).map((item:any)=><div key={item.productId} className="text-sm text-slate-300"><span className="text-white font-semibold">{item.productName}</span> · {item.providerName} <span className="text-[10px] font-mono text-violet-300">{item.matchStatus}</span></div>)}
+                      {(fundingResult.options?.providerCandidates||[]).slice(0,3).map((item:any)=><div key={item.providerId+item.productId} className="text-sm text-emerald-300">Verified: {item.providerName} / {item.productName||item.productPathId}</div>)}
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5">
+                      <div className="text-xs font-mono text-amber-400">QUALIFICATION + DOCUMENT GAPS</div>
+                      <ul className="mt-3 space-y-2 text-xs text-slate-300">
+                        {(fundingResult.options?.missingInformation||[]).slice(0,4).map((item:any)=><li key={item.field}>• {item.reason}</li>)}
+                        {(fundingResult.options?.documentChecklist?.items||[]).filter((item:any)=>item.required).slice(0,4).map((item:any)=><li key={item.id}>• {item.label}</li>)}
+                      </ul>
+                    </div>
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5">
+                      <div className="text-xs font-mono text-cyan-400">LIVE SUPPORT RESOURCES</div>
+                      <div className="mt-3 space-y-2">{(fundingResult.options?.supportResources||[]).map((item:any)=><a key={item.resourceId} href={item.liveUrl} target="_blank" rel="noreferrer" className="block text-xs text-cyan-300 hover:text-cyan-200">{item.name}</a>)}</div>
+                    </div>
                   </div>
                   <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5">
                     <div className="text-xs font-mono text-amber-400">NEXT REQUIRED WORK</div>
@@ -246,6 +295,18 @@ export const FundingOperator: React.FC = () => {
               </div>
               <p className="mt-4 text-xs text-slate-500">Submission transmission, lender decisions, negotiations, and funding confirmations remain human-controlled. The console does not auto-submit a deal.</p>
             </div>
+          </div>
+
+          <div className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/35 p-6 sm:p-8">
+            <div className="text-xs font-mono text-cyan-400">CANONICAL REGISTRY SEARCH</div>
+            <div className="mt-4 flex gap-3">
+              <input value={registryQuery} onChange={e=>setRegistryQuery(e.target.value)} placeholder="provider, product, funding type…" className="flex-1 rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white"/>
+              <button onClick={async()=>{const q=encodeURIComponent(registryQuery);const [providers,products]=await Promise.all([jsonRequest('/api/v1/providers?q='+q),jsonRequest('/api/v1/products?q='+q)]);setRegistryResult({providers,products});}} className="rounded-xl border border-cyan-800 bg-cyan-950/30 px-4 py-3 text-sm font-semibold text-cyan-300">Search</button>
+            </div>
+            {registryResult&&<div className="mt-5 grid md:grid-cols-2 gap-5">
+              <div><div className="text-xs font-mono text-slate-500">PROVIDERS</div>{(registryResult.providers?.providers||[]).slice(0,8).map((item:any)=><div key={item.id} className="mt-2 text-sm text-slate-300">{item.name} <span className="text-[10px] text-emerald-400">{item.status}</span></div>)}</div>
+              <div><div className="text-xs font-mono text-slate-500">PRODUCTS</div>{(registryResult.products?.provider_products||[]).slice(0,8).map((item:any)=><div key={item.id} className="mt-2 text-sm text-slate-300">{item.name} <span className="text-[10px] text-violet-400">{item.verificationStatus}</span></div>)}</div>
+            </div>}
           </div>
         </Container>
       </Section>
