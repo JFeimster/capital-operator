@@ -53,3 +53,16 @@
 - Phase 5 authenticated operations derive workspace identity from the server auth boundary and never trust workspace/user identifiers from request payloads.
 - Provider-specific output remains empty unless the verified-provider registry contains provenance-backed records.
 - External submission and FUNDED states require explicit human confirmation/evidence.
+
+## Canonical Resource Layer
+
+| Domain | Canonical source | Notes |
+|---|---|---|
+| Funding providers + criteria | `src/config/fundingProviders.ts` → `src/data/fundingResources.generated.ts` | 33 normalized providers; provider candidates require verified provider identity and verified product-level criteria. |
+| Funding paths + provider products + families | `src/config/fundingProducts.ts` → `src/data/fundingResources.generated.ts` | Existing provider-agnostic paths remain canonical; 59 provider products and 7 source families enrich discovery and qualification. |
+| Tools + calculators | `src/config/resourceAssets.ts` → `src/data/fundingResourceAssets.generated.ts` | 125 tool rows and 138 calculator rows normalize into 138 resources; only 6 source-verified live assets are operational. |
+| Relationships | `src/config/resourceRelationships.ts` | Lightweight provider/product/family/path edges; no graph database. |
+| Document + verification requirements | `src/lib/fundingDocuments.ts` | Purpose-specific preparation checklists plus 3 source verification paths; never represented as universal lender requirements. |
+| Ingestion validation | `scripts/ingestResourceRegistries.mjs` | Validates source counts, duplicate IDs, provider/product/family references, and tool/calculator deduplication. |
+
+Primary import source is the attached `Registries.zip`. Product, family, and tool registry payloads matched current donor copies during implementation; the provider package contained two newer ZIP-only records and remains authoritative for provider coverage.

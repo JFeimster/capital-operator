@@ -76,3 +76,11 @@ This document provides system rules, operational guidelines, and architectural c
 - Compensation metadata must cite a source; never infer a commission amount.
 - Production auth and durable persistence remain SPECIFIED until actually configured.
 
+### 7. Canonical Resource Layer Rules
+
+- `src/config/fundingProducts.ts`, `src/config/fundingProviders.ts`, `src/config/resourceAssets.ts`, and `src/config/resourceRelationships.ts` are the runtime resource consumption boundaries.
+- `src/data/fundingResources.generated.ts` and `src/data/fundingResourceAssets.generated.ts` are generated implementation payloads. Validate source packages with `scripts/ingestResourceRegistries.mjs`.
+- Provider identity verification and product-criteria verification are separate. MCP/provider candidates require both an `ACTIVE_VERIFIED` provider and `VERIFIED` product-level criteria.
+- Imported provider/product guidance remains human-reviewed and must never become an approval, eligibility, pricing, or capital-availability claim.
+- Tool/calculator records marked `CONCEPT` are metadata only. Never surface them as live operational capabilities without a verified live destination.
+- Public APIs must project public-safe fields; commission/contact metadata remains internal.
