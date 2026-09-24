@@ -159,9 +159,9 @@ export function findFundingOptions(intent: FundingIntent): FundingOptionsResult 
         productId:product.id,productName:product.name,providerId:product.providerId,providerName:product.providerName,
         productFamilyId:product.productFamily,productPathId:product.productPathId,fundingType:product.fundingType,
         score:ranked.score,
-        matchStatus:ranked.evaluation.outside?'OUTSIDE_KNOWN_CRITERIA':product.status==='ACTIVE_VERIFIED'?'POTENTIAL_MATCH':'REVIEW_REQUIRED',
+        matchStatus:(ranked.evaluation.outside?'OUTSIDE_KNOWN_CRITERIA':product.status==='ACTIVE_VERIFIED'?'POTENTIAL_MATCH':'REVIEW_REQUIRED') as FundingProductMatch['matchStatus'],
         reasons:ranked.reasons,qualificationCriteria:ranked.criteria?.criteria||{},qualificationGaps:ranked.evaluation.gaps,
-        verificationStatus:product.provenance.verificationStatus,lastVerifiedAt:product.provenance.verifiedAt,humanReviewRequired:true
+        verificationStatus:product.provenance.verificationStatus,lastVerifiedAt:product.provenance.verifiedAt,humanReviewRequired:true as const
       };
     }).sort((a,b)=>b.score-a.score);
 
