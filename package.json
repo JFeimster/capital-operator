@@ -21,7 +21,7 @@
     "vite": "^8.3.0",
     "express": "^5.2.1",
     "dotenv": "^17.2.3",
-    "motion": "^13.3.0"
+    "motion": "^14.3.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
